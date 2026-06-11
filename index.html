@@ -642,6 +642,51 @@
       .ring-1 { width:82px; height:82px; margin:-41px 0 0 -41px; }
       .btn { padding:13px 24px; font-size:14px; }
     }
+
+    /* ── COOKIE BANNER ── */
+    #cookie-banner {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      z-index: 9999; width: calc(100% - 48px); max-width: 780px;
+      opacity: 0; transition: opacity .4s, transform .4s;
+      pointer-events: none;
+    }
+    #cookie-banner.visible {
+      opacity: 1; pointer-events: all;
+    }
+    #cookie-banner-inner {
+      background: rgba(33,56,88,0.97); backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.13); border-radius: 16px;
+      padding: 18px 22px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 20px; flex-wrap: wrap;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    }
+    #cookie-text {
+      display: flex; align-items: flex-start; gap: 14px; flex: 1; min-width: 220px;
+    }
+    #cookie-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+    #cookie-text strong { font-family: 'Syne', sans-serif; font-size: 14px; display: block; margin-bottom: 2px; }
+    #cookie-text p { font-size: 12px; color: rgba(255,255,255,0.6); margin: 0; line-height: 1.5; }
+    #cookie-actions { display: flex; gap: 10px; flex-shrink: 0; }
+    #cookie-decline {
+      background: none; border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.6); padding: 9px 18px; border-radius: 50px;
+      font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: all .2s;
+    }
+    #cookie-decline:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
+    #cookie-accept {
+      background: #8DD44E; border: none; color: #fff;
+      padding: 9px 20px; border-radius: 50px;
+      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700;
+      cursor: pointer; transition: background .2s;
+    }
+    #cookie-accept:hover { background: #6fb83a; }
+    @media (max-width: 600px) {
+      #cookie-banner { bottom: 16px; width: calc(100% - 32px); }
+      #cookie-banner-inner { flex-direction: column; gap: 14px; }
+      #cookie-actions { width: 100%; justify-content: flex-end; }
+    }
   </style>
 </head>
 <body>
@@ -880,6 +925,23 @@
   <p>© 2025 Conselho Digital. Todos os direitos reservados.</p>
 </footer>
 
+<!-- ── COOKIE BANNER ── -->
+<div id="cookie-banner" style="display:none" role="dialog" aria-label="Aviso de cookies">
+  <div id="cookie-banner-inner">
+    <div id="cookie-text">
+      <span id="cookie-icon">🍪</span>
+      <div>
+        <strong>Usamos cookies</strong>
+        <p>Este site utiliza cookies para melhorar sua experiência. Você pode aceitar ou recusar o uso de cookies não essenciais.</p>
+      </div>
+    </div>
+    <div id="cookie-actions">
+      <button id="cookie-decline">Recusar</button>
+      <button id="cookie-accept">Aceitar</button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ── NAV COMPACT + BURGER ── */
 const nav = document.getElementById('nav');
@@ -974,6 +1036,34 @@ rvEls.forEach(el => io.observe(el));
     `<span class="marquee-item">${it}<span class="marquee-sep">✦</span></span>`
   ).join('');
   track.innerHTML = html;
+})();
+
+/* ── COOKIE BANNER ── */
+(function cookieConsent() {
+  function getCookie(name) {
+    return document.cookie.split('; ').reduce((acc, c) => {
+      const [k, v] = c.split('=');
+      return k === name ? decodeURIComponent(v) : acc;
+    }, null);
+  }
+  function setCookie(name, value, days) {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires};path=/;SameSite=Lax`;
+  }
+  if (getCookie('cd_cookies')) return;
+  const banner = document.getElementById('cookie-banner');
+  banner.style.display = 'flex';
+  setTimeout(() => banner.classList.add('visible'), 100);
+  document.getElementById('cookie-accept').onclick = function() {
+    setCookie('cd_cookies', 'accepted', 365);
+    banner.classList.remove('visible');
+    setTimeout(() => banner.style.display = 'none', 400);
+  };
+  document.getElementById('cookie-decline').onclick = function() {
+    setCookie('cd_cookies', 'declined', 365);
+    banner.classList.remove('visible');
+    setTimeout(() => banner.style.display = 'none', 400);
+  };
 })();
 </script>
 </body>
