@@ -162,6 +162,17 @@
     /* ── DASHBOARD ── */
     #tab-dashboard { overflow-y:auto; padding:24px; flex-direction:column; gap:20px; background:var(--bg); }
     #tab-dashboard.active { display:flex; }
+    .dash-source { background:var(--bg2); border:1px solid var(--cbr); border-radius:var(--r); padding:16px 18px; }
+    .dash-source-label { font-size:12px; font-weight:600; color:var(--white); margin-bottom:10px; }
+    .dash-source-row { display:flex; gap:10px; }
+    .dash-source-row input {
+      flex:1; background:var(--bg3); border:1px solid var(--cbr); color:var(--white);
+      font-family:'DM Sans',sans-serif; font-size:13px; padding:9px 13px; border-radius:8px; outline:none; transition:border-color .2s;
+    }
+    .dash-source-row input:focus { border-color:var(--blue); }
+    .dash-source-hint { font-size:11px; color:var(--muted); margin-top:8px; }
+    .dash-source-hint.ok  { color:var(--green); }
+    .dash-source-hint.err { color:var(--red); }
     .dash-banner {
       border-radius:8px; padding:10px 16px; font-size:12px; font-weight:500; display:none;
     }
@@ -182,10 +193,6 @@
     }
     .period-btn.active { border-color:var(--blue); color:var(--blue); background:rgba(0,188,255,.08); }
     .dash-2col { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-    .dash-no-worker { background:var(--bg2); border:1px dashed var(--cbr); border-radius:var(--r); padding:32px; text-align:center; }
-    .dash-no-worker .icon { font-size:32px; margin-bottom:10px; }
-    .dash-no-worker p { color:var(--muted); font-size:13px; line-height:1.6; }
-    .dash-no-worker a { color:var(--blue); text-decoration:none; }
 
     /* ── INTEGRATIONS ── */
     #tab-integrations { overflow-y:auto; padding:24px; flex-direction:column; gap:20px; background:var(--bg); }
@@ -364,12 +371,17 @@
 
     <!-- TAB: DASHBOARD -->
     <div class="tab-panel" id="tab-dashboard">
-      <div id="dash-banner-update" class="dash-banner yellow">Atualizando dados…</div>
-      <div id="dash-banner-error"  class="dash-banner red">Falha ao atualizar. Exibindo dados do cache.</div>
-      <div id="dash-no-worker" class="dash-no-worker" style="display:none">
-        <div class="icon">📊</div>
-        <p>Nenhum Worker de analytics configurado.<br>Configure o URL do Worker na aba <strong>Integrações</strong> para ver os dados aqui.</p>
+      <!-- Link das métricas -->
+      <div class="dash-source">
+        <div class="dash-source-label">🔗 Link das métricas (Cloudflare Analytics Worker)</div>
+        <div class="dash-source-row">
+          <input type="text" id="dash-worker-url" placeholder="https://analytics.conselhodigital.com/">
+          <button class="btn-primary" onclick="connectWorker()">Importar dados</button>
+        </div>
+        <div class="dash-source-hint" id="dash-source-hint">Cole o link e clique em importar para carregar as métricas nos cards abaixo.</div>
       </div>
+      <div id="dash-banner-update" class="dash-banner yellow">Atualizando dados…</div>
+      <div id="dash-banner-error"  class="dash-banner red">Falha ao importar. Verifique o link das métricas.</div>
       <div id="dash-content">
         <div class="dash-period">
           <button class="period-btn active" onclick="setPeriod(7,this)">7 dias</button>
@@ -893,15 +905,36 @@ async function saveIntegrations() {
 let dashData = null;
 
 async function initDashboard() {
-  const workerUrl = localStorage.getItem(CF_WORKER_KEY) || currentContent?.integrations?.worker_url || CF_WORKER_DEFAULT;
-  if (!workerUrl) {
-    document.getElementById('dash-no-worker').style.display='block';
-    document.getElementById('dash-content').style.display='none';
-    return;
+  // Cards sempre visíveis. Preenche o campo de link com o salvo ou o padrão.
+  const saved = localStorage.getItem(CF_WORKER_KEY) || currentContent?.integrations?.worker_url || CF_WORKER_DEFAULT;
+  const input = document.getElementById('dash-worker-url');
+  if (input && !input.value) input.value = saved;
+  // Só importa dados se o usuário já salvou um link antes.
+  const stored = localStorage.getItem(CF_WORKER_KEY);
+  if (stored) {
+    setHint('Carregando dados de ' + stored + ' …');
+    await loadDashboardData(stored);
+  } else {
+    setHint('Cole o link e clique em "Importar dados" para carregar as métricas nos cards abaixo.');
   }
-  document.getElementById('dash-no-worker').style.display='none';
-  document.getElementById('dash-content').style.display='block';
-  await loadDashboardData(workerUrl);
+}
+
+// Acionado pelo botão "Importar dados"
+async function connectWorker() {
+  const url = document.getElementById('dash-worker-url').value.trim();
+  if (!url) { setHint('Informe o link das métricas.', 'err'); return; }
+  localStorage.setItem(CF_WORKER_KEY, url);
+  // limpa cache antigo para forçar nova importação
+  [7,30,90].forEach(d => { localStorage.removeItem(`cf_cache_${d}d`); localStorage.removeItem(`cf_cache_${d}d_ts`); });
+  setHint('Importando dados…');
+  await loadDashboardData(url);
+}
+
+function setHint(msg, type='') {
+  const el = document.getElementById('dash-source-hint');
+  if (!el) return;
+  el.textContent = msg;
+  el.className = 'dash-source-hint' + (type ? ' '+type : '');
 }
 
 async function loadDashboardData(workerUrl) {
@@ -926,9 +959,11 @@ async function refreshDash(workerUrl, cacheKey) {
     localStorage.setItem(cacheKey+'_ts', Date.now());
     renderDash(data);
     hideBanners();
+    setHint('✅ Dados importados de ' + workerUrl, 'ok');
   } catch {
     hideBanners();
     if (localStorage.getItem(cacheKey)) showBanner('error');
+    setHint('❌ Não foi possível importar do link. Verifique se está correto e online.', 'err');
   }
 }
 
