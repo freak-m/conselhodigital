@@ -177,7 +177,7 @@
     }
     .pill-tag .dot { width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 0 4px rgba(141,212,78,0.18); animation:pulse 2.4s ease-in-out infinite; }
     .hero-logo { height:120px; width:auto; max-width:100%; margin:28px 0 24px; display:block; filter:drop-shadow(0 6px 26px rgba(0,188,255,0.3)); }
-    .hero h1 { font-size:clamp(40px,5.4vw,68px); font-weight:700; margin-bottom:22px; }
+    .hero h1 { font-size:clamp(22px,2.8vw,36px); font-weight:700; margin-bottom:22px; }
     .hero h1 .grad { display:inline; }
     .hero-sub { font-size:clamp(16px,1.3vw,19px); color:var(--muted); max-width:480px; margin-bottom:36px; line-height:1.7; }
     .hero-actions { display:flex; gap:14px; flex-wrap:wrap; }
@@ -218,11 +218,12 @@
       content:''; position:absolute; width:240px; height:240px; right:-60px; top:-80px;
       background:radial-gradient(circle, rgba(0,221,208,0.35), transparent 65%); filter:blur(20px);
     }
-    .stat-grid { position:relative; z-index:2; display:grid; grid-template-columns:1fr 1fr; gap:14px 18px; }
-    .sg-item { display:flex; flex-direction:column; gap:3px; }
-    .sg-num { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:32px; line-height:1; background:var(--grad); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
-    .sg-ic { font-size:28px; line-height:1; }
-    .sg-lbl { font-size:12px; color:var(--muted); font-weight:500; }
+    .orb-center { position:relative; z-index:2; }
+    .orb-num { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:56px; line-height:1; background:var(--grad); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; transition:opacity .35s, transform .35s; }
+    .orb-ic  { font-size:52px; line-height:1; transition:opacity .35s, transform .35s; }
+    .orb-lbl { font-size:15px; color:var(--muted); margin-top:8px; font-weight:500; transition:opacity .35s, transform .35s; }
+    .orb-center.orb-out .orb-num,.orb-center.orb-out .orb-ic,.orb-center.orb-out .orb-lbl { opacity:0; transform:translateY(-10px); }
+    .orb-center.orb-in  .orb-num,.orb-center.orb-in  .orb-ic,.orb-center.orb-in  .orb-lbl { opacity:0; transform:translateY(10px); }
 
     .hx-badge-list { display:flex; flex-direction:column; gap:9px; }
     .hx-badge {
@@ -341,45 +342,133 @@
     .step p { color:var(--muted); font-size:14.5px; line-height:1.65; }
 
     /* ── PAINEL / ADMIN ── */
+    .panel-intro { max-width:680px; margin-bottom:40px; }
+    .panel-intro .feat-list { list-style:none; margin-top:24px; display:flex; flex-wrap:wrap; gap:14px 32px; }
+    .panel-intro .feat-list li { display:flex; gap:10px; align-items:center; }
+    .panel-intro .feat-ic {
+      width:36px; height:36px; border-radius:10px; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center; font-size:16px;
+      background:var(--surface-2); border:1px solid var(--border);
+    }
+    .panel-intro .feat-ic.b { color:var(--blue);  border-color:rgba(0,188,255,.35); }
+    .panel-intro .feat-ic.g { color:var(--green); border-color:rgba(141,212,78,.35); }
+    .panel-intro .feat-ic.v { color:var(--violet);border-color:rgba(139,92,246,.35); }
+    .panel-intro .feat-list h3 { font-size:15px; font-weight:600; margin:0; }
+    .panel-intro .panel-actions { margin-top:28px; }
+
+    /* dashboard mockup */
+    .pm-db {
+      border-radius:14px; overflow:hidden;
+      border:1px solid rgba(255,255,255,0.10); background:#0D1117;
+      box-shadow:0 24px 80px rgba(0,0,0,.5);
+      font-family:'Space Grotesk',sans-serif;
+    }
+    .pm-topbar {
+      display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+      padding:11px 18px; background:#0B0F15;
+      border-bottom:1px solid rgba(255,255,255,0.07);
+    }
+    .pm-brand { display:flex; align-items:center; gap:8px; font-weight:700; font-size:13px; color:#F38020; margin-right:4px; }
+    .pm-sel {
+      font-size:11.5px; padding:4px 10px; border-radius:6px;
+      border:1px solid rgba(255,255,255,0.12); color:#ccc; background:rgba(255,255,255,0.05);
+    }
+    .pm-live { display:flex; align-items:center; gap:5px; font-size:11px; color:#888; }
+    .pm-live-dot { width:6px; height:6px; border-radius:50%; background:#3B9EFF; animation:pmBlink 1.8s ease-in-out infinite; }
+    @keyframes pmBlink { 0%,100%{opacity:1} 50%{opacity:.25} }
+    .pm-tb-btns { margin-left:auto; display:flex; gap:8px; }
+    .pm-btn-sm {
+      font-size:11px; padding:5px 11px; border-radius:6px;
+      border:1px solid rgba(255,255,255,0.11); color:#bbb; background:rgba(255,255,255,0.04);
+    }
+    .pm-db-body { padding:14px; display:flex; flex-direction:column; gap:11px; }
+    /* kpi row */
+    .pm-kpi-row { display:grid; grid-template-columns:1fr 1fr; gap:11px; }
+    .pm-kpi-card {
+      background:#131920; border:1px solid rgba(255,255,255,0.07);
+      border-radius:10px; padding:14px 16px; overflow:hidden;
+    }
+    .pm-kpi-hd { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+    .pm-kpi-ttl { font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase; color:#666; }
+    .pm-badge-up { font-size:10.5px; font-weight:700; padding:2px 7px; border-radius:4px; background:rgba(40,200,64,0.15); color:#28C840; }
+    .pm-badge-dn { font-size:10.5px; font-weight:700; padding:2px 7px; border-radius:4px; background:rgba(255,60,60,0.15); color:#FF4444; }
+    .pm-kpi-n { font-size:38px; font-weight:700; line-height:1; color:#fff; margin-bottom:10px; }
+    .pm-spark { width:100%; height:38px; display:block; }
+    .pm-sn { display:flex; justify-content:space-between; margin-top:4px; }
+    .pm-sn span { font-size:9px; color:#555; }
+    /* mid row */
+    .pm-mid-row { display:grid; grid-template-columns:2fr 1fr; gap:11px; }
+    .pm-chart-card {
+      background:#131920; border:1px solid rgba(255,255,255,0.07);
+      border-radius:10px; padding:14px 16px;
+    }
+    .pm-ch-hd { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .pm-leg { display:flex; gap:12px; }
+    .pm-leg span { display:flex; align-items:center; gap:5px; font-size:9.5px; color:#888; }
+    .pm-leg-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+    /* grouped bars */
+    .pm-grp-bars { display:flex; align-items:flex-end; gap:6px; height:86px; }
+    .pm-grp { display:flex; flex-direction:column; align-items:center; flex:1; }
+    .pm-pair { display:flex; align-items:flex-end; gap:2px; height:72px; width:100%; }
+    .pm-bar-y { flex:1; background:#E5A800; border-radius:3px 3px 0 0; }
+    .pm-bar-b { flex:1; background:#3B9EFF; border-radius:3px 3px 0 0; }
+    .pm-grp-lbl { font-size:7.5px; color:#555; margin-top:4px; }
+    /* wa line */
+    .pm-wa-svg { width:100%; height:76px; display:block; }
+    /* bot row */
+    .pm-bot-row { display:grid; grid-template-columns:1fr 1fr 1.5fr; gap:11px; }
+    .pm-time-card,.pm-dev-card,.pm-ph-card {
+      background:#131920; border:1px solid rgba(255,255,255,0.07);
+      border-radius:10px; padding:14px 16px;
+    }
+    .pm-big-time { font-size:28px; font-weight:700; color:#E5A800; margin:5px 0 2px; }
+    .pm-big-time small { font-size:17px; }
+    .pm-avg-badge { font-size:9.5px; padding:2px 8px; border-radius:4px; background:rgba(255,255,255,0.07); color:#777; }
+    .pm-time-spark { width:100%; height:28px; display:block; margin-top:10px; }
+    .pm-dev-info { display:flex; gap:14px; margin:7px 0 10px; flex-wrap:wrap; }
+    .pm-dev-info span { font-size:10.5px; color:#888; display:flex; align-items:center; gap:5px; }
+    .pm-dev-info b { color:#ddd; }
+    .pm-donut-wrap { display:flex; justify-content:center; }
+    .pm-donut {
+      width:50px; height:50px; border-radius:50%;
+      background:conic-gradient(#3B9EFF 0% 92%, #E5A800 92% 100%);
+      display:flex; align-items:center; justify-content:center;
+    }
+    .pm-donut::after { content:''; width:30px; height:30px; border-radius:50%; background:#131920; }
+    .pm-ph-list { display:flex; flex-direction:column; gap:7px; margin-top:8px; }
+    .pm-ph-item { display:flex; align-items:center; gap:8px; }
+    .pm-ph-thumb { width:26px; height:26px; border-radius:4px; flex-shrink:0; }
+    .pm-ph-thumb.a{background:linear-gradient(135deg,#2d3a4a,#4a7a9b)}
+    .pm-ph-thumb.b{background:linear-gradient(135deg,#1a4a2e,#4CAF50)}
+    .pm-ph-thumb.c{background:linear-gradient(135deg,#4a3a1a,#C8933F)}
+    .pm-ph-thumb.d{background:linear-gradient(135deg,#4a1a1a,#C84848)}
+    .pm-ph-thumb.e{background:linear-gradient(135deg,#1a1a4a,#4848C8)}
+    .pm-ph-body { flex:1; min-width:0; }
+    .pm-ph-name { font-size:9.5px; color:#ccc; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:3px; }
+    .pm-ph-prog { height:3px; background:rgba(255,255,255,0.07); border-radius:2px; }
+    .pm-ph-fill { height:100%; background:#28C840; border-radius:2px; }
+    .pm-ph-n { font-size:10.5px; font-weight:700; color:#28C840; flex-shrink:0; }
+    @media(max-width:768px){
+      .pm-mid-row { grid-template-columns:1fr; }
+      .pm-bot-row { grid-template-columns:1fr 1fr; }
+      .pm-ph-card { grid-column:span 2; }
+    }
+    @media(max-width:520px){
+      .pm-kpi-row,.pm-bot-row { grid-template-columns:1fr; }
+      .pm-ph-card { grid-column:auto; }
+    }
+
+    /* ── SHARED PANEL GRID (SEO section) ── */
     .panel-grid { display:grid; grid-template-columns:1fr 1.05fr; gap:56px; align-items:center; }
     .panel-copy .feat-list { list-style:none; margin-top:30px; display:flex; flex-direction:column; gap:18px; }
     .panel-copy .feat-list li { display:flex; gap:14px; align-items:flex-start; }
-    .panel-copy .feat-ic {
-      width:42px; height:42px; border-radius:12px; flex-shrink:0;
-      display:flex; align-items:center; justify-content:center; font-size:19px;
-      background:var(--surface-2); border:1px solid var(--border);
-    }
+    .panel-copy .feat-ic { width:42px; height:42px; border-radius:12px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:19px; background:var(--surface-2); border:1px solid var(--border); }
     .panel-copy .feat-ic.b { color:var(--blue);  border-color:rgba(0,188,255,.35); }
     .panel-copy .feat-ic.g { color:var(--green); border-color:rgba(141,212,78,.35); }
     .panel-copy .feat-ic.v { color:var(--violet);border-color:rgba(139,92,246,.35); }
     .panel-copy .feat-list h3 { font-size:16.5px; font-weight:600; margin-bottom:3px; }
     .panel-copy .feat-list p { color:var(--muted); font-size:14.5px; line-height:1.6; }
     .panel-copy .panel-actions { margin-top:34px; }
-
-    /* mockup do painel (puro CSS) */
-    .panel-mock {
-      position:relative; border-radius:var(--r-lg); overflow:hidden;
-      border:1px solid var(--border-2); background:#0B1422;
-      box-shadow:var(--shadow);
-    }
-    .panel-mock::after {
-      content:''; position:absolute; width:300px; height:300px; right:-80px; top:-90px;
-      background:radial-gradient(circle, rgba(0,188,255,0.18), transparent 65%); filter:blur(20px); pointer-events:none;
-    }
-    .pm-bar { display:flex; align-items:center; gap:7px; padding:13px 16px; border-bottom:1px solid var(--border); background:rgba(255,255,255,0.02); }
-    .pm-dot { width:11px; height:11px; border-radius:50%; }
-    .pm-dot.r{background:#FF5F57}.pm-dot.y{background:#FEBC2E}.pm-dot.g{background:#28C840}
-    .pm-url { margin-left:12px; font-size:12px; color:var(--faint); font-family:'Space Grotesk',sans-serif; }
-    .pm-body { padding:18px; position:relative; z-index:1; }
-    .pm-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
-    .pm-stat { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:15px; }
-    .pm-stat .lbl { font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--faint); }
-    .pm-stat .num { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:30px; margin-top:4px; }
-    .pm-stat .num.b { color:var(--blue); } .pm-stat .num.t { color:var(--teal); }
-    .pm-chart { display:flex; align-items:flex-end; gap:8px; height:96px; padding:14px; background:var(--surface); border:1px solid var(--border); border-radius:14px; }
-    .pm-chart i { flex:1; border-radius:5px 5px 0 0; background:linear-gradient(180deg,var(--blue),rgba(0,188,255,.25)); animation:pmGrow .9s cubic-bezier(.16,1,.3,1) both; transform-origin:bottom; }
-    .pm-chart i:nth-child(even){ background:linear-gradient(180deg,var(--green),rgba(141,212,78,.25)); }
-    @keyframes pmGrow { from{transform:scaleY(0)} to{transform:scaleY(1)} }
 
     /* ── SEO / GOOGLE ── */
     .google-mock {
@@ -452,7 +541,7 @@
     }
     .foot-logo { display:flex; align-items:center; gap:10px; }
     .foot-logo img { height:30px; width:auto; }
-    .foot-logo span { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:17px; }
+    .foot-logo span { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:17px; color:var(--text); }
     .foot-logo span em { font-style:normal; color:var(--blue); }
     footer p { color:var(--muted); font-size:14px; }
 
@@ -496,7 +585,7 @@
     }
     @media (max-width:440px){
       .hero h1 { font-size:clamp(32px,9vw,42px); }
-      .sg-num { font-size:26px; } .sg-ic { font-size:22px; }
+      .orb-num { font-size:40px; } .orb-ic { font-size:38px; }
     }
 
     @media (prefers-reduced-motion: reduce){
@@ -606,12 +695,9 @@
   <!-- BENTO VISUAL -->
   <div class="hero-visual">
     <div class="hx-card hx-stat">
-      <div class="stat-grid" id="orbNum">
-        <div class="sg-item"><span class="sg-num">200+</span><span class="sg-lbl">Sites criados</span></div>
-        <div class="sg-item"><span class="sg-ic">✦</span><span class="sg-lbl">Novos Designs</span></div>
-        <div class="sg-item"><span class="sg-ic">⚡</span><span class="sg-lbl">Sites Animados</span></div>
-        <div class="sg-item"><span class="sg-ic">🎯</span><span class="sg-lbl">Focado em Venda</span></div>
-        <div class="sg-item"><span class="sg-ic">🚀</span><span class="sg-lbl">Lançamento Rápido</span></div>
+      <div class="orb-center" id="orbCenter">
+        <div class="orb-num" id="orbNum">200+</div>
+        <div class="orb-lbl" id="orbLbl">Sites criados</div>
       </div>
     </div>
     <div class="hx-card hx-badges">
@@ -738,45 +824,114 @@
 <!-- ── PAINEL / ADMIN ── -->
 <section class="section" id="painel">
   <div class="container">
-    <div class="panel-grid">
-      <div class="panel-copy rv">
-        <span class="s-tag">Bônus exclusivo</span>
-        <h2>Seu site com <span class="grad">painel próprio</span>.</h2>
-        <p class="section-sub">Todo site que entregamos vem com um painel de administração simples. Você edita textos, imagens e seções quando quiser — e ainda acompanha as métricas de visitas em tempo real.</p>
-        <ul class="feat-list">
-          <li>
-            <div class="feat-ic b">✏️</div>
-            <div><h3>Edite você mesmo</h3><p>Troque textos, imagens e seções sem depender de ninguém, com pré-visualização ao vivo.</p></div>
-          </li>
-          <li>
-            <div class="feat-ic g">📊</div>
-            <div><h3>Métricas em tempo real</h3><p>Veja visitas, páginas mais acessadas, dispositivos e cliques no WhatsApp.</p></div>
-          </li>
-          <li>
-            <div class="feat-ic v">🔒</div>
-            <div><h3>Acesso seguro</h3><p>Login protegido só para você — publique as mudanças com um clique.</p></div>
-          </li>
-        </ul>
-        <div class="panel-actions">
-          <a href="#contato" class="btn btn-primary">Quero meu site com painel
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
+    <div class="panel-intro rv">
+      <span class="s-tag">Bônus exclusivo</span>
+      <h2>Seu site com <span class="grad">painel próprio</span>.</h2>
+      <p class="section-sub">Todo site que entregamos vem com um painel de administração simples. Você edita textos, imagens e seções quando quiser — e ainda acompanha as métricas de visitas em tempo real.</p>
+      <ul class="feat-list">
+        <li><div class="feat-ic b">✏️</div><h3>Edite você mesmo</h3></li>
+        <li><div class="feat-ic g">📊</div><h3>Métricas em tempo real</h3></li>
+        <li><div class="feat-ic v">🔒</div><h3>Acesso seguro</h3></li>
+      </ul>
+      <div class="panel-actions">
+        <a href="#contato" class="btn btn-primary">Quero meu site com painel
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="pm-db rv d1" aria-hidden="true">
+      <div class="pm-topbar">
+        <div class="pm-brand">
+          <svg width="15" height="15" viewBox="0 0 100 100" fill="#F38020"><path d="M68.5,44.5c-1.4-9.9-10.1-17.5-20.5-17.5c-9,0-16.8,5.3-20.4,13c-6.5,0.9-11.6,6.5-11.6,13.3c0,7.4,6,13.5,13.5,13.5h37.5c6.2,0,11.2-5,11.2-11.2C78.2,49.7,74,45.1,68.5,44.5z"/></svg>
+          Cloudflare Metrics
+        </div>
+        <div class="pm-sel">Últimos 7 dias ▾</div>
+        <div class="pm-live"><span class="pm-live-dot"></span>verificando...</div>
+        <div class="pm-tb-btns">
+          <span class="pm-btn-sm">↻ Atualizar</span>
+          <span class="pm-btn-sm">⚙ Reconfigurar</span>
         </div>
       </div>
-
-      <div class="panel-mock rv d1" aria-hidden="true">
-        <div class="pm-bar">
-          <span class="pm-dot r"></span><span class="pm-dot y"></span><span class="pm-dot g"></span>
-          <span class="pm-url">seusite.com/admin</span>
-        </div>
-        <div class="pm-body">
-          <div class="pm-row">
-            <div class="pm-stat"><div class="lbl">Total Visitas</div><div class="num b">467</div></div>
-            <div class="pm-stat"><div class="lbl">Page Views</div><div class="num t">329</div></div>
+      <div class="pm-db-body">
+        <div class="pm-kpi-row">
+          <div class="pm-kpi-card">
+            <div class="pm-kpi-hd"><span class="pm-kpi-ttl">Total Visitas</span><span class="pm-badge-up">↑119%</span></div>
+            <div class="pm-kpi-n">474</div>
+            <svg class="pm-spark" viewBox="0 0 140 38" preserveAspectRatio="none">
+              <defs><linearGradient id="yg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E5A800" stop-opacity=".3"/><stop offset="100%" stop-color="#E5A800" stop-opacity="0"/></linearGradient></defs>
+              <polygon points="0,30 20,36 47,26 70,2 93,22 116,14 140,20 140,38 0,38" fill="url(#yg)"/>
+              <polyline points="0,30 20,36 47,26 70,2 93,22 116,14 140,20" fill="none" stroke="#E5A800" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+            <div class="pm-sn"><span>58</span><span>31</span><span>59</span><span>126</span><span>62</span><span>77</span><span>61</span></div>
           </div>
-          <div class="pm-chart">
-            <i style="height:55%"></i><i style="height:34%"></i><i style="height:62%"></i>
-            <i style="height:100%"></i><i style="height:48%"></i><i style="height:78%"></i><i style="height:58%"></i>
+          <div class="pm-kpi-card">
+            <div class="pm-kpi-hd"><span class="pm-kpi-ttl">Page Views</span><span class="pm-badge-dn">↓18%</span></div>
+            <div class="pm-kpi-n">338</div>
+            <svg class="pm-spark" viewBox="0 0 140 38" preserveAspectRatio="none">
+              <defs><linearGradient id="bg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3B9EFF" stop-opacity=".25"/><stop offset="100%" stop-color="#3B9EFF" stop-opacity="0"/></linearGradient></defs>
+              <polygon points="0,24 20,36 47,29 70,16 93,35 116,12 140,8 140,38 0,38" fill="url(#bg2)"/>
+              <polyline points="0,24 20,36 47,29 70,16 93,35 116,12 140,8" fill="none" stroke="#3B9EFF" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+            <div class="pm-sn"><span>51</span><span>18</span><span>39</span><span>64</span><span>22</span><span>71</span><span>73</span></div>
+          </div>
+        </div>
+        <div class="pm-mid-row">
+          <div class="pm-chart-card">
+            <div class="pm-ch-hd">
+              <span class="pm-kpi-ttl">Visitas por Dia</span>
+              <div class="pm-leg">
+                <span><span class="pm-leg-dot" style="background:#E5A800"></span>Visitas únicas</span>
+                <span><span class="pm-leg-dot" style="background:#3B9EFF"></span>Page Views</span>
+              </div>
+            </div>
+            <div class="pm-grp-bars">
+              <div class="pm-grp"><div class="pm-pair"><div class="pm-bar-y" style="height:46%"></div><div class="pm-bar-b" style="height:41%"></div></div><span class="pm-grp-lbl">06/05</span></div>
+              <div class="pm-grp"><div class="pm-pair"><div class="pm-bar-y" style="height:25%"></div><div class="pm-bar-b" style="height:14%"></div></div><span class="pm-grp-lbl">06/06</span></div>
+              <div class="pm-grp"><div class="pm-pair"><div class="pm-bar-y" style="height:47%"></div><div class="pm-bar-b" style="height:31%"></div></div><span class="pm-grp-lbl">06/07</span></div>
+              <div class="pm-grp"><div class="pm-pair"><div class="pm-bar-y" style="height:100%"></div><div class="pm-bar-b" style="height:51%"></div></div><span class="pm-grp-lbl">06/08</span></div>
+              <div class="pm-grp"><div class="pm-pair"><div class="pm-bar-y" style="height:49%"></div><div class="pm-bar-b" style="height:17%"></div></div><span class="pm-grp-lbl">06/09</span></div>
+              <div class="pm-grp"><div class="pm-pair"><div class="pm-bar-y" style="height:61%"></div><div class="pm-bar-b" style="height:56%"></div></div><span class="pm-grp-lbl">06/10</span></div>
+              <div class="pm-grp"><div class="pm-pair"><div class="pm-bar-y" style="height:48%"></div><div class="pm-bar-b" style="height:58%"></div></div><span class="pm-grp-lbl">06/11</span></div>
+            </div>
+          </div>
+          <div class="pm-chart-card">
+            <div class="pm-ch-hd"><span class="pm-kpi-ttl">Cliques WhatsApp / Dia</span></div>
+            <svg class="pm-wa-svg" viewBox="0 0 120 76" preserveAspectRatio="none">
+              <defs><linearGradient id="wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#28C840" stop-opacity=".3"/><stop offset="100%" stop-color="#28C840" stop-opacity="0"/></linearGradient></defs>
+              <polygon points="0,72 20,72 40,72 60,72 80,72 100,24 120,4 120,76 0,76" fill="url(#wg)"/>
+              <polyline points="0,72 20,72 40,72 60,72 80,72 100,24 120,4" fill="none" stroke="#28C840" stroke-width="1.5" stroke-linejoin="round"/>
+              <circle cx="120" cy="4" r="3" fill="#28C840"/>
+              <text x="114" y="2" font-size="9" fill="#28C840" text-anchor="middle">8</text>
+            </svg>
+          </div>
+        </div>
+        <div class="pm-bot-row">
+          <div class="pm-time-card">
+            <div class="pm-kpi-ttl">Tempo na Página</div>
+            <div class="pm-big-time">2m <small>50s</small></div>
+            <span class="pm-avg-badge">média</span>
+            <svg class="pm-time-spark" viewBox="0 0 120 28" preserveAspectRatio="none">
+              <polyline points="0,26 20,24 40,22 60,18 80,14 100,10 120,4" fill="none" stroke="#E5A800" stroke-width="1.2" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="pm-dev-card">
+            <div class="pm-kpi-ttl">Dispositivos</div>
+            <div class="pm-dev-info">
+              <span><span class="pm-leg-dot" style="background:#3B9EFF"></span>Desktop <b>1.5k</b></span>
+              <span><span class="pm-leg-dot" style="background:#E5A800"></span>Mobile <b>131</b></span>
+            </div>
+            <div class="pm-donut-wrap"><div class="pm-donut"></div></div>
+          </div>
+          <div class="pm-ph-card">
+            <div class="pm-kpi-ttl">Fotos mais clicadas</div>
+            <div class="pm-ph-list">
+              <div class="pm-ph-item"><div class="pm-ph-thumb a"></div><div class="pm-ph-body"><div class="pm-ph-name">Foto Principal</div><div class="pm-ph-prog"><div class="pm-ph-fill" style="width:100%"></div></div></div><span class="pm-ph-n">12</span></div>
+              <div class="pm-ph-item"><div class="pm-ph-thumb b"></div><div class="pm-ph-body"><div class="pm-ph-name">Portfólio 1</div><div class="pm-ph-prog"><div class="pm-ph-fill" style="width:66%"></div></div></div><span class="pm-ph-n">8</span></div>
+              <div class="pm-ph-item"><div class="pm-ph-thumb c"></div><div class="pm-ph-body"><div class="pm-ph-name">Portfólio 2</div><div class="pm-ph-prog"><div class="pm-ph-fill" style="width:50%"></div></div></div><span class="pm-ph-n">6</span></div>
+              <div class="pm-ph-item"><div class="pm-ph-thumb d"></div><div class="pm-ph-body"><div class="pm-ph-name">Portfólio 3</div><div class="pm-ph-prog"><div class="pm-ph-fill" style="width:33%"></div></div></div><span class="pm-ph-n">4</span></div>
+              <div class="pm-ph-item"><div class="pm-ph-thumb e"></div><div class="pm-ph-body"><div class="pm-ph-name">Portfólio 4</div><div class="pm-ph-prog"><div class="pm-ph-fill" style="width:16%"></div></div></div><span class="pm-ph-n">2</span></div>
+            </div>
           </div>
         </div>
       </div>
@@ -916,6 +1071,35 @@ addItems(document.getElementById('ring2'), [
   {label:'SEO & Conteúdo',     color:'#8B5CF6'},
 ]);
 
+
+/* ── STAT CYCLE ── */
+(function statCycle() {
+  const slides = [
+    {cls:'orb-num', val:'200+', lbl:'Sites criados'},
+    {cls:'orb-ic',  val:'⚡',   lbl:'Sites Animados'},
+    {cls:'orb-ic',  val:'🚀',   lbl:'Lançamento Rápido'},
+    {cls:'orb-ic',  val:'🎯',   lbl:'Focado em Venda'},
+    {cls:'orb-ic',  val:'✦',   lbl:'Novos Designs'},
+  ];
+  const center = document.getElementById('orbCenter');
+  const numEl  = document.getElementById('orbNum');
+  const lblEl  = document.getElementById('orbLbl');
+  if (!center || !numEl || !lblEl) return;
+  let idx = 0;
+  setInterval(() => {
+    center.classList.add('orb-out');
+    setTimeout(() => {
+      idx = (idx + 1) % slides.length;
+      const s = slides[idx];
+      numEl.className  = s.cls;
+      numEl.textContent = s.val;
+      lblEl.textContent = s.lbl;
+      center.classList.remove('orb-out');
+      center.classList.add('orb-in');
+      requestAnimationFrame(() => requestAnimationFrame(() => center.classList.remove('orb-in')));
+    }, 350);
+  }, 2800);
+})();
 
 /* ── MARQUEE ── */
 (function setupMarquee() {
