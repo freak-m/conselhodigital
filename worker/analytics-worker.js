@@ -10,7 +10,7 @@
  *   CF_ZONE_ID    (secret) — Zone ID de conselhodigital.com
  *
  * ── KV Binding ──
- *   KVconselhodigital — KV namespace para eventos customizados (wa, photo, time)
+ *   analytics  — KV binding (variable name) para o namespace KVconselhodigital
  *
  * ── CORS ──
  *   Aceita requisições de conselhodigital.com (admin e landing page)
@@ -131,36 +131,36 @@ async function fetchAnalytics(env, days) {
 
 /* ── KV: eventos customizados da landing page ── */
 async function recordEvent(env, type, value) {
-  if (!env.KVconselhodigital) return;
+  if (!env.analytics) return;
   if (!['wa', 'photo', 'time'].includes(type)) return;
 
   if (type === 'time') {
     // Guarda soma e contagem para calcular média
     const [rawSum, rawCnt] = await Promise.all([
-      env.KVconselhodigital.get('time_sum'),
-      env.KVconselhodigital.get('time_count'),
+      env.analytics.get('time_sum'),
+      env.analytics.get('time_count'),
     ]);
     const sum = parseFloat(rawSum || '0') + Math.max(0, parseFloat(value) || 0);
     const cnt = parseInt(rawCnt || '0', 10) + 1;
     await Promise.all([
-      env.KVconselhodigital.put('time_sum', String(sum)),
-      env.KVconselhodigital.put('time_count', String(cnt)),
+      env.analytics.put('time_sum', String(sum)),
+      env.analytics.put('time_count', String(cnt)),
     ]);
   } else {
     const key = `evt_${type}`;
-    const cur = parseInt(await env.KVconselhodigital.get(key) || '0', 10);
-    await env.KVconselhodigital.put(key, String(cur + 1));
+    const cur = parseInt(await env.analytics.get(key) || '0', 10);
+    await env.analytics.put(key, String(cur + 1));
   }
 }
 
 async function readEvents(env) {
-  if (!env.KVconselhodigital) return { wa: 0, photo: 0, avg_time: 0 };
+  if (!env.analytics) return { wa: 0, photo: 0, avg_time: 0 };
 
   const [wa, photo, timeSum, timeCnt] = await Promise.all([
-    env.KVconselhodigital.get('evt_wa'),
-    env.KVconselhodigital.get('evt_photo'),
-    env.KVconselhodigital.get('time_sum'),
-    env.KVconselhodigital.get('time_count'),
+    env.analytics.get('evt_wa'),
+    env.analytics.get('evt_photo'),
+    env.analytics.get('time_sum'),
+    env.analytics.get('time_count'),
   ]);
 
   const cnt = parseInt(timeCnt || '0', 10);

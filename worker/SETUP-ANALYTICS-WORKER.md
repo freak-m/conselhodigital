@@ -31,13 +31,14 @@ No Worker → **Settings** → **Variables and Secrets**:
 
 ## 3. KV Binding
 
-No Worker → **Settings** → **KV Namespace Bindings** → **Add**:
+No Worker → **Bindings** → **Add binding** → **KV namespace**:
 
 | Variable name | KV Namespace |
 |---|---|
-| `KVconselhodigital` | `KVconselhodigital` (o que você já criou) |
+| `analytics` | `KVconselhodigital` |
 
-> O **Variable name** deve ser exatamente `KVconselhodigital` (igual ao nome do KV que você criou).
+> ✅ Já está configurado: o **Variable name** é `analytics` e aponta para o namespace `KVconselhodigital`.
+> O código usa `env.analytics`.
 
 ---
 
