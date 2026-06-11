@@ -1,0 +1,91 @@
+{
+  "seo": {
+    "title": "Conselho Digital — Websites que Transformam Negócios",
+    "description": "Seu website pronto, feito rápido, com criatividade e pronto pra vender sua empresa online.",
+    "keywords": "criação de sites, wordpress, design web, landing page, e-commerce",
+    "og_image": ""
+  },
+  "hero": {
+    "tag": "Agência de Criação de Websites",
+    "subtitle": "Seu website pronto, feito rápido, com criatividade e pronto pra vender sua empresa online.",
+    "cta_primary_text": "Solicitar Orçamento →",
+    "cta_primary_url": "#contato",
+    "cta_secondary_text": "Ver Portfólio",
+    "cta_secondary_url": "#portfolio"
+  },
+  "stats": [
+    {"num": "200+", "lbl": "Sites criados"},
+    {"num": "✦",    "lbl": "Novos Designs"},
+    {"num": "⚡",   "lbl": "Sites Animados"},
+    {"num": "🎯",   "lbl": "Focado em Venda"},
+    {"num": "🚀",   "lbl": "Lançamento Rápido"}
+  ],
+  "orbital_badges": [
+    {"label": "Segurança proativa", "color": "#00bcff"},
+    {"label": "Descobrir",          "color": "#00DDD0"},
+    {"label": "Design",             "color": "#8DD44E"},
+    {"label": "Desenvolver",        "color": "#8B5CF6"},
+    {"label": "Lançar",             "color": "#F59E0B"}
+  ],
+  "marquee": ["WordPress","Elementor","Yoast SEO","Cloudflare","PHP 8","MySQL","CSS"],
+  "services": {
+    "tag": "O que fazemos",
+    "title": "Tudo que seu site precisa",
+    "items": [
+      {"icon": "🎨", "color": "b", "title": "Design Personalizado",  "desc": "Layouts desenvolvidos à mão e ajustados à identidade da sua marca — únicos, modernos e memoráveis."},
+      {"icon": "🔍", "color": "t", "title": "SEO & Conteúdo",        "desc": "Estrutura otimizada para o Google, conteúdo estratégico que atrai visitantes qualificados organicamente."},
+      {"icon": "⚡", "color": "g", "title": "Performance",            "desc": "sites ultrarrápidos que não percam clientes."}
+    ]
+  },
+  "benefits": {
+    "tag": "Manutenção Contínua",
+    "title": "Seu site sempre rápido, seguro e no ar.",
+    "subtitle": "Um site sem manutenção é um problema esperando para acontecer. Cuidamos de tudo para você focar no que importa: o seu negócio.",
+    "items": [
+      {"title": "Segurança proativa",   "desc": "Firewall, bloqueio de bots, varredura de malware e proteção contra brute-force."},
+      {"title": "Monitoramento 24/7",  "desc": "Alertas instantâneos se o site sair do ar — respondemos antes de você notar."},
+      {"title": "Suporte humano",      "desc": "Time dedicado por WhatsApp e e-mail, com SLA de resposta de até 4 horas úteis."},
+      {"title": "Relatório mensal",    "desc": "Resumo claro de uptime, performance, segurança e visitas do período."},
+      {"title": "Pequenas alterações", "desc": "Trocas de texto, imagens e ajustes pontuais por um pequeno preço."}
+    ]
+  },
+  "portfolio": {
+    "tag": "Trabalhos recentes",
+    "title": "Sites que lançamos recentemente",
+    "items": [
+      {"category": "E-commerce",        "title": "Nome do Projeto 1", "image": "", "bg": "linear-gradient(135deg,#071829 0%,#0E4D8C 100%)", "span2": true},
+      {"category": "Landing Page",      "title": "Nome do Projeto 2", "image": "", "bg": "linear-gradient(135deg,#071020 0%,#00C4B4 100%)", "span2": false},
+      {"category": "Site Institucional","title": "Nome do Projeto 3", "image": "", "bg": "linear-gradient(135deg,#061408 0%,#7DC241 100%)", "span2": false},
+      {"category": "Blog",              "title": "Nome do Projeto 4", "image": "", "bg": "linear-gradient(135deg,#130820 0%,#8B5CF6 100%)", "span2": true}
+    ]
+  },
+  "process": {
+    "tag": "Como trabalhamos",
+    "title": "Do briefing ao lançamento em 4 semanas",
+    "subtitle": "Processo claro e sem surpresas — você acompanha cada etapa.",
+    "steps": [
+      {"title": "Descobrir",    "desc": "Mergulhamos na sua marca, público e objetivos de negócio para construir a estratégia certa."},
+      {"title": "Design",      "desc": "Protótipos pixel-perfect no Figma, refinados até você amar cada detalhe antes de codar."},
+      {"title": "Desenvolver", "desc": "Código WordPress limpo e personalizado — sem plugins desnecessários, leve e seguro."},
+      {"title": "Lançar",      "desc": "Deploy otimizado, treinamento completo e plano de manutenção para crescer sem preocupações."}
+    ]
+  },
+  "cta": {
+    "tag": "Pronto para começar?",
+    "title": "Pronto para lançar um site do qual você se orgulha?",
+    "subtitle": "Agende uma conversa gratuita de 30 minutos. Sem compromisso, sem enrolação.",
+    "cta_primary_text": "Solicitar Orçamento Grátis →",
+    "cta_primary_url": "#",
+    "cta_secondary_text": "Falar no WhatsApp",
+    "cta_secondary_url": "#"
+  },
+  "footer": {
+    "text": "© 2025 Conselho Digital. Todos os direitos reservados."
+  },
+  "integrations": {
+    "google_analytics": "",
+    "meta_pixel": "",
+    "meta_verify": "",
+    "worker_url": ""
+  }
+}

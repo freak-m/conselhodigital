@@ -712,16 +712,16 @@
   <div class="hero-glow-3"></div>
   <!-- LEFT TOP: tag + logo -->
   <div class="hero-top">
-    <div class="hero-tag"><span class="tag-dot"></span>Agência de Criação de Websites</div>
+    <div class="hero-tag"><span class="tag-dot"></span><span id="hero-tag-text">Agência de Criação de Websites</span></div>
     <img src="meus/Completo.webp" alt="Conselho Digital" class="hero-brand-logo">
   </div>
 
   <!-- LEFT BOTTOM: subtitle + buttons -->
   <div class="hero-bottom">
-    <p>Seu website pronto, feito rápido, com criatividade e pronto pra vender sua empresa online.</p>
+    <p id="hero-subtitle">Seu website pronto, feito rápido, com criatividade e pronto pra vender sua empresa online.</p>
     <div class="hero-btns">
-      <a href="#contato" class="btn btn-green">Solicitar Orçamento →</a>
-      <a href="#portfolio" class="btn btn-ghost">Ver Portfólio</a>
+      <a id="hero-cta-primary" href="#contato" class="btn btn-green">Solicitar Orçamento →</a>
+      <a id="hero-cta-secondary" href="#portfolio" class="btn btn-ghost">Ver Portfólio</a>
     </div>
   </div>
 
@@ -764,12 +764,12 @@
   <div class="container">
     <div class="sec-row rv">
       <div>
-        <span class="s-tag">O que fazemos</span>
-        <h2>Tudo que seu site precisa</h2>
+        <span class="s-tag" id="svc-tag">O que fazemos</span>
+        <h2 id="svc-title">Tudo que seu site precisa</h2>
       </div>
       <a href="#contato" class="btn btn-ghost btn-sm rv">Ver todos →</a>
     </div>
-    <div class="svc-grid">
+    <div class="svc-grid" id="svc-grid">
       <div class="svc-card rv">
         <div class="svc-sym b">🎨</div>
         <h3>Design Personalizado</h3>
@@ -793,11 +793,11 @@
 <section class="section benefits-section" id="beneficios">
   <div class="container">
     <div class="ben-intro rv">
-      <span class="s-tag">Manutenção Contínua</span>
-      <h2>Seu site sempre rápido, seguro e no ar.</h2>
-      <p class="section-sub">Um site sem manutenção é um problema esperando para acontecer. Cuidamos de tudo para você focar no que importa: o seu negócio.</p>
+      <span class="s-tag" id="ben-tag">Manutenção Contínua</span>
+      <h2 id="ben-title">Seu site sempre rápido, seguro e no ar.</h2>
+      <p class="section-sub" id="ben-subtitle">Um site sem manutenção é um problema esperando para acontecer. Cuidamos de tudo para você focar no que importa: o seu negócio.</p>
     </div>
-    <div class="ben-grid">
+    <div class="ben-grid" id="ben-grid">
       <div class="ben-card rv">
         <div class="ben-check">✓</div>
         <h3>Segurança proativa</h3>
@@ -832,12 +832,12 @@
   <div class="container">
     <div class="sec-row">
       <div class="rv">
-        <span class="s-tag">Trabalhos recentes</span>
-        <h2>Sites que lançamos recentemente</h2>
+        <span class="s-tag" id="port-tag">Trabalhos recentes</span>
+        <h2 id="port-title">Sites que lançamos recentemente</h2>
       </div>
       <a href="#contato" class="btn btn-ghost btn-sm rv">Ver portfólio completo →</a>
     </div>
-    <div class="gallery-grid">
+    <div class="gallery-grid" id="port-grid">
       <div class="pj span2 rv">
         <div class="pj-inner">
           <div class="pj-bg" style="background:linear-gradient(135deg,#071829 0%,#0E4D8C 100%)"></div>
@@ -874,11 +874,11 @@
 <section class="section process-section" id="processo">
   <div class="container">
     <div class="process-intro rv">
-      <span class="s-tag">Como trabalhamos</span>
-      <h2>Do briefing ao lançamento em <span class="grad">4 semanas</span></h2>
-      <p class="section-sub">Processo claro e sem surpresas — você acompanha cada etapa.</p>
+      <span class="s-tag" id="proc-tag">Como trabalhamos</span>
+      <h2 id="proc-title">Do briefing ao lançamento em <span class="grad">4 semanas</span></h2>
+      <p class="section-sub" id="proc-subtitle">Processo claro e sem surpresas — você acompanha cada etapa.</p>
     </div>
-    <div class="process-grid">
+    <div class="process-grid" id="proc-grid">
       <div class="step rv">
         <div class="step-num">01</div>
         <h3>Descobrir</h3>
@@ -908,12 +908,12 @@
   <div class="container">
     <div class="cta-box rv zi">
       <div class="cta-inner">
-        <span class="s-tag">Pronto para começar?</span>
-        <h2>Pronto para lançar um site<br>do qual você se orgulha?</h2>
-        <p>Agende uma conversa gratuita de 30 minutos. Sem compromisso, sem enrolação.</p>
+        <span class="s-tag" id="cta-tag">Pronto para começar?</span>
+        <h2 id="cta-title">Pronto para lançar um site<br>do qual você se orgulha?</h2>
+        <p id="cta-subtitle">Agende uma conversa gratuita de 30 minutos. Sem compromisso, sem enrolação.</p>
         <div class="cta-btns">
-          <a href="#" class="btn btn-green">Solicitar Orçamento Grátis →</a>
-          <a href="#" class="btn btn-ghost">Falar no WhatsApp</a>
+          <a id="cta-btn-primary" href="#" class="btn btn-green">Solicitar Orçamento Grátis →</a>
+          <a id="cta-btn-secondary" href="#" class="btn btn-ghost">Falar no WhatsApp</a>
         </div>
       </div>
     </div>
@@ -922,7 +922,7 @@
 
 <!-- ── FOOTER ── -->
 <footer>
-  <p>© 2025 Conselho Digital. Todos os direitos reservados.</p>
+  <p id="footer-text">© 2025 Conselho Digital. Todos os direitos reservados.</p>
 </footer>
 
 <!-- ── COOKIE BANNER ── -->
@@ -1037,6 +1037,108 @@ rvEls.forEach(el => io.observe(el));
   ).join('');
   track.innerHTML = html;
 })();
+
+/* ── DYNAMIC CONTENT ── */
+const COLORS = ['b','t','g','p'];
+function applyContent(c) {
+  if (!c) return;
+  if (c.seo) {
+    if (c.seo.title) document.title = c.seo.title;
+    const md = document.querySelector('meta[name="description"]');
+    if (md && c.seo.description) md.setAttribute('content', c.seo.description);
+  }
+  if (c.integrations) {
+    if (c.integrations.google_analytics) injectGA(c.integrations.google_analytics);
+    if (c.integrations.meta_pixel)       injectPixel(c.integrations.meta_pixel);
+    if (c.integrations.meta_verify) {
+      let mv = document.querySelector('meta[name="facebook-domain-verification"]');
+      if (!mv) { mv = document.createElement('meta'); mv.name='facebook-domain-verification'; document.head.appendChild(mv); }
+      mv.setAttribute('content', c.integrations.meta_verify);
+    }
+  }
+  if (c.hero) {
+    setText('hero-tag-text',     c.hero.tag);
+    setText('hero-subtitle',     c.hero.subtitle);
+    setLink('hero-cta-primary',  c.hero.cta_primary_url,  c.hero.cta_primary_text);
+    setLink('hero-cta-secondary',c.hero.cta_secondary_url,c.hero.cta_secondary_text);
+  }
+  if (c.orbital_badges && c.orbital_badges.length) {
+    const r2 = document.getElementById('ring2');
+    if (r2) { r2.innerHTML = ''; addItems(r2, c.orbital_badges, 162); }
+  }
+  if (c.marquee && c.marquee.length) {
+    const track = document.getElementById('marquee');
+    if (track) {
+      const items = [...c.marquee,...c.marquee,...c.marquee];
+      track.innerHTML = items.map(it=>`<span class="marquee-item">${it}<span class="marquee-sep">✦</span></span>`).join('');
+    }
+  }
+  if (c.services) {
+    setText('svc-tag',   c.services.tag);
+    setText('svc-title', c.services.title);
+    const g = document.getElementById('svc-grid');
+    if (g && c.services.items) g.innerHTML = c.services.items.map((s,i)=>`
+      <div class="svc-card rv${i?' d'+(i-1):''}"><div class="svc-sym ${s.color||COLORS[i%4]}">${s.icon}</div><h3>${s.title}</h3><p>${s.desc}</p></div>`).join('');
+  }
+  if (c.benefits) {
+    setText('ben-tag',     c.benefits.tag);
+    setText('ben-title',   c.benefits.title);
+    setText('ben-subtitle',c.benefits.subtitle);
+    const g = document.getElementById('ben-grid');
+    if (g && c.benefits.items) g.innerHTML = c.benefits.items.map((b,i)=>`
+      <div class="ben-card rv${i?' d'+(i-1):''}"><div class="ben-check">✓</div><h3>${b.title}</h3><p>${b.desc}</p></div>`).join('');
+  }
+  if (c.portfolio) {
+    setText('port-tag',  c.portfolio.tag);
+    setText('port-title',c.portfolio.title);
+    const g = document.getElementById('port-grid');
+    if (g && c.portfolio.items) g.innerHTML = c.portfolio.items.map((p,i)=>`
+      <div class="pj${p.span2?' span2':''} rv${i?' d'+(Math.min(i,2)):''}">
+        <div class="pj-inner">
+          ${p.image?`<img src="${p.image}" class="pj-bg" style="object-fit:cover;width:100%;height:100%">`:
+            `<div class="pj-bg" style="background:${p.bg}"></div><div class="pj-ph"><span class="pj-ph-icon">🖥</span><span class="pj-ph-txt">Adicione screenshot</span></div>`}
+          <div class="pj-overlay"><div class="pj-cat">${p.category}</div><div class="pj-title">${p.title}</div></div>
+        </div>
+      </div>`).join('');
+  }
+  if (c.process) {
+    setText('proc-tag',     c.process.tag);
+    setText('proc-subtitle',c.process.subtitle);
+    const pt = document.getElementById('proc-title');
+    if (pt) pt.textContent = c.process.title;
+    const g = document.getElementById('proc-grid');
+    if (g && c.process.steps) g.innerHTML = c.process.steps.map((s,i)=>`
+      <div class="step rv${i?' d'+(i-1):''}"><div class="step-num">0${i+1}</div><h3>${s.title}</h3><p>${s.desc}</p></div>`).join('');
+  }
+  if (c.cta) {
+    setText('cta-tag',      c.cta.tag);
+    setText('cta-title',    c.cta.title);
+    setText('cta-subtitle', c.cta.subtitle);
+    setLink('cta-btn-primary',  c.cta.cta_primary_url,  c.cta.cta_primary_text);
+    setLink('cta-btn-secondary',c.cta.cta_secondary_url,c.cta.cta_secondary_text);
+  }
+  if (c.footer) setText('footer-text', c.footer.text);
+}
+function setText(id, val) { const el=document.getElementById(id); if(el&&val!=null) el.textContent=val; }
+function setLink(id, href, text) {
+  const el=document.getElementById(id); if(!el) return;
+  if(href!=null) el.href=href; if(text!=null) el.textContent=text;
+}
+function injectGA(id) {
+  if (!id||document.getElementById('ga-script')) return;
+  const s=document.createElement('script'); s.id='ga-script'; s.async=true;
+  s.src=`https://www.googletagmanager.com/gtag/js?id=${id}`; document.head.appendChild(s);
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){dataLayer.push(arguments);} gtag('js',new Date()); gtag('config',id);
+}
+function injectPixel(id) {
+  if (!id||document.getElementById('fb-pixel')) return;
+  const s=document.createElement('script'); s.id='fb-pixel';
+  s.text=`!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${id}');fbq('track','PageView');`;
+  document.head.appendChild(s);
+}
+window.addEventListener('message', e => { if(e.data&&e.data.type==='preview') applyContent(e.data.content); });
+fetch('/content.json').then(r=>r.json()).then(applyContent).catch(()=>{});
 
 /* ── COOKIE BANNER ── */
 (function cookieConsent() {
