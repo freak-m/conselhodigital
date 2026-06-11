@@ -385,6 +385,46 @@
     .pm-chart i:nth-child(even){ background:linear-gradient(180deg,var(--green),rgba(141,212,78,.25)); }
     @keyframes pmGrow { from{transform:scaleY(0)} to{transform:scaleY(1)} }
 
+    /* ── SEO / GOOGLE ── */
+    .google-mock {
+      background:#fff; border-radius:18px; padding:24px 22px;
+      box-shadow:var(--shadow); color:#202124;
+      font-family:'Inter',Arial,sans-serif; position:relative; overflow:hidden;
+    }
+    .gm-bar {
+      display:flex; align-items:center; gap:12px;
+      border:1px solid #dfe1e5; border-radius:999px; padding:11px 18px;
+      box-shadow:0 1px 5px rgba(32,33,36,.10);
+    }
+    .gm-glogo { font-weight:700; font-size:16px; letter-spacing:-.5px; flex-shrink:0; }
+    .gm-glogo .b{color:#4285F4}.gm-glogo .r{color:#EA4335}.gm-glogo .y{color:#FBBC05}.gm-glogo .g{color:#34A853}
+    .gm-query { flex:1; font-size:14.5px; color:#202124; }
+    .gm-search-ic { width:18px; height:18px; color:#4285F4; flex-shrink:0; }
+    .gm-tabs { display:flex; gap:18px; margin:16px 2px 4px; font-size:12px; color:#5f6368; border-bottom:1px solid #ebebeb; padding-bottom:8px; }
+    .gm-tabs span:first-child { color:#1a73e8; font-weight:600; border-bottom:2px solid #1a73e8; padding-bottom:8px; margin-bottom:-9px; }
+    .gm-result { margin-top:18px; position:relative; }
+    .gm-rank {
+      position:absolute; top:-6px; right:-4px;
+      background:#e6f4ea; color:#137333; font-size:11px; font-weight:700;
+      padding:4px 11px; border-radius:999px; border:1px solid #a8dab5;
+      font-family:'Space Grotesk',sans-serif; letter-spacing:.2px;
+    }
+    .gm-url-row { display:flex; align-items:center; gap:11px; margin-bottom:5px; }
+    .gm-fav {
+      width:28px; height:28px; border-radius:50%; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center; font-size:13px;
+      background:#0E2032; color:#8DD44E; border:1px solid #e0e0e0;
+    }
+    .gm-url { line-height:1.25; }
+    .gm-url b { font-size:13.5px; color:#202124; font-weight:500; }
+    .gm-url small { display:block; font-size:12px; color:#5f6368; }
+    .gm-title {
+      color:#1a0dab; font-size:19px; font-weight:500; line-height:1.3;
+      margin:3px 0 4px; font-family:'Arial',sans-serif;
+    }
+    .gm-desc { color:#4d5156; font-size:13px; line-height:1.55; }
+    .gm-desc b { color:#4d5156; font-weight:700; }
+
     /* ── CTA ── */
     .cta-section { padding:clamp(72px,9vw,120px) clamp(20px,5vw,var(--pad)); }
     .cta-box {
@@ -541,6 +581,7 @@
     <li><a href="#portfolio" class="nav-close">Portfólio</a></li>
     <li><a href="#processo" class="nav-close">Processo</a></li>
     <li><a href="#painel" class="nav-close">Painel</a></li>
+    <li><a href="#seo" class="nav-close">SEO</a></li>
     <li><a href="#contato" class="nav-close">Contato</a></li>
     <li><a href="#contato" class="nav-pill nav-close">Orçamento Grátis</a></li>
   </ul>
@@ -739,6 +780,56 @@
             <i style="height:55%"></i><i style="height:34%"></i><i style="height:62%"></i>
             <i style="height:100%"></i><i style="height:48%"></i><i style="height:78%"></i><i style="height:58%"></i>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SEO / GOOGLE ── -->
+<section class="section" id="seo">
+  <div class="container">
+    <div class="panel-grid">
+      <div class="panel-copy rv">
+        <span class="s-tag">Encontrado no Google</span>
+        <h2>Seu site no <span class="grad">topo das buscas</span>.</h2>
+        <p class="section-sub">Configuramos tudo que o Google precisa para encontrar, entender e mostrar a sua empresa nas pesquisas. Quem procura pelo seu serviço, encontra você primeiro.</p>
+        <ul class="feat-list">
+          <li>
+            <div class="feat-ic b">🔎</div>
+            <div><h3>Palavras-chave certas</h3><p>Otimizamos o site para os termos que seus clientes realmente pesquisam.</p></div>
+          </li>
+          <li>
+            <div class="feat-ic g">🏷️</div>
+            <div><h3>Meta tags &amp; descrição</h3><p>Títulos e descrições otimizados que aparecem bonitos nos resultados.</p></div>
+          </li>
+          <li>
+            <div class="feat-ic v">⚡</div>
+            <div><h3>Velocidade &amp; mobile</h3><p>Sites rápidos e responsivos — fatores que o Google usa para ranquear.</p></div>
+          </li>
+        </ul>
+        <div class="panel-actions">
+          <a href="#contato" class="btn btn-primary">Quero aparecer no Google
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="google-mock rv d1" aria-label="Exemplo de busca no Google">
+        <div class="gm-bar">
+          <span class="gm-glogo"><span class="b">G</span><span class="r">o</span><span class="y">o</span><span class="b">g</span><span class="g">l</span><span class="r">e</span></span>
+          <span class="gm-query">caçambas em campinas</span>
+          <svg class="gm-search-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3" stroke-linecap="round"/></svg>
+        </div>
+        <div class="gm-tabs"><span>Todas</span><span>Maps</span><span>Imagens</span><span>Notícias</span></div>
+        <div class="gm-result">
+          <div class="gm-rank">1º resultado</div>
+          <div class="gm-url-row">
+            <div class="gm-fav">C</div>
+            <div class="gm-url"><b>Camp Caçambas</b><small>https://campcacambas.com.br</small></div>
+          </div>
+          <div class="gm-title">Camp Caçambas — Locação de Caçambas em Campinas e Região</div>
+          <div class="gm-desc">Locação de <b>caçambas</b> para entulho <b>em Campinas</b> e região com entrega rápida. Retirada de resíduos, atendimento ágil e os melhores preços. Solicite seu orçamento!</div>
         </div>
       </div>
     </div>
