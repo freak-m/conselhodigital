@@ -1167,6 +1167,32 @@ fetch('/content.json').then(r=>r.json()).then(applyContent).catch(()=>{});
     setTimeout(() => banner.style.display = 'none', 400);
   };
 })();
+
+/* ── Rastreamento de eventos para o Analytics Worker ── */
+(function trackEvents() {
+  const WORKER = 'https://analytics.conselhodigital.com/event';
+
+  function send(type, value) {
+    try {
+      navigator.sendBeacon
+        ? navigator.sendBeacon(WORKER, JSON.stringify({ type, value }))
+        : fetch(WORKER, { method: 'POST', body: JSON.stringify({ type, value }), keepalive: true });
+    } catch (_) {}
+  }
+
+  // WhatsApp clicks
+  document.addEventListener('click', function(e) {
+    const a = e.target.closest('a[href*="wa.me"], a[href*="whatsapp"]');
+    if (a) send('wa', 1);
+  });
+
+  // Tempo médio na página (enviado ao sair)
+  const t0 = Date.now();
+  window.addEventListener('pagehide', function() {
+    const sec = Math.round((Date.now() - t0) / 1000);
+    if (sec > 2) send('time', sec);
+  });
+})();
 </script>
 </body>
 </html>
