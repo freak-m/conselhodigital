@@ -213,12 +213,13 @@
       grid-column:span 2; padding:30px;
       background:linear-gradient(135deg, rgba(0,188,255,0.12), rgba(0,221,208,0.06));
       border-color:rgba(0,188,255,0.22);
+      display:flex; align-items:center; justify-content:center;
     }
     .hx-stat::after {
       content:''; position:absolute; width:240px; height:240px; right:-60px; top:-80px;
       background:radial-gradient(circle, rgba(0,221,208,0.35), transparent 65%); filter:blur(20px);
     }
-    .orb-center { position:relative; z-index:2; }
+    .orb-center { position:relative; z-index:2; text-align:center; }
     .orb-num { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:56px; line-height:1; background:var(--grad); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; transition:opacity .35s, transform .35s; }
     .orb-ic  { font-size:52px; line-height:1; transition:opacity .35s, transform .35s; }
     .orb-lbl { font-size:15px; color:var(--muted); margin-top:8px; font-weight:500; transition:opacity .35s, transform .35s; }
