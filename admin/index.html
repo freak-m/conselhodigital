@@ -679,6 +679,7 @@ function makePortfolioItem(it,i) {
   d.innerHTML=`<div class="item-head"><span class="item-label">Projeto ${i+1}</span><button class="btn-remove" onclick="this.closest('.repeat-item').remove();sendPreview()">✕</button></div>
     <div class="fld"><label>Categoria</label><input type="text" value="${escHtml(it.category||'')}" oninput="sendPreview()"></div>
     <div class="fld"><label>Título</label><input type="text" value="${escHtml(it.title||'')}" oninput="sendPreview()"></div>
+    <div class="fld"><label>Link do site do cliente</label><input type="text" value="${escHtml(it.link||'')}" oninput="sendPreview()" placeholder="https://sitedocliente.com"></div>
     <div class="fld"><label>Ocupa 2 colunas?</label><select oninput="sendPreview()">
       <option value="true" ${it.span2?'selected':''}>Sim</option>
       <option value="false" ${!it.span2?'selected':''}>Não</option>
@@ -696,7 +697,7 @@ function makePortfolioItem(it,i) {
 }
 function addPortfolioItem() {
   const c=document.getElementById('portfolio-items');
-  c.appendChild(makePortfolioItem({category:'',title:'',span2:false,image:'',bg:'linear-gradient(135deg,#071829 0%,#0E4D8C 100%)'}, c.children.length));
+  c.appendChild(makePortfolioItem({category:'',title:'',link:'',span2:false,image:'',bg:'linear-gradient(135deg,#071829 0%,#0E4D8C 100%)'}, c.children.length));
 }
 
 function handleImgUpload(input, previewId, container) {
@@ -781,6 +782,7 @@ function collectForm() {
     items: [...document.querySelectorAll('#portfolio-items .repeat-item')].map((el,i) => ({
       category: el.querySelectorAll('input[type="text"]')[0]?.value || '',
       title:    el.querySelectorAll('input[type="text"]')[1]?.value || '',
+      link:     el.querySelectorAll('input[type="text"]')[2]?.value || '',
       span2:    el.querySelector('select')?.value === 'true',
       image:    el.querySelector('.img-url')?.value || '',
       bg:       currentContent?.portfolio?.items?.[i]?.bg || 'linear-gradient(135deg,#071829 0%,#0E4D8C 100%)',

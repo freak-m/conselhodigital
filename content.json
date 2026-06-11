@@ -58,10 +58,10 @@
     "tag": "Trabalhos recentes",
     "title": "Sites que lançamos recentemente",
     "items": [
-      {"category": "E-commerce",        "title": "Nome do Projeto 1", "image": "", "bg": "linear-gradient(135deg,#071829 0%,#0E4D8C 100%)", "span2": true},
-      {"category": "Landing Page",      "title": "Nome do Projeto 2", "image": "", "bg": "linear-gradient(135deg,#071020 0%,#00C4B4 100%)", "span2": false},
-      {"category": "Site Institucional","title": "Nome do Projeto 3", "image": "", "bg": "linear-gradient(135deg,#061408 0%,#7DC241 100%)", "span2": false},
-      {"category": "Blog",              "title": "Nome do Projeto 4", "image": "", "bg": "linear-gradient(135deg,#130820 0%,#8B5CF6 100%)", "span2": true}
+      {"category": "E-commerce",        "title": "Nome do Projeto 1", "link": "", "image": "", "bg": "linear-gradient(135deg,#071829 0%,#0E4D8C 100%)", "span2": true},
+      {"category": "Landing Page",      "title": "Nome do Projeto 2", "link": "", "image": "", "bg": "linear-gradient(135deg,#071020 0%,#00C4B4 100%)", "span2": false},
+      {"category": "Site Institucional","title": "Nome do Projeto 3", "link": "", "image": "", "bg": "linear-gradient(135deg,#061408 0%,#7DC241 100%)", "span2": false},
+      {"category": "Blog",              "title": "Nome do Projeto 4", "link": "", "image": "", "bg": "linear-gradient(135deg,#130820 0%,#8B5CF6 100%)", "span2": true}
     ]
   },
   "process": {

@@ -304,7 +304,8 @@
 
     /* ── PORTFOLIO ── */
     .gallery-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
-    .pj { border-radius:var(--r-lg); overflow:hidden; position:relative; cursor:pointer; background:var(--bg-elev); border:1px solid var(--border); }
+    .pj { display:block; border-radius:var(--r-lg); overflow:hidden; position:relative; cursor:pointer; background:var(--bg-elev); border:1px solid var(--border); color:inherit; text-decoration:none; transition:border-color .3s, transform .35s cubic-bezier(.16,1,.3,1); }
+    a.pj:hover { border-color:var(--border-2); transform:translateY(-3px); }
     .pj.span2 { grid-column:span 2; }
     .pj-inner { width:100%; aspect-ratio:4/3; position:relative; overflow:hidden; }
     .pj.span2 .pj-inner { aspect-ratio:16/7; }
@@ -917,14 +918,18 @@ function applyContent(c) {
     setText('port-tag',  c.portfolio.tag);
     setText('port-title',c.portfolio.title);
     const g = document.getElementById('port-grid');
-    if (g && c.portfolio.items) g.innerHTML = c.portfolio.items.map((p,i)=>`
-      <div class="pj${p.span2?' span2':''} rv on${i?' d'+(Math.min(i,2)):''}">
+    if (g && c.portfolio.items) g.innerHTML = c.portfolio.items.map((p,i)=>{
+      const cls = `pj${p.span2?' span2':''} rv on${i?' d'+(Math.min(i,2)):''}`;
+      const inner = `
         <div class="pj-inner">
           ${p.image?`<img src="${p.image}" class="pj-bg" style="object-fit:cover;width:100%;height:100%">`:
             `<div class="pj-bg" style="background:${p.bg}"></div><div class="pj-ph"><span class="pj-ph-icon">🖥</span><span class="pj-ph-txt">Adicione screenshot</span></div>`}
-          <div class="pj-overlay"><div class="pj-cat">${p.category}</div><div class="pj-title">${p.title}</div></div>
-        </div>
-      </div>`).join('');
+          <div class="pj-overlay"><div class="pj-cat">${p.category||''}</div><div class="pj-title">${p.title||''}</div></div>
+        </div>`;
+      return p.link
+        ? `<a class="${cls}" href="${p.link}" target="_blank" rel="noopener">${inner}</a>`
+        : `<div class="${cls}">${inner}</div>`;
+    }).join('');
   }
   if (c.process) {
     setText('proc-tag',     c.process.tag);
