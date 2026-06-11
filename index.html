@@ -176,7 +176,7 @@
       backdrop-filter:blur(8px);
     }
     .pill-tag .dot { width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 0 4px rgba(141,212,78,0.18); animation:pulse 2.4s ease-in-out infinite; }
-    .hero-logo { height:30px; width:auto; margin:26px 0 22px; display:block; filter:drop-shadow(0 4px 20px rgba(0,188,255,0.25)); }
+    .hero-logo { height:64px; width:auto; max-width:100%; margin:28px 0 24px; display:block; filter:drop-shadow(0 6px 26px rgba(0,188,255,0.3)); }
     .hero h1 { font-size:clamp(40px,5.4vw,68px); font-weight:700; margin-bottom:22px; }
     .hero h1 .grad { display:inline; }
     .hero-sub { font-size:clamp(16px,1.3vw,19px); color:var(--muted); max-width:480px; margin-bottom:36px; line-height:1.7; }
@@ -343,6 +343,47 @@
     .step h3 { font-size:17px; font-weight:600; margin-bottom:10px; }
     .step p { color:var(--muted); font-size:14.5px; line-height:1.65; }
 
+    /* ── PAINEL / ADMIN ── */
+    .panel-grid { display:grid; grid-template-columns:1fr 1.05fr; gap:56px; align-items:center; }
+    .panel-copy .feat-list { list-style:none; margin-top:30px; display:flex; flex-direction:column; gap:18px; }
+    .panel-copy .feat-list li { display:flex; gap:14px; align-items:flex-start; }
+    .panel-copy .feat-ic {
+      width:42px; height:42px; border-radius:12px; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center; font-size:19px;
+      background:var(--surface-2); border:1px solid var(--border);
+    }
+    .panel-copy .feat-ic.b { color:var(--blue);  border-color:rgba(0,188,255,.35); }
+    .panel-copy .feat-ic.g { color:var(--green); border-color:rgba(141,212,78,.35); }
+    .panel-copy .feat-ic.v { color:var(--violet);border-color:rgba(139,92,246,.35); }
+    .panel-copy .feat-list h3 { font-size:16.5px; font-weight:600; margin-bottom:3px; }
+    .panel-copy .feat-list p { color:var(--muted); font-size:14.5px; line-height:1.6; }
+    .panel-copy .panel-actions { margin-top:34px; }
+
+    /* mockup do painel (puro CSS) */
+    .panel-mock {
+      position:relative; border-radius:var(--r-lg); overflow:hidden;
+      border:1px solid var(--border-2); background:#0B1422;
+      box-shadow:var(--shadow);
+    }
+    .panel-mock::after {
+      content:''; position:absolute; width:300px; height:300px; right:-80px; top:-90px;
+      background:radial-gradient(circle, rgba(0,188,255,0.18), transparent 65%); filter:blur(20px); pointer-events:none;
+    }
+    .pm-bar { display:flex; align-items:center; gap:7px; padding:13px 16px; border-bottom:1px solid var(--border); background:rgba(255,255,255,0.02); }
+    .pm-dot { width:11px; height:11px; border-radius:50%; }
+    .pm-dot.r{background:#FF5F57}.pm-dot.y{background:#FEBC2E}.pm-dot.g{background:#28C840}
+    .pm-url { margin-left:12px; font-size:12px; color:var(--faint); font-family:'Space Grotesk',sans-serif; }
+    .pm-body { padding:18px; position:relative; z-index:1; }
+    .pm-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+    .pm-stat { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:15px; }
+    .pm-stat .lbl { font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--faint); }
+    .pm-stat .num { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:30px; margin-top:4px; }
+    .pm-stat .num.b { color:var(--blue); } .pm-stat .num.t { color:var(--teal); }
+    .pm-chart { display:flex; align-items:flex-end; gap:8px; height:96px; padding:14px; background:var(--surface); border:1px solid var(--border); border-radius:14px; }
+    .pm-chart i { flex:1; border-radius:5px 5px 0 0; background:linear-gradient(180deg,var(--blue),rgba(0,188,255,.25)); animation:pmGrow .9s cubic-bezier(.16,1,.3,1) both; transform-origin:bottom; }
+    .pm-chart i:nth-child(even){ background:linear-gradient(180deg,var(--green),rgba(141,212,78,.25)); }
+    @keyframes pmGrow { from{transform:scaleY(0)} to{transform:scaleY(1)} }
+
     /* ── CTA ── */
     .cta-section { padding:clamp(72px,9vw,120px) clamp(20px,5vw,var(--pad)); }
     .cta-box {
@@ -408,6 +449,7 @@
       .nav-logo span { display:none; }
       .sec-row { flex-direction:column; align-items:flex-start; }
       .svc-grid, .ben-grid, .gallery-grid, .process-grid { grid-template-columns:1fr; }
+      .panel-grid { grid-template-columns:1fr; gap:40px; }
       .pj.span2 { grid-column:span 1; }
       .pj.span2 .pj-inner { aspect-ratio:4/3; }
       .pj-overlay { opacity:1; }
@@ -497,6 +539,7 @@
     <li><a href="#servicos" class="nav-close">Serviços</a></li>
     <li><a href="#portfolio" class="nav-close">Portfólio</a></li>
     <li><a href="#processo" class="nav-close">Processo</a></li>
+    <li><a href="#painel" class="nav-close">Painel</a></li>
     <li><a href="#contato" class="nav-close">Contato</a></li>
     <li><a href="#contato" class="nav-pill nav-close">Orçamento Grátis</a></li>
   </ul>
@@ -506,10 +549,10 @@
 <!-- ── HERO ── -->
 <section class="hero" id="top">
   <div class="hero-copy">
-    <span class="pill-tag"><span class="dot"></span><span id="hero-tag-text">Agência de Criação de Websites</span></span>
+    <span id="hero-tag-text" hidden></span>
     <img src="meus/Completo.webp" alt="Conselho Digital" class="hero-logo">
     <h1>Websites que <span class="grad">transformam</span> negócios.</h1>
-    <p class="hero-sub" id="hero-subtitle">Seu website pronto, feito rápido, com criatividade e pronto pra vender sua empresa online.</p>
+    <p class="hero-sub" id="hero-subtitle" hidden></p>
     <div class="hero-actions">
       <a id="hero-cta-primary" href="#contato" class="btn btn-primary">Solicitar Orçamento
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -566,6 +609,11 @@
       <div class="svc-card rv"><div class="svc-sym b">🎨</div><h3>Design Personalizado</h3><p>Layouts desenvolvidos à mão e ajustados à identidade da sua marca — únicos, modernos e memoráveis.</p></div>
       <div class="svc-card rv d1"><div class="svc-sym t">🔍</div><h3>SEO & Conteúdo</h3><p>Estrutura otimizada para o Google, conteúdo estratégico que atrai visitantes qualificados organicamente.</p></div>
       <div class="svc-card rv d2"><div class="svc-sym g">⚡</div><h3>Performance</h3><p>sites ultrarrápidos que não percam clientes.</p></div>
+      <div class="svc-card rv d3"><div class="svc-sym p">🔒</div><h3>Segurança proativa</h3><p>Firewall, bloqueio de bots e proteção contra ataques para manter seu site sempre seguro.</p></div>
+      <div class="svc-card rv"><div class="svc-sym b">🔎</div><h3>Descobrir</h3><p>Mergulhamos na sua marca, público e objetivos para construir a estratégia certa.</p></div>
+      <div class="svc-card rv d1"><div class="svc-sym t">✏️</div><h3>Design</h3><p>Protótipos pixel-perfect, refinados até cada detalhe ficar do seu jeito.</p></div>
+      <div class="svc-card rv d2"><div class="svc-sym g">💻</div><h3>Desenvolver</h3><p>Código limpo e personalizado — leve, rápido e sem plugins desnecessários.</p></div>
+      <div class="svc-card rv d3"><div class="svc-sym p">🚀</div><h3>Lançar</h3><p>Deploy otimizado, treinamento completo e suporte para crescer sem preocupações.</p></div>
     </div>
   </div>
 </section>
@@ -648,6 +696,55 @@
   </div>
 </section>
 
+<!-- ── PAINEL / ADMIN ── -->
+<section class="section" id="painel">
+  <div class="container">
+    <div class="panel-grid">
+      <div class="panel-copy rv">
+        <span class="s-tag">Bônus exclusivo</span>
+        <h2>Seu site com <span class="grad">painel próprio</span>.</h2>
+        <p class="section-sub">Todo site que entregamos vem com um painel de administração simples. Você edita textos, imagens e seções quando quiser — e ainda acompanha as métricas de visitas em tempo real.</p>
+        <ul class="feat-list">
+          <li>
+            <div class="feat-ic b">✏️</div>
+            <div><h3>Edite você mesmo</h3><p>Troque textos, imagens e seções sem depender de ninguém, com pré-visualização ao vivo.</p></div>
+          </li>
+          <li>
+            <div class="feat-ic g">📊</div>
+            <div><h3>Métricas em tempo real</h3><p>Veja visitas, páginas mais acessadas, dispositivos e cliques no WhatsApp.</p></div>
+          </li>
+          <li>
+            <div class="feat-ic v">🔒</div>
+            <div><h3>Acesso seguro</h3><p>Login protegido só para você — publique as mudanças com um clique.</p></div>
+          </li>
+        </ul>
+        <div class="panel-actions">
+          <a href="#contato" class="btn btn-primary">Quero meu site com painel
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="panel-mock rv d1" aria-hidden="true">
+        <div class="pm-bar">
+          <span class="pm-dot r"></span><span class="pm-dot y"></span><span class="pm-dot g"></span>
+          <span class="pm-url">seusite.com/admin</span>
+        </div>
+        <div class="pm-body">
+          <div class="pm-row">
+            <div class="pm-stat"><div class="lbl">Total Visitas</div><div class="num b">467</div></div>
+            <div class="pm-stat"><div class="lbl">Page Views</div><div class="num t">329</div></div>
+          </div>
+          <div class="pm-chart">
+            <i style="height:55%"></i><i style="height:34%"></i><i style="height:62%"></i>
+            <i style="height:100%"></i><i style="height:48%"></i><i style="height:78%"></i><i style="height:58%"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ── CTA ── -->
 <section class="cta-section" id="contato">
   <div class="container">
@@ -658,8 +755,7 @@
         <h2 id="cta-title">Pronto para lançar um site do qual você se orgulha?</h2>
         <p id="cta-subtitle">Agende uma conversa gratuita de 30 minutos. Sem compromisso, sem enrolação.</p>
         <div class="cta-btns">
-          <a id="cta-btn-primary" href="#" class="btn btn-primary">Solicitar Orçamento Grátis →</a>
-          <a id="cta-btn-secondary" href="#" class="btn btn-ghost">Falar no WhatsApp</a>
+          <a id="cta-btn-primary" href="https://wa.me/5519953222558" class="btn btn-primary">Solicitar Orçamento Grátis →</a>
         </div>
       </div>
     </div>
@@ -676,7 +772,7 @@
 </footer>
 
 <!-- ── BOTÃO FLUTUANTE WHATSAPP ── -->
-<a id="float-wa" href="https://wa.me/5500000000000" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+<a id="float-wa" href="https://wa.me/5519953222558" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
   <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
     <path d="M16.04 4C9.93 4 4.96 8.97 4.96 15.08c0 2.13.6 4.18 1.73 5.98L4.5 28l7.1-2.13a11.02 11.02 0 0 0 4.44.93h.01c6.11 0 11.08-4.97 11.08-11.08C27.13 8.97 22.16 4 16.04 4zm0 20.18h-.01c-1.4 0-2.77-.38-3.97-1.08l-.28-.17-4.21 1.26 1.27-4.1-.18-.29a9.13 9.13 0 0 1-1.4-4.85c0-5.05 4.11-9.16 9.17-9.16 2.45 0 4.75.96 6.48 2.69a9.1 9.1 0 0 1 2.68 6.48c0 5.06-4.11 9.17-9.16 9.17zm5.03-6.86c-.28-.14-1.63-.8-1.88-.9-.25-.09-.43-.14-.62.14-.18.28-.71.9-.87 1.08-.16.18-.32.21-.6.07-.28-.14-1.16-.43-2.21-1.36-.82-.73-1.37-1.63-1.53-1.91-.16-.28-.02-.43.12-.57.12-.12.28-.32.42-.48.14-.16.18-.28.28-.46.09-.18.05-.35-.02-.49-.07-.14-.62-1.5-.85-2.05-.22-.54-.45-.46-.62-.47l-.53-.01c-.18 0-.48.07-.73.35-.25.28-.96.94-.96 2.3 0 1.36.99 2.67 1.13 2.85.14.18 1.95 2.97 4.72 4.16.66.28 1.17.45 1.57.58.66.21 1.26.18 1.74.11.53-.08 1.63-.67 1.86-1.31.23-.64.23-1.19.16-1.31-.07-.12-.25-.18-.53-.32z"/>
   </svg>
@@ -788,7 +884,8 @@ function applyContent(c) {
   }
   if (c.hero) {
     setText('hero-tag-text',      c.hero.tag);
-    setText('hero-subtitle',      c.hero.subtitle);
+    const sub = document.getElementById('hero-subtitle');
+    if (sub) { sub.textContent = c.hero.subtitle || ''; sub.hidden = !c.hero.subtitle; }
     setLink('hero-cta-primary',   c.hero.cta_primary_url,   c.hero.cta_primary_text);
     setLink('hero-cta-secondary', c.hero.cta_secondary_url, c.hero.cta_secondary_text);
   }

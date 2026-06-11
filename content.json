@@ -7,7 +7,7 @@
   },
   "hero": {
     "tag": "Agência de Criação de Websites",
-    "subtitle": "Seu website pronto, feito rápido, com criatividade e pronto pra vender sua empresa online.",
+    "subtitle": "",
     "cta_primary_text": "Solicitar Orçamento →",
     "cta_primary_url": "#contato",
     "cta_secondary_text": "Ver Portfólio",
@@ -34,7 +34,12 @@
     "items": [
       {"icon": "🎨", "color": "b", "title": "Design Personalizado",  "desc": "Layouts desenvolvidos à mão e ajustados à identidade da sua marca — únicos, modernos e memoráveis."},
       {"icon": "🔍", "color": "t", "title": "SEO & Conteúdo",        "desc": "Estrutura otimizada para o Google, conteúdo estratégico que atrai visitantes qualificados organicamente."},
-      {"icon": "⚡", "color": "g", "title": "Performance",            "desc": "sites ultrarrápidos que não percam clientes."}
+      {"icon": "⚡", "color": "g", "title": "Performance",            "desc": "sites ultrarrápidos que não percam clientes."},
+      {"icon": "🔒", "color": "p", "title": "Segurança proativa",     "desc": "Firewall, bloqueio de bots e proteção contra ataques para manter seu site sempre seguro."},
+      {"icon": "🔎", "color": "b", "title": "Descobrir",              "desc": "Mergulhamos na sua marca, público e objetivos para construir a estratégia certa."},
+      {"icon": "✏️", "color": "t", "title": "Design",                 "desc": "Protótipos pixel-perfect, refinados até cada detalhe ficar do seu jeito."},
+      {"icon": "💻", "color": "g", "title": "Desenvolver",            "desc": "Código limpo e personalizado — leve, rápido e sem plugins desnecessários."},
+      {"icon": "🚀", "color": "p", "title": "Lançar",                 "desc": "Deploy otimizado, treinamento completo e suporte para crescer sem preocupações."}
     ]
   },
   "benefits": {
@@ -77,12 +82,12 @@
     "cta_primary_text": "Solicitar Orçamento Grátis →",
     "cta_primary_url": "#",
     "cta_secondary_text": "Falar no WhatsApp",
-    "cta_secondary_url": "#"
+    "cta_secondary_url": "https://wa.me/5519953222558"
   },
   "footer": {
     "text": "© 2025 Conselho Digital. Todos os direitos reservados."
   },
-  "whatsapp": "https://wa.me/5500000000000",
+  "whatsapp": "https://wa.me/5519953222558",
   "integrations": {
     "google_analytics": "",
     "meta_pixel": "",
