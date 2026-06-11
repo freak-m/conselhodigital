@@ -23,19 +23,6 @@
     }
     body { background:var(--bg); color:var(--white); font-family:'DM Sans',sans-serif; font-size:14px; line-height:1.6; overflow:hidden; height:100vh; }
 
-    /* ── LOGIN ── */
-    #login-screen {
-      position:fixed; inset:0; z-index:9999;
-      background:var(--bg); display:flex; align-items:center; justify-content:center;
-    }
-    .login-box {
-      background:var(--bg2); border:1px solid var(--cbr); border-radius:18px;
-      padding:44px 36px; width:100%; max-width:380px;
-      display:flex; flex-direction:column; gap:18px;
-    }
-    .login-brand { font-family:'Syne',sans-serif; font-weight:800; font-size:20px; text-align:center; }
-    .login-brand em { font-style:normal; color:var(--blue); }
-    .login-sub { text-align:center; color:var(--muted); font-size:12px; margin-top:-10px; }
     .fld { display:flex; flex-direction:column; gap:6px; }
     .fld label { font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; }
     .fld input, .fld textarea, .fld select {
@@ -46,15 +33,6 @@
     .fld input:focus, .fld textarea:focus, .fld select:focus { border-color:var(--blue); }
     .fld textarea { min-height:72px; }
     .fld select option { background:var(--bg2); }
-    .btn-login {
-      background:var(--green); color:#fff; border:none; border-radius:50px;
-      padding:12px; font-family:'Syne',sans-serif; font-weight:700; font-size:13px;
-      cursor:pointer; transition:background .2s;
-    }
-    .btn-login:hover { background:#6fb83a; }
-    .login-hint { font-size:11px; color:var(--muted); text-align:center; line-height:1.6; }
-    .login-hint a { color:var(--blue); text-decoration:none; }
-    #login-error { color:var(--red); font-size:12px; text-align:center; display:none; }
 
     /* ── LAYOUT ── */
     #app { display:flex; height:100vh; }
@@ -231,26 +209,8 @@
 </head>
 <body>
 
-<!-- ── LOGIN ── -->
-<div id="login-screen">
-  <div class="login-box">
-    <div class="login-brand">Conselho<em>Digital</em></div>
-    <p class="login-sub">Painel Administrativo</p>
-    <div class="fld">
-      <label>GitHub Personal Access Token</label>
-      <input type="password" id="pat-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
-    </div>
-    <p id="login-error">Token inválido ou sem permissão para o repositório.</p>
-    <button class="btn-login" onclick="doLogin()">Entrar</button>
-    <p class="login-hint">
-      Gere um token em <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a><br>
-      com permissão <strong>repo</strong> (Contents: read &amp; write).
-    </p>
-  </div>
-</div>
-
 <!-- ── APP ── -->
-<div id="app" style="display:none">
+<div id="app">
 
   <!-- SIDEBAR -->
   <aside class="sidebar">
@@ -270,7 +230,7 @@
       <button class="nav-item" data-section="footer">         <span class="icon">📄</span> Rodapé</button>
     </nav>
     <div class="sidebar-footer">
-      <button class="btn-logout" onclick="doLogout()">Sair da conta</button>
+      <button class="btn-logout" onclick="doLogout()">Sair (Cloudflare)</button>
     </div>
   </aside>
 
@@ -467,61 +427,33 @@
 <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
 <script>
 /* ── CONSTANTS ── */
-const REPO         = 'freak-m/conselhodigital';
-const API          = 'https://api.github.com';
-const CONTENT_PATH = 'content.json';
+/* Autenticação é feita pelo Cloudflare Access (código por e-mail).
+   A página abre direto. Para PUBLICAR, o painel fala com um Cloudflare
+   Worker (mesma proteção do Access) que guarda o token do GitHub em
+   segredo e faz os commits. Nenhum token fica no navegador ou no código. */
+const PUBLISH_API  = '/admin-api';            // rota do Worker (mesmo domínio, atrás do Access)
 const CF_WORKER_KEY= 'cf_worker_url';
 const CACHE_MAX_MS = 2 * 60 * 60 * 1000;
 const CACHE_CHECK_MS = 5 * 60 * 1000;
 const NO_PREVIEW_TABS = new Set(['dashboard','integrations']);
 
-let currentSha = null;
 let currentContent = null;
 let previewReady = false;
 let charts = {};
 let currentPeriod = 7;
 let quills = {};
 
-/* ── AUTH ── */
-function token() { return sessionStorage.getItem('gh_token'); }
-
-function autoLogin() {
-  if (token()) showApp();
-}
-
-async function doLogin() {
-  const pat = document.getElementById('pat-input').value.trim();
-  if (!pat) return;
-  document.querySelector('.btn-login').textContent = 'Verificando…';
-  try {
-    const r = await fetch(`${API}/repos/${REPO}/contents/${CONTENT_PATH}`,
-      { headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github.v3+json' } });
-    if (!r.ok) throw new Error('unauthorized');
-    sessionStorage.setItem('gh_token', pat);
-    showApp();
-  } catch {
-    document.getElementById('login-error').style.display = 'block';
-    document.querySelector('.btn-login').textContent = 'Entrar';
-  }
-}
-
+/* ── AUTH (via Cloudflare Access) ── */
 function doLogout() {
-  sessionStorage.removeItem('gh_token');
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('login-error').style.display = 'none';
-  document.querySelector('.btn-login').textContent = 'Entrar';
+  // Encerra a sessão do Cloudflare Access
+  window.location.href = 'https://conselhodigital.cloudflareaccess.com/cdn-cgi/access/logout';
 }
 
 function showApp() {
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('app').style.display = 'flex';
   initQuills();
   loadContent();
   loadIntegrations();
 }
-
-document.getElementById('pat-input').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 
 /* ── QUILL ── */
 function initQuills() {
@@ -532,15 +464,12 @@ function initQuills() {
   Object.values(quills).forEach(q => q.on('text-change', debounce(sendPreview, 400)));
 }
 
-/* ── GITHUB API ── */
+/* ── LOAD CONTENT (público, sem token) ── */
 async function loadContent() {
   setIndicator('Carregando…');
   try {
-    const r = await fetch(`${API}/repos/${REPO}/contents/${CONTENT_PATH}`,
-      { headers: { Authorization: `token ${token()}`, Accept: 'application/vnd.github.v3+json' } });
-    const data = await r.json();
-    currentSha = data.sha;
-    currentContent = JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\n/g,'')))));
+    const r = await fetch('../content.json?_=' + Date.now());
+    currentContent = await r.json();
     populateForm(currentContent);
     setIndicator('Conteúdo carregado');
     document.getElementById('publish-btn').disabled = false;
@@ -550,51 +479,50 @@ async function loadContent() {
   }
 }
 
+/* ── PUBLISH (via Worker protegido pelo Access) ── */
 async function publishContent() {
   const btn = document.getElementById('publish-btn');
   btn.disabled = true; btn.textContent = '⏳ Publicando…';
   setIndicator('Publicando…');
   try {
     const content = collectForm();
-    const body = JSON.stringify(content, null, 2);
-    const encoded = btoa(unescape(encodeURIComponent(body)));
-    const r = await fetch(`${API}/repos/${REPO}/contents/${CONTENT_PATH}`, {
-      method: 'PUT',
-      headers: { Authorization: `token ${token()}`, 'Content-Type': 'application/json', Accept: 'application/vnd.github.v3+json' },
-      body: JSON.stringify({ message: 'Update content via Admin CMS', content: encoded, sha: currentSha })
+    const r = await fetch(`${PUBLISH_API}/publish`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ content })
     });
     if (!r.ok) throw new Error(r.status);
-    const data = await r.json();
-    currentSha = data.content.sha;
     currentContent = content;
     setIndicator('Publicado! (~30s para atualizar)');
     showToast('Publicado com sucesso! O site atualiza em ~30s.', 'success');
   } catch(e) {
     setIndicator('Erro ao publicar');
-    showToast('Erro ao publicar. Verifique o token.', 'error');
+    showToast('Falha ao publicar. O Worker de publicação está configurado? (veja admin/SETUP-WORKER.md)', 'error');
   }
   btn.disabled = false; btn.textContent = '🚀 Publicar';
 }
 
 async function uploadImage(file, callback) {
   showToast('Enviando imagem…', 'info');
-  try {
-    const reader = new FileReader();
-    reader.onload = async (ev) => {
+  const reader = new FileReader();
+  reader.onload = async (ev) => {
+    try {
       const base64 = ev.target.result.split(',')[1];
       const filename = `meus/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.]/g,'-')}`;
-      const r = await fetch(`${API}/repos/${REPO}/contents/${filename}`, {
-        method: 'PUT',
-        headers: { Authorization: `token ${token()}`, 'Content-Type': 'application/json', Accept: 'application/vnd.github.v3+json' },
-        body: JSON.stringify({ message: `Upload image ${filename}`, content: base64 })
+      const r = await fetch(`${PUBLISH_API}/upload`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ filename, content: base64 })
       });
       if (!r.ok) throw new Error(r.status);
-      const publicUrl = `https://freak-m.github.io/conselhodigital/${filename}`;
-      callback(publicUrl);
+      const data = await r.json();
+      callback(data.url || `https://freak-m.github.io/conselhodigital/${filename}`);
       showToast('Imagem enviada!', 'success');
-    };
-    reader.readAsDataURL(file);
-  } catch { showToast('Erro ao enviar imagem.', 'error'); }
+    } catch { showToast('Erro ao enviar imagem. (Worker configurado?)', 'error'); }
+  };
+  reader.readAsDataURL(file);
 }
 
 /* ── FORM POPULATE ── */
@@ -1085,7 +1013,7 @@ function hideBanners() {
 function setText(id, val) { const el=document.getElementById(id); if(el) el.textContent=val; }
 
 /* ── BOOT ── */
-autoLogin();
+showApp();
 </script>
 </body>
 </html>
