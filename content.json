@@ -70,7 +70,7 @@
     "subtitle": "Processo claro e sem surpresas — você acompanha cada etapa.",
     "steps": [
       {"title": "Descobrir",    "desc": "Mergulhamos na sua marca, público e objetivos de negócio para construir a estratégia certa."},
-      {"title": "Design",      "desc": "Protótipos pixel-perfect no Figma, refinados até você amar cada detalhe antes de codar."},
+      {"title": "Design",      "desc": "Exemplos planejados para você escolher o que mais combina com sua marca."},
       {"title": "Desenvolver", "desc": "Código WordPress limpo e personalizado — sem plugins desnecessários, leve e seguro."},
       {"title": "Lançar",      "desc": "Deploy otimizado, treinamento completo e plano de manutenção para crescer sem preocupações."}
     ]
