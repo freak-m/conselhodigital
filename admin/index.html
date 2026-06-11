@@ -43,7 +43,8 @@
       border-right:1px solid var(--cbr); display:flex; flex-direction:column;
       height:100vh; overflow-y:auto;
     }
-    .sidebar-brand { padding:20px 16px 16px; border-bottom:1px solid var(--cbr); }
+    .sidebar-brand { padding:20px 16px 16px; border-bottom:1px solid var(--cbr); text-align:center; }
+    .sidebar-brand .brand-logo { max-width:150px; width:100%; height:auto; display:block; margin:0 auto 8px; }
     .sidebar-brand .logo { font-family:'Syne',sans-serif; font-weight:800; font-size:16px; letter-spacing:-.3px; }
     .sidebar-brand .logo em { font-style:normal; color:var(--blue); }
     .sidebar-brand .badge {
@@ -215,7 +216,7 @@
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-brand">
-      <div class="logo">Conselho<em>Digital</em></div>
+      <img src="../meus/logo.webp" alt="Conselho Digital" class="brand-logo">
       <span class="badge">Admin CMS</span>
     </div>
     <nav class="sidebar-nav" id="sidebar-nav">
@@ -414,7 +415,7 @@
       <div class="int-card">
         <h4>Cloudflare Analytics Worker</h4>
         <p class="desc">URL do Worker que consulta a API de Analytics da Cloudflare. Usado para o Dashboard acima.</p>
-        <div class="fld"><label>Worker URL</label><input type="text" id="int-worker" placeholder="https://analytics.conselhodigital.com/"></div>
+        <div class="fld"><label>Worker URL</label><input type="text" id="int-worker" placeholder="https://analytics.conselhodigital.com/" value="https://analytics.conselhodigital.com/"></div>
       </div>
       <button class="btn-primary" onclick="saveIntegrations()" style="width:fit-content">💾 Salvar Integrações</button>
     </div>
@@ -433,6 +434,7 @@
    segredo e faz os commits. Nenhum token fica no navegador ou no código. */
 const PUBLISH_API  = '/admin-api';            // rota do Worker (mesmo domínio, atrás do Access)
 const CF_WORKER_KEY= 'cf_worker_url';
+const CF_WORKER_DEFAULT = 'https://analytics.conselhodigital.com/';
 const CACHE_MAX_MS = 2 * 60 * 60 * 1000;
 const CACHE_CHECK_MS = 5 * 60 * 1000;
 const NO_PREVIEW_TABS = new Set(['dashboard','integrations']);
@@ -865,7 +867,7 @@ function showToast(msg, type='success') {
 
 /* ── INTEGRATIONS ── */
 function loadIntegrations() {
-  const workerUrl = localStorage.getItem(CF_WORKER_KEY) || '';
+  const workerUrl = localStorage.getItem(CF_WORKER_KEY) || currentContent?.integrations?.worker_url || CF_WORKER_DEFAULT;
   document.getElementById('int-worker').value = workerUrl;
   if (currentContent?.integrations) {
     document.getElementById('int-ga').value    = currentContent.integrations.google_analytics || '';
@@ -891,7 +893,7 @@ async function saveIntegrations() {
 let dashData = null;
 
 async function initDashboard() {
-  const workerUrl = localStorage.getItem(CF_WORKER_KEY) || currentContent?.integrations?.worker_url || '';
+  const workerUrl = localStorage.getItem(CF_WORKER_KEY) || currentContent?.integrations?.worker_url || CF_WORKER_DEFAULT;
   if (!workerUrl) {
     document.getElementById('dash-no-worker').style.display='block';
     document.getElementById('dash-content').style.display='none';
@@ -998,7 +1000,7 @@ function setPeriod(days, btn) {
   currentPeriod = days;
   document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  const workerUrl = localStorage.getItem(CF_WORKER_KEY) || currentContent?.integrations?.worker_url || '';
+  const workerUrl = localStorage.getItem(CF_WORKER_KEY) || currentContent?.integrations?.worker_url || CF_WORKER_DEFAULT;
   if (workerUrl) loadDashboardData(workerUrl);
 }
 
