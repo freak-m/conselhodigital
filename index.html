@@ -218,15 +218,11 @@
       content:''; position:absolute; width:240px; height:240px; right:-60px; top:-80px;
       background:radial-gradient(circle, rgba(0,221,208,0.35), transparent 65%); filter:blur(20px);
     }
-    .orb-center { position:relative; z-index:2; }
-    .orb-num {
-      font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:60px; line-height:1;
-      background:var(--grad); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
-      transition:opacity .4s, transform .4s;
-    }
-    .orb-lbl { font-size:15px; color:var(--muted); margin-top:6px; font-weight:500; transition:opacity .4s, transform .4s; }
-    .orb-center.fade-out .orb-num,.orb-center.fade-out .orb-lbl { opacity:0; transform:translateY(-8px); }
-    .orb-center.fade-in  .orb-num,.orb-center.fade-in  .orb-lbl { opacity:0; transform:translateY(8px); }
+    .stat-grid { position:relative; z-index:2; display:grid; grid-template-columns:1fr 1fr; gap:14px 18px; }
+    .sg-item { display:flex; flex-direction:column; gap:3px; }
+    .sg-num { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:32px; line-height:1; background:var(--grad); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+    .sg-ic { font-size:28px; line-height:1; }
+    .sg-lbl { font-size:12px; color:var(--muted); font-weight:500; }
 
     .hx-badge-list { display:flex; flex-direction:column; gap:9px; }
     .hx-badge {
@@ -500,7 +496,7 @@
     }
     @media (max-width:440px){
       .hero h1 { font-size:clamp(32px,9vw,42px); }
-      .hx-stat .orb-num { font-size:48px; }
+      .sg-num { font-size:26px; } .sg-ic { font-size:22px; }
     }
 
     @media (prefers-reduced-motion: reduce){
@@ -610,9 +606,12 @@
   <!-- BENTO VISUAL -->
   <div class="hero-visual">
     <div class="hx-card hx-stat">
-      <div class="orb-center">
-        <div class="orb-num" id="orbNum">200+</div>
-        <div class="orb-lbl" id="orbLbl">Sites criados</div>
+      <div class="stat-grid" id="orbNum">
+        <div class="sg-item"><span class="sg-num">200+</span><span class="sg-lbl">Sites criados</span></div>
+        <div class="sg-item"><span class="sg-ic">✦</span><span class="sg-lbl">Novos Designs</span></div>
+        <div class="sg-item"><span class="sg-ic">⚡</span><span class="sg-lbl">Sites Animados</span></div>
+        <div class="sg-item"><span class="sg-ic">🎯</span><span class="sg-lbl">Focado em Venda</span></div>
+        <div class="sg-item"><span class="sg-ic">🚀</span><span class="sg-lbl">Lançamento Rápido</span></div>
       </div>
     </div>
     <div class="hx-card hx-badges">
@@ -645,7 +644,6 @@
         <span class="s-tag" id="svc-tag">O que fazemos</span>
         <h2 id="svc-title">Tudo que seu site precisa</h2>
       </div>
-      <a href="#contato" class="btn btn-ghost btn-sm rv">Ver todos →</a>
     </div>
     <div class="svc-grid" id="svc-grid">
       <div class="svc-card rv"><div class="svc-sym b">🎨</div><h3>Design Personalizado</h3><p>Layouts desenvolvidos à mão e ajustados à identidade da sua marca — únicos, modernos e memoráveis.</p></div>
@@ -918,32 +916,6 @@ addItems(document.getElementById('ring2'), [
   {label:'SEO & Conteúdo',     color:'#8B5CF6'},
 ]);
 
-/* ── STAT CYCLE ── */
-(function statCycle() {
-  const slides = [
-    {num:'200+', lbl:'Sites criados'},
-    {num:'✦',    lbl:'Novos Designs'},
-    {num:'⚡',   lbl:'Sites Animados'},
-    {num:'🎯',   lbl:'Focado em Venda'},
-    {num:'🚀',   lbl:'Lançamento Rápido'},
-  ];
-  const center = document.querySelector('.orb-center');
-  const numEl = document.getElementById('orbNum');
-  const lblEl = document.getElementById('orbLbl');
-  if (!center || !numEl || !lblEl) return;
-  let idx = 0;
-  setInterval(() => {
-    center.classList.add('fade-out');
-    setTimeout(() => {
-      idx = (idx + 1) % slides.length;
-      numEl.textContent = slides[idx].num;
-      lblEl.textContent = slides[idx].lbl;
-      center.classList.remove('fade-out');
-      center.classList.add('fade-in');
-      requestAnimationFrame(() => requestAnimationFrame(() => center.classList.remove('fade-in')));
-    }, 400);
-  }, 2600);
-})();
 
 /* ── MARQUEE ── */
 (function setupMarquee() {
