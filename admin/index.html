@@ -38,49 +38,6 @@
       overflow-x: hidden;
     }
 
-    /* ── LOGIN SCREEN ── */
-    #login-screen {
-      position: fixed; inset: 0; z-index: 9999;
-      background: var(--bg);
-      display: flex; align-items: center; justify-content: center;
-    }
-    .login-box {
-      background: var(--bg2);
-      border: 1px solid var(--cbr);
-      border-radius: 20px;
-      padding: 48px 40px;
-      width: 100%; max-width: 400px;
-      display: flex; flex-direction: column; gap: 20px;
-    }
-    .login-box .brand {
-      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 22px;
-      text-align: center; letter-spacing: -0.4px;
-    }
-    .login-box .brand em { font-style: normal; color: var(--blue); }
-    .login-box .sub {
-      text-align: center; color: var(--muted); font-size: 13px; margin-top: -12px;
-    }
-    .form-group { display: flex; flex-direction: column; gap: 8px; }
-    .form-group label { font-size: 13px; font-weight: 500; color: var(--muted); }
-    .form-group input {
-      background: var(--bg3); border: 1px solid var(--cbr);
-      color: var(--white); font-family: 'DM Sans', sans-serif;
-      font-size: 14px; padding: 11px 16px; border-radius: 10px; outline: none;
-      transition: border-color .2s;
-    }
-    .form-group input:focus { border-color: var(--blue); }
-    .btn-login {
-      background: var(--green); color: #fff;
-      border: none; border-radius: 50px; padding: 13px;
-      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px;
-      cursor: pointer; transition: background .2s; letter-spacing: 0.2px;
-    }
-    .btn-login:hover { background: #6fb83a; }
-    .login-error {
-      color: var(--red); font-size: 13px; text-align: center;
-      display: none;
-    }
-
     /* ── LAYOUT ── */
     #app { display: flex; min-height: 100vh; }
 
@@ -454,26 +411,8 @@
 </head>
 <body>
 
-<!-- ── LOGIN ── -->
-<div id="login-screen">
-  <div class="login-box">
-    <div class="brand">Conselho<em>Digital</em></div>
-    <p class="sub">Painel Administrativo CMS</p>
-    <div class="form-group">
-      <label>E-mail</label>
-      <input type="email" id="login-email" placeholder="admin@conselhodigital.com" value="admin@conselhodigital.com">
-    </div>
-    <div class="form-group">
-      <label>Senha</label>
-      <input type="password" id="login-pass" placeholder="••••••••" value="admin123">
-    </div>
-    <p class="login-error" id="login-error">E-mail ou senha inválidos.</p>
-    <button class="btn-login" onclick="doLogin()">Entrar no Painel</button>
-  </div>
-</div>
-
 <!-- ── APP ── -->
-<div id="app" style="display:none">
+<div id="app">
   <div class="overlay-bg" id="overlay-bg" onclick="closeSidebar()"></div>
 
   <!-- SIDEBAR -->
@@ -525,7 +464,7 @@
           <div class="role">Super Admin</div>
         </div>
       </div>
-      <button class="btn-logout" onclick="doLogout()">Sair da conta</button>
+      <button class="btn-logout" onclick="window.location.href='https://conselhodigital.cloudflareaccess.com/cdn-cgi/access/logout'">Sair da conta</button>
     </div>
   </aside>
 
@@ -1217,30 +1156,7 @@
 </div>
 
 <script>
-  // ── AUTH ──
-  const CREDS = { email: 'admin@conselhodigital.com', password: 'admin123' };
   let currentContactRow = null;
-
-  function doLogin() {
-    const email = document.getElementById('login-email').value.trim();
-    const pass  = document.getElementById('login-pass').value;
-    if (email === CREDS.email && pass === CREDS.password) {
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('app').style.display = 'flex';
-    } else {
-      document.getElementById('login-error').style.display = 'block';
-    }
-  }
-
-  function doLogout() {
-    document.getElementById('app').style.display = 'none';
-    document.getElementById('login-screen').style.display = 'flex';
-    document.getElementById('login-error').style.display = 'none';
-  }
-
-  document.getElementById('login-pass').addEventListener('keydown', e => {
-    if (e.key === 'Enter') doLogin();
-  });
 
   // ── NAVIGATION ──
   function showPanel(id, btn) {
