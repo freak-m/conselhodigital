@@ -162,12 +162,44 @@
     /* ── HERO ── */
     .hero {
       min-height:100vh;
-      display:grid; grid-template-columns:1.05fr 0.95fr;
-      align-items:center; gap:56px;
-      max-width:var(--maxw); margin:0 auto;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      text-align:center; position:relative; overflow:hidden;
       padding:160px clamp(20px,5vw,var(--pad)) 90px;
     }
-    .hero-copy { position:relative; z-index:2; }
+    .hero-copy {
+      position:relative; z-index:2;
+      display:flex; flex-direction:column; align-items:center;
+      max-width:740px;
+    }
+    /* ── HERO BG ANIMATION ── */
+    .hero-bg-anim {
+      position:absolute; inset:0; z-index:1;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      pointer-events:none; overflow:hidden;
+    }
+    .hero-bg-glow {
+      position:absolute; width:700px; height:700px; border-radius:50%;
+      background:radial-gradient(circle, rgba(0,188,255,0.14), transparent 65%);
+      filter:blur(80px); transition:background 1.6s ease;
+    }
+    .hero-bg-main {
+      position:relative; z-index:2; text-align:center;
+      opacity:0; transform:scale(0.82);
+      transition:opacity 1.1s ease, transform 1.1s ease;
+    }
+    .hero-bg-main.vis { opacity:1; transform:scale(1); animation:bgBreathe 3.2s ease-in-out infinite; }
+    @keyframes bgBreathe { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+    .hero-bg-n {
+      font-family:'Space Grotesk',sans-serif; font-weight:900;
+      font-size:clamp(140px,26vw,320px); line-height:.85; display:block;
+      background:var(--grad); -webkit-background-clip:text; background-clip:text;
+      -webkit-text-fill-color:transparent; opacity:.11;
+    }
+    .hero-bg-e { font-size:clamp(130px,24vw,300px); line-height:.9; display:block; opacity:.16; }
+    .hero-bg-l {
+      display:block; font-size:clamp(12px,1.6vw,20px); font-weight:700;
+      letter-spacing:5px; text-transform:uppercase; color:rgba(255,255,255,0.22); margin-top:22px;
+    }
     .pill-tag {
       display:inline-flex; align-items:center; gap:9px;
       padding:7px 16px 7px 12px; border-radius:var(--r-pill);
@@ -558,12 +590,6 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width:1024px){
-      .hero { grid-template-columns:1fr; gap:48px; padding-top:140px; }
-      .hero-copy { text-align:center; }
-      .hero-logo { margin-left:auto; margin-right:auto; }
-      .hero-sub { margin-left:auto; margin-right:auto; }
-      .hero-actions, .hero-trust { justify-content:center; }
-      .hero-visual { max-width:520px; margin:0 auto; }
       .svc-grid { grid-template-columns:repeat(2,1fr); }
       .ben-grid { grid-template-columns:repeat(2,1fr); }
       .gallery-grid { grid-template-columns:repeat(2,1fr); }
@@ -676,7 +702,17 @@
 
 <!-- ── HERO ── -->
 <section class="hero" id="top">
-  <div class="hero-copy">
+  <!-- Animated background -->
+  <div class="hero-bg-anim" aria-hidden="true">
+    <div class="hero-bg-glow" id="heroBgGlow"></div>
+    <div class="hero-bg-main" id="heroBgMain">
+      <span class="hero-bg-n" id="heroBgNum">200+</span>
+      <span class="hero-bg-e" id="heroBgIc" style="display:none"></span>
+      <span class="hero-bg-l" id="heroBgLbl">Sites criados</span>
+    </div>
+  </div>
+  <!-- Content -->
+  <div class="hero-copy rv">
     <span id="hero-tag-text" hidden></span>
     <img src="meus/Completo.webp" alt="Conselho Digital" class="hero-logo">
     <h1>Websites que <span class="grad">transformam</span> negócios.</h1>
@@ -690,30 +726,6 @@
     <div class="hero-trust">
       <div class="avatars"><i></i><i></i><i></i><i></i></div>
       <small><b>200+ negócios</b> já confiaram<br>na Conselho Digital</small>
-    </div>
-  </div>
-
-  <!-- BENTO VISUAL -->
-  <div class="hero-visual">
-    <div class="hx-card hx-stat">
-      <div class="orb-center" id="orbCenter">
-        <div class="orb-num" id="orbNum">200+</div>
-        <div class="orb-lbl" id="orbLbl">Sites criados</div>
-      </div>
-    </div>
-    <div class="hx-card hx-badges">
-      <span class="hx-card-label">Especialidades</span>
-      <div class="hx-badge-list" id="ring2"></div>
-    </div>
-    <div class="hx-card hx-quality">
-      <div>
-        <div class="hx-stars">★★★★★</div>
-        <div class="lbl" style="margin-top:8px">Clientes satisfeitos</div>
-      </div>
-      <div>
-        <div class="big grad">4 sem.</div>
-        <div class="lbl">do briefing ao ar</div>
-      </div>
     </div>
   </div>
 </section>
@@ -1073,33 +1085,34 @@ addItems(document.getElementById('ring2'), [
 ]);
 
 
-/* ── STAT CYCLE ── */
-(function statCycle() {
+/* ── HERO BG CYCLE ── */
+(function heroBgCycle() {
   const slides = [
-    {cls:'orb-num', val:'200+', lbl:'Sites criados'},
-    {cls:'orb-ic',  val:'⚡',   lbl:'Sites Animados'},
-    {cls:'orb-ic',  val:'🚀',   lbl:'Lançamento Rápido'},
-    {cls:'orb-ic',  val:'🎯',   lbl:'Focado em Venda'},
-    {cls:'orb-ic',  val:'✦',   lbl:'Novos Designs'},
+    {isNum:true,  val:'200+', lbl:'Sites criados',     glow:'rgba(0,188,255,0.18)'},
+    {isNum:false, val:'⚡',   lbl:'Sites Animados',    glow:'rgba(245,158,11,0.22)'},
+    {isNum:false, val:'🚀',   lbl:'Lançamento Rápido', glow:'rgba(139,92,246,0.22)'},
+    {isNum:false, val:'🎯',   lbl:'Focado em Venda',   glow:'rgba(141,212,78,0.20)'},
+    {isNum:false, val:'✦',   lbl:'Novos Designs',     glow:'rgba(0,221,208,0.22)'},
   ];
-  const center = document.getElementById('orbCenter');
-  const numEl  = document.getElementById('orbNum');
-  const lblEl  = document.getElementById('orbLbl');
-  if (!center || !numEl || !lblEl) return;
+  const main  = document.getElementById('heroBgMain');
+  const numEl = document.getElementById('heroBgNum');
+  const icEl  = document.getElementById('heroBgIc');
+  const lblEl = document.getElementById('heroBgLbl');
+  const glow  = document.getElementById('heroBgGlow');
+  if (!main) return;
   let idx = 0;
+  function show(s) {
+    if (s.isNum) { numEl.style.display='block'; icEl.style.display='none'; numEl.textContent=s.val; }
+    else         { numEl.style.display='none';  icEl.style.display='block'; icEl.textContent=s.val; }
+    lblEl.textContent = s.lbl;
+    if (glow) glow.style.background = `radial-gradient(circle, ${s.glow}, transparent 65%)`;
+    main.classList.add('vis');
+  }
+  show(slides[0]);
   setInterval(() => {
-    center.classList.add('orb-out');
-    setTimeout(() => {
-      idx = (idx + 1) % slides.length;
-      const s = slides[idx];
-      numEl.className  = s.cls;
-      numEl.textContent = s.val;
-      lblEl.textContent = s.lbl;
-      center.classList.remove('orb-out');
-      center.classList.add('orb-in');
-      requestAnimationFrame(() => requestAnimationFrame(() => center.classList.remove('orb-in')));
-    }, 350);
-  }, 2800);
+    main.classList.remove('vis');
+    setTimeout(() => { idx=(idx+1)%slides.length; show(slides[idx]); }, 1100);
+  }, 3600);
 })();
 
 /* ── MARQUEE ── */
