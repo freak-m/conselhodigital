@@ -131,7 +131,7 @@
     .ql-toolbar .ql-stroke { stroke:#aaa; } .ql-toolbar .ql-fill { fill:#aaa; }
     .ql-toolbar button:hover .ql-stroke, .ql-toolbar button.ql-active .ql-stroke { stroke:var(--blue)!important; }
 
-    /* image upload */
+    /* image upload (legacy, other sections) */
     .img-upload-area {
       border:2px dashed var(--cbr); border-radius:8px; padding:20px; text-align:center;
       cursor:pointer; transition:border-color .2s; background:var(--bg3);
@@ -140,6 +140,47 @@
     .img-upload-area .upload-icon { font-size:24px; margin-bottom:6px; }
     .img-upload-area p { font-size:11px; color:var(--muted); }
     .img-preview { max-width:100%; border-radius:6px; margin-top:8px; display:none; }
+
+    /* ── PORTFOLIO dual-image preview ── */
+    .pf-previews { display:flex; gap:10px; margin-bottom:14px; }
+    .pf-prev-desktop { flex:2; cursor:pointer; display:block; }
+    .pf-prev-mobile  { flex:1; cursor:pointer; display:block; }
+    .pf-prev-inner {
+      position:relative; border-radius:8px; overflow:hidden;
+      border:1.5px dashed var(--cbr); background:var(--bg3);
+      transition:border-color .2s, box-shadow .2s;
+    }
+    .pf-prev-desktop .pf-prev-inner { aspect-ratio:16/7; }
+    .pf-prev-mobile  .pf-prev-inner { aspect-ratio:9/16; max-height:260px; }
+    .pf-prev-desktop:hover .pf-prev-inner,
+    .pf-prev-mobile:hover  .pf-prev-inner { border-color:var(--blue); box-shadow:0 0 0 2px rgba(0,188,255,.15); }
+    .pf-prev-img { width:100%; height:100%; object-fit:cover; display:block; }
+    .pf-prev-empty {
+      position:absolute; inset:0; display:flex; flex-direction:column;
+      align-items:center; justify-content:center; gap:6px;
+      color:var(--muted); font-size:11px; pointer-events:none;
+    }
+    .pf-prev-empty-icon { font-size:26px; }
+    .pf-prev-overlay {
+      position:absolute; bottom:0; left:0; right:0;
+      padding:10px 12px 8px;
+      background:linear-gradient(to top, rgba(4,10,18,.96) 0%, transparent 100%);
+      pointer-events:none;
+    }
+    .pf-prev-cat   { font-size:9px; color:#00bcff; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:2px; }
+    .pf-prev-title { font-size:11px; font-weight:600; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .pf-prev-badge {
+      position:absolute; top:7px; right:7px; font-size:9px; font-weight:600;
+      padding:2px 8px; border-radius:99px; backdrop-filter:blur(6px);
+      background:rgba(0,0,0,.55); color:rgba(255,255,255,.8);
+    }
+    .pf-prev-hint {
+      position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+      background:rgba(0,188,255,.12); opacity:0; transition:opacity .2s;
+      font-size:11px; color:var(--blue); font-weight:600; pointer-events:none;
+    }
+    .pf-prev-desktop:hover .pf-prev-hint,
+    .pf-prev-mobile:hover  .pf-prev-hint { opacity:1; }
     input[type="file"] { display:none; }
 
     /* ── PREVIEW PANE ── */
@@ -677,32 +718,47 @@ function makePortfolioItem(it,i) {
   const d=document.createElement('div'); d.className='repeat-item';
   const imgId=`port-img-${i}`;
   const mImgId=`port-mimg-${i}`;
-  d.innerHTML=`<div class="item-head"><span class="item-label">Projeto ${i+1}</span><button class="btn-remove" onclick="this.closest('.repeat-item').remove();sendPreview()">✕</button></div>
-    <div class="fld"><label>Categoria</label><input type="text" value="${escHtml(it.category||'')}" oninput="sendPreview()"></div>
-    <div class="fld"><label>Título</label><input type="text" value="${escHtml(it.title||'')}" oninput="sendPreview()"></div>
-    <div class="fld"><label>Link do site do cliente</label><input type="text" value="${escHtml(it.link||'')}" oninput="sendPreview()" placeholder="https://sitedocliente.com"></div>
-    <div class="fld"><label>Ocupa 2 colunas?</label><select oninput="sendPreview()">
-      <option value="true" ${it.span2?'selected':''}>Sim</option>
-      <option value="false" ${!it.span2?'selected':''}>Não</option>
-    </select></div>
-    <div class="fld"><label>Imagem Desktop</label>
-      <label class="img-upload-area" for="${imgId}">
-        <div class="upload-icon">🖼️</div>
-        <p>${it.image?'Clique para trocar':'Arraste ou clique para enviar'}</p>
-        <img class="img-preview" id="prev-${imgId}" src="${it.image||''}" style="${it.image?'display:block':''}">
+  const cat=escHtml(it.category||'');
+  const ttl=escHtml(it.title||'');
+  const img=escHtml(it.image||'');
+  const mimg=escHtml(it.mobile_image||'');
+  d.innerHTML=`
+    <div class="item-head"><span class="item-label">Projeto ${i+1}</span><button class="btn-remove" onclick="this.closest('.repeat-item').remove();sendPreview()">✕</button></div>
+    <!-- Dual image previews -->
+    <div class="pf-previews">
+      <label class="pf-prev-desktop" for="${imgId}" title="Clique para trocar imagem desktop">
+        <div class="pf-prev-inner">
+          ${img?`<img class="pf-prev-img" id="prev-${imgId}" src="${img}" alt="">`
+               :`<div class="pf-prev-empty"><span class="pf-prev-empty-icon">🖥️</span><span>Clique para adicionar</span></div><img class="pf-prev-img" id="prev-${imgId}" src="" alt="" style="display:none">`}
+          <div class="pf-prev-overlay"><div class="pf-prev-cat pf-dyn-cat">${cat}</div><div class="pf-prev-title pf-dyn-title">${ttl}</div></div>
+          <span class="pf-prev-badge">🖥 Desktop</span>
+          <div class="pf-prev-hint">Trocar imagem</div>
+        </div>
       </label>
-      <input type="file" id="${imgId}" accept="image/*" onchange="handleImgUpload(this,'prev-${imgId}',this.closest('.repeat-item'))">
-    </div>
-    <input type="hidden" class="img-url" value="${escHtml(it.image||'')}">
-    <div class="fld"><label>Imagem Mobile 📱 (retrato, ex: 390×844px)</label>
-      <label class="img-upload-area" for="${mImgId}">
-        <div class="upload-icon">📱</div>
-        <p>${it.mobile_image?'Clique para trocar':'Arraste ou clique para enviar'}</p>
-        <img class="img-preview" id="prev-${mImgId}" src="${it.mobile_image||''}" style="${it.mobile_image?'display:block':''}">
+      <label class="pf-prev-mobile" for="${mImgId}" title="Clique para trocar imagem mobile">
+        <div class="pf-prev-inner">
+          ${mimg?`<img class="pf-prev-img" id="prev-${mImgId}" src="${mimg}" alt="">`
+                :`<div class="pf-prev-empty"><span class="pf-prev-empty-icon">📱</span><span>Clique para adicionar</span></div><img class="pf-prev-img" id="prev-${mImgId}" src="" alt="" style="display:none">`}
+          <div class="pf-prev-overlay"><div class="pf-prev-cat pf-dyn-cat">${cat}</div><div class="pf-prev-title pf-dyn-title">${ttl}</div></div>
+          <span class="pf-prev-badge">📱 Mobile</span>
+          <div class="pf-prev-hint">Trocar imagem</div>
+        </div>
       </label>
-      <input type="file" id="${mImgId}" accept="image/*" onchange="handleMobileImgUpload(this,'prev-${mImgId}',this.closest('.repeat-item'))">
     </div>
-    <input type="hidden" class="mobile-img-url" value="${escHtml(it.mobile_image||'')}">`;
+    <input type="file" id="${imgId}"  accept="image/*" onchange="handleImgUpload(this,'prev-${imgId}',this.closest('.repeat-item'))">
+    <input type="file" id="${mImgId}" accept="image/*" onchange="handleMobileImgUpload(this,'prev-${mImgId}',this.closest('.repeat-item'))">
+    <input type="hidden" class="img-url"        value="${img}">
+    <input type="hidden" class="mobile-img-url" value="${mimg}">
+    <!-- Text fields -->
+    <div class="inline-2">
+      <div class="fld"><label>Categoria</label><input type="text" value="${cat}" oninput="pfUpdateOverlay(this);sendPreview()" placeholder="Landing Page"></div>
+      <div class="fld"><label>Ocupa 2 colunas?</label><select oninput="sendPreview()">
+        <option value="true"  ${it.span2?'selected':''}>Sim (destaque)</option>
+        <option value="false" ${!it.span2?'selected':''}>Não</option>
+      </select></div>
+    </div>
+    <div class="fld"><label>Título do projeto</label><input type="text" value="${ttl}" oninput="pfUpdateOverlay(this);sendPreview()" placeholder="Nome do cliente"></div>
+    <div class="fld"><label>Link do site</label><input type="text" value="${escHtml(it.link||'')}" oninput="sendPreview()" placeholder="https://sitedocliente.com.br"></div>`;
   return d;
 }
 function addPortfolioItem() {
@@ -710,12 +766,26 @@ function addPortfolioItem() {
   c.appendChild(makePortfolioItem({category:'',title:'',link:'',span2:false,image:'',mobile_image:'',bg:'linear-gradient(135deg,#071829 0%,#0E4D8C 100%)'}, c.children.length));
 }
 
+function pfShowImg(previewId) {
+  const prev = document.getElementById(previewId); if(!prev) return;
+  prev.style.display = 'block';
+  const empty = prev.closest('.pf-prev-inner')?.querySelector('.pf-prev-empty');
+  if (empty) empty.style.display = 'none';
+}
+function pfUpdateOverlay(input) {
+  const item = input.closest('.repeat-item'); if(!item) return;
+  const inputs = item.querySelectorAll('input[type="text"]');
+  const cat   = inputs[0]?.value || '';
+  const title = inputs[1]?.value || '';
+  item.querySelectorAll('.pf-dyn-cat').forEach(el => el.textContent = cat);
+  item.querySelectorAll('.pf-dyn-title').forEach(el => el.textContent = title);
+}
 function handleImgUpload(input, previewId, container) {
   const file = input.files[0]; if(!file) return;
   uploadImage(file, url => {
     container.querySelector('.img-url').value = url;
     const prev = document.getElementById(previewId);
-    prev.src = url; prev.style.display = 'block';
+    prev.src = url; pfShowImg(previewId);
     sendPreview();
   });
 }
@@ -724,7 +794,7 @@ function handleMobileImgUpload(input, previewId, container) {
   uploadImage(file, url => {
     container.querySelector('.mobile-img-url').value = url;
     const prev = document.getElementById(previewId);
-    prev.src = url; prev.style.display = 'block';
+    prev.src = url; pfShowImg(previewId);
     sendPreview();
   });
 }
