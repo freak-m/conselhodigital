@@ -505,7 +505,7 @@
     }
     .process-timeline::before {
       content:''; position:absolute;
-      top:23px; left:12.5%; right:12.5%; height:2px;
+      top:60px; left:12.5%; right:12.5%; height:2px;
       background:linear-gradient(90deg,
         rgba(0,188,255,.55) 0%,
         rgba(0,221,208,.55) 33%,
@@ -517,44 +517,53 @@
       display:flex; flex-direction:column; align-items:center; text-align:center;
       position:relative; z-index:1;
     }
-    .tl-node {
-      width:48px; height:48px; border-radius:50%; flex-shrink:0;
+    /* illustration card */
+    .tl-illus {
+      width:120px; height:120px; border-radius:20px;
       display:flex; align-items:center; justify-content:center;
-      font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:700;
-      background:var(--bg); border:2px solid currentColor;
-      margin-bottom:20px; position:relative; z-index:1;
-      transition:transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s;
+      margin-bottom:16px; position:relative; z-index:1;
+      transition:transform .4s cubic-bezier(.16,1,.3,1), box-shadow .4s;
     }
-    .tl-step:nth-child(1) .tl-node { color:var(--blue);   box-shadow:0 0 0 5px rgba(0,188,255,.10), 0 0 22px rgba(0,188,255,.25); }
-    .tl-step:nth-child(2) .tl-node { color:var(--teal);   box-shadow:0 0 0 5px rgba(0,221,208,.10), 0 0 22px rgba(0,221,208,.25); }
-    .tl-step:nth-child(3) .tl-node { color:var(--green);  box-shadow:0 0 0 5px rgba(141,212,78,.10), 0 0 22px rgba(141,212,78,.25); }
-    .tl-step:nth-child(4) .tl-node { color:var(--violet); box-shadow:0 0 0 5px rgba(139,92,246,.10), 0 0 22px rgba(139,92,246,.25); }
-    .tl-step:hover .tl-node { transform:scale(1.12); }
+    .tl-illus svg { width:68px; height:68px; }
+    .tl-step:hover .tl-illus { transform:translateY(-6px); }
+    .tl-step:nth-child(1) .tl-illus { background:rgba(0,188,255,.08); border:1px solid rgba(0,188,255,.30); box-shadow:0 0 24px rgba(0,188,255,.12); }
+    .tl-step:nth-child(2) .tl-illus { background:rgba(0,221,208,.08); border:1px solid rgba(0,221,208,.28); box-shadow:0 0 24px rgba(0,221,208,.12); }
+    .tl-step:nth-child(3) .tl-illus { background:rgba(141,212,78,.08); border:1px solid rgba(141,212,78,.25); box-shadow:0 0 24px rgba(141,212,78,.10); }
+    .tl-step:nth-child(4) .tl-illus { background:rgba(139,92,246,.08); border:1px solid rgba(139,92,246,.28); box-shadow:0 0 24px rgba(139,92,246,.12); }
+    .tl-node {
+      width:40px; height:40px; border-radius:50%; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center;
+      font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700;
+      background:var(--bg); border:2px solid currentColor;
+      margin-bottom:14px; position:relative; z-index:1;
+      transition:transform .3s cubic-bezier(.16,1,.3,1);
+    }
+    .tl-step:nth-child(1) .tl-node { color:var(--blue); }
+    .tl-step:nth-child(2) .tl-node { color:var(--teal); }
+    .tl-step:nth-child(3) .tl-node { color:var(--green); }
+    .tl-step:nth-child(4) .tl-node { color:var(--violet); }
+    .tl-step:hover .tl-node { transform:scale(1.1); }
     .tl-step-content h3 { font-size:17px; font-weight:600; margin-bottom:9px; }
     .tl-step-content p  { color:var(--muted); font-size:14px; line-height:1.65; }
 
     /* ── PAINEL / ADMIN ── */
     .panel-intro { max-width:680px; margin-bottom:40px; }
     .panel-feat-grid {
-      display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:28px;
+      display:flex; justify-content:space-between; gap:10px; margin-top:28px;
     }
     .panel-feat-card {
-      background:var(--surface); border:1px solid var(--border);
-      border-radius:var(--r); padding:20px 16px;
       display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px;
-      transition:border-color .3s, transform .3s cubic-bezier(.16,1,.3,1);
+      flex:1;
     }
-    .panel-feat-card:hover { border-color:var(--border-2); transform:translateY(-3px); }
     .panel-feat-ic {
-      width:44px; height:44px; border-radius:12px; flex-shrink:0;
-      display:flex; align-items:center; justify-content:center; font-size:20px;
-      background:var(--surface-2); border:1px solid var(--border);
+      width:48px; height:48px; border-radius:14px; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center; font-size:22px;
     }
-    .panel-feat-ic.b { color:var(--blue);   border-color:rgba(0,188,255,.35); }
-    .panel-feat-ic.g { color:var(--green);  border-color:rgba(141,212,78,.35); }
-    .panel-feat-ic.v { color:var(--violet); border-color:rgba(139,92,246,.35); }
-    .panel-feat-ic.t { color:var(--teal);   border-color:rgba(0,221,208,.35); }
-    .panel-feat-card h3 { font-size:13.5px; font-weight:600; margin:0; line-height:1.3; }
+    .panel-feat-ic.b { color:var(--blue); }
+    .panel-feat-ic.g { color:var(--green); }
+    .panel-feat-ic.v { color:var(--violet); }
+    .panel-feat-ic.t { color:var(--teal); }
+    .panel-feat-card h3 { font-size:13.5px; font-weight:600; margin:0; line-height:1.3; color:var(--muted); }
     .panel-intro .feat-list { list-style:none; margin-top:24px; display:flex; flex-wrap:wrap; gap:14px 32px; }
     .panel-intro .feat-list li { display:flex; gap:10px; align-items:center; }
     .panel-intro .feat-ic {
@@ -584,7 +593,26 @@
     .pm-sel {
       font-size:11.5px; padding:4px 10px; border-radius:6px;
       border:1px solid rgba(255,255,255,0.12); color:#ccc; background:rgba(255,255,255,0.05);
+      cursor:pointer; font-family:'Space Grotesk',sans-serif;
+      transition:border-color .2s, color .2s;
     }
+    .pm-sel:hover { border-color:rgba(255,255,255,.3); color:#fff; }
+    .pm-dropdown { position:relative; }
+    .pm-dropdown-menu {
+      display:none; position:absolute; top:calc(100% + 5px); left:0;
+      background:#0B0F15; border:1px solid rgba(255,255,255,0.14);
+      border-radius:8px; padding:4px; z-index:200; min-width:148px;
+      box-shadow:0 8px 24px rgba(0,0,0,.55);
+    }
+    .pm-dropdown-menu.open { display:block; animation:pmDrop .18s ease; }
+    @keyframes pmDrop { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:none} }
+    .pm-dropdown-menu button {
+      display:block; width:100%; text-align:left; border:none; background:none;
+      color:#aaa; font-size:11.5px; padding:7px 12px; border-radius:5px;
+      cursor:pointer; font-family:'Space Grotesk',sans-serif; transition:background .15s, color .15s;
+    }
+    .pm-dropdown-menu button:hover { background:rgba(255,255,255,.07); color:#fff; }
+    .pm-kpi-n { transition:opacity .5s ease; }
     .pm-live { display:flex; align-items:center; gap:5px; font-size:11px; color:#888; }
     .pm-live-dot { width:6px; height:6px; border-radius:50%; background:#3B9EFF; animation:pmBlink 1.8s ease-in-out infinite; }
     @keyframes pmBlink { 0%,100%{opacity:1} 50%{opacity:.25} }
@@ -799,22 +827,15 @@
       .rv.sl { transform:translateX(-70px); }
       .rv.sr { transform:translateX(70px); }
       .rv.sl.on, .rv.sr.on { transform:none; }
-      /* process: vertical timeline on mobile */
-      .process-timeline { grid-template-columns:1fr; gap:0; }
-      .process-timeline::before {
-        display:block;
-        top:0; bottom:0; left:23px; right:auto; width:2px; height:auto;
-        background:linear-gradient(180deg,
-          rgba(0,188,255,.55) 0%,
-          rgba(0,221,208,.55) 33%,
-          rgba(141,212,78,.55) 66%,
-          rgba(139,92,246,.55) 100%);
-      }
-      .tl-step { flex-direction:row; align-items:flex-start; text-align:left; gap:18px; padding-bottom:28px; }
-      .tl-step:last-child { padding-bottom:0; }
-      .tl-node { margin-bottom:0; }
+      /* process: card stack on mobile */
+      .process-timeline { grid-template-columns:1fr; gap:20px; }
+      .process-timeline::before { display:none; }
+      .tl-step { flex-direction:column; align-items:center; text-align:center; padding-bottom:0; gap:0; }
+      .tl-illus { width:80px; height:80px; border-radius:14px; margin-bottom:12px; }
+      .tl-illus svg { width:48px; height:48px; }
       /* panel feat grid: 2x2 on mobile */
-      .panel-feat-grid { grid-template-columns:repeat(2,1fr); }
+      .panel-feat-grid { flex-wrap:wrap; }
+      .panel-feat-card { flex:1 1 40%; }
       /* orbital: smaller on mobile */
       .hero-orbital { height:340px; }
       .orb-ring.r3 { display:none; }
@@ -1049,22 +1070,103 @@
       <p class="section-sub" id="proc-subtitle">Processo claro e sem surpresas — você acompanha cada etapa.</p>
     </div>
     <div class="process-timeline" id="proc-grid">
+
       <div class="tl-step rv">
+        <div class="tl-illus">
+          <svg viewBox="0 0 80 80" fill="none">
+            <!-- Document -->
+            <rect x="10" y="8" width="34" height="46" rx="4" fill="rgba(0,188,255,.1)" stroke="#00BCFF" stroke-width="1.8"/>
+            <path d="M31 8L44 21H31Z" fill="rgba(0,188,255,.22)" stroke="#00BCFF" stroke-width="1.5" stroke-linejoin="round"/>
+            <line x1="18" y1="30" x2="38" y2="30" stroke="#00BCFF" stroke-width="1.5" stroke-linecap="round" opacity=".7"/>
+            <line x1="18" y1="38" x2="38" y2="38" stroke="#00BCFF" stroke-width="1.5" stroke-linecap="round" opacity=".7"/>
+            <line x1="18" y1="46" x2="30" y2="46" stroke="#00BCFF" stroke-width="1.5" stroke-linecap="round" opacity=".7"/>
+            <!-- Magnifying glass -->
+            <circle cx="54" cy="56" r="13" fill="rgba(0,188,255,.1)" stroke="#00BCFF" stroke-width="2.2"/>
+            <circle cx="54" cy="56" r="6" fill="rgba(0,188,255,.18)"/>
+            <line x1="63" y1="65" x2="72" y2="74" stroke="#00BCFF" stroke-width="2.8" stroke-linecap="round"/>
+          </svg>
+        </div>
         <div class="tl-node">01</div>
         <div class="tl-step-content"><h3>Descobrir</h3><p>Mergulhamos na sua marca, público e objetivos de negócio para construir a estratégia certa.</p></div>
       </div>
+
       <div class="tl-step rv d1">
+        <div class="tl-illus">
+          <svg viewBox="0 0 80 80" fill="none">
+            <!-- Sketchpad -->
+            <rect x="8" y="16" width="46" height="40" rx="4" fill="rgba(0,221,208,.1)" stroke="#00DDD0" stroke-width="1.8"/>
+            <line x1="8" y1="25" x2="54" y2="25" stroke="#00DDD0" stroke-width="1" opacity=".35"/>
+            <!-- Design layout sketch -->
+            <rect x="14" y="30" width="16" height="12" rx="2" fill="rgba(0,221,208,.2)" stroke="#00DDD0" stroke-width="1.2"/>
+            <line x1="34" y1="32" x2="47" y2="32" stroke="#00DDD0" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
+            <line x1="34" y1="38" x2="47" y2="38" stroke="#00DDD0" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
+            <line x1="14" y1="48" x2="47" y2="48" stroke="#00DDD0" stroke-width="1.2" stroke-linecap="round" opacity=".4"/>
+            <!-- Pencil (diagonal) -->
+            <path d="M52,10 L72,30 L68,34 L48,14Z" fill="rgba(0,221,208,.2)" stroke="#00DDD0" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M68,34 L63,44 L72,40Z" fill="#00DDD0" opacity=".85"/>
+            <line x1="52" y1="10" x2="48" y2="14" stroke="#00DDD0" stroke-width="3.5" stroke-linecap="round" opacity=".45"/>
+          </svg>
+        </div>
         <div class="tl-node">02</div>
         <div class="tl-step-content"><h3>Design</h3><p>Exemplos planejados para você escolher o que mais combina com sua marca.</p></div>
       </div>
+
       <div class="tl-step rv d2">
+        <div class="tl-illus">
+          <svg viewBox="0 0 80 80" fill="none">
+            <!-- Open book left page -->
+            <path d="M6 20Q6 16 10 16L38 16L38 64L10 64Q6 64 6 60Z" fill="rgba(141,212,78,.1)" stroke="#8DD44E" stroke-width="1.8"/>
+            <!-- Open book right page -->
+            <path d="M74 20Q74 16 70 16L42 16L42 64L70 64Q74 64 74 60Z" fill="rgba(141,212,78,.1)" stroke="#8DD44E" stroke-width="1.8"/>
+            <line x1="38" y1="16" x2="38" y2="64" stroke="#8DD44E" stroke-width="1.5" opacity=".35"/>
+            <line x1="42" y1="16" x2="42" y2="64" stroke="#8DD44E" stroke-width="1.5" opacity=".35"/>
+            <!-- Left page lines -->
+            <line x1="12" y1="28" x2="34" y2="28" stroke="#8DD44E" stroke-width="1.2" stroke-linecap="round" opacity=".5"/>
+            <line x1="12" y1="35" x2="34" y2="35" stroke="#8DD44E" stroke-width="1.2" stroke-linecap="round" opacity=".5"/>
+            <line x1="12" y1="42" x2="34" y2="42" stroke="#8DD44E" stroke-width="1.2" stroke-linecap="round" opacity=".5"/>
+            <line x1="12" y1="49" x2="26" y2="49" stroke="#8DD44E" stroke-width="1.2" stroke-linecap="round" opacity=".5"/>
+            <!-- Right page: cover being designed -->
+            <rect x="48" y="22" width="18" height="22" rx="3" fill="rgba(141,212,78,.22)" stroke="#8DD44E" stroke-width="1.5"/>
+            <line x1="48" y1="50" x2="66" y2="50" stroke="#8DD44E" stroke-width="1.2" stroke-linecap="round" opacity=".65"/>
+            <line x1="48" y1="56" x2="60" y2="56" stroke="#8DD44E" stroke-width="1.2" stroke-linecap="round" opacity=".65"/>
+            <!-- Pen on cover -->
+            <line x1="64" y1="22" x2="74" y2="12" stroke="#8DD44E" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="64" cy="22" r="2.5" fill="#8DD44E"/>
+          </svg>
+        </div>
         <div class="tl-node">03</div>
         <div class="tl-step-content"><h3>Desenvolver</h3><p>Código WordPress limpo e personalizado — sem plugins desnecessários, leve e seguro.</p></div>
       </div>
+
       <div class="tl-step rv d3">
+        <div class="tl-illus">
+          <svg viewBox="0 0 80 80" fill="none">
+            <!-- Shelf -->
+            <rect x="4" y="62" width="72" height="5" rx="2" fill="rgba(139,92,246,.3)" stroke="#8B5CF6" stroke-width="1.5"/>
+            <line x1="6" y1="67" x2="6" y2="74" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round" opacity=".35"/>
+            <line x1="74" y1="67" x2="74" y2="74" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round" opacity=".35"/>
+            <!-- Book 1 -->
+            <rect x="10" y="28" width="12" height="34" rx="2" fill="rgba(139,92,246,.25)" stroke="#8B5CF6" stroke-width="1.5"/>
+            <line x1="10" y1="38" x2="22" y2="38" stroke="#8B5CF6" stroke-width="1" opacity=".5"/>
+            <rect x="13" y="43" width="6" height="8" rx="1" fill="rgba(139,92,246,.2)" stroke="#8B5CF6" stroke-width=".8"/>
+            <!-- Book 2 -->
+            <rect x="24" y="36" width="10" height="26" rx="2" fill="rgba(139,92,246,.15)" stroke="#8B5CF6" stroke-width="1.5"/>
+            <!-- Book 3 (tallest) -->
+            <rect x="36" y="22" width="14" height="40" rx="2" fill="rgba(139,92,246,.35)" stroke="#8B5CF6" stroke-width="1.5"/>
+            <line x1="36" y1="34" x2="50" y2="34" stroke="#8B5CF6" stroke-width="1" opacity=".5"/>
+            <rect x="40" y="40" width="6" height="10" rx="1" fill="rgba(139,92,246,.25)" stroke="#8B5CF6" stroke-width=".8"/>
+            <!-- Book 4 -->
+            <rect x="52" y="38" width="10" height="24" rx="2" fill="rgba(139,92,246,.2)" stroke="#8B5CF6" stroke-width="1.5"/>
+            <!-- Stars -->
+            <text x="22" y="20" font-size="9" fill="#8B5CF6" opacity=".75" text-anchor="middle">✦</text>
+            <text x="56" y="16" font-size="6" fill="#8B5CF6" opacity=".5" text-anchor="middle">✦</text>
+            <text x="66" y="26" font-size="5" fill="#8B5CF6" opacity=".4" text-anchor="middle">✦</text>
+          </svg>
+        </div>
         <div class="tl-node">04</div>
         <div class="tl-step-content"><h3>Lançar</h3><p>Deploy otimizado, treinamento completo e plano de manutenção para crescer sem preocupações.</p></div>
       </div>
+
     </div>
   </div>
 </section>
@@ -1095,7 +1197,14 @@
           <svg width="15" height="15" viewBox="0 0 100 100" fill="#F38020"><path d="M68.5,44.5c-1.4-9.9-10.1-17.5-20.5-17.5c-9,0-16.8,5.3-20.4,13c-6.5,0.9-11.6,6.5-11.6,13.3c0,7.4,6,13.5,13.5,13.5h37.5c6.2,0,11.2-5,11.2-11.2C78.2,49.7,74,45.1,68.5,44.5z"/></svg>
           Cloudflare Metrics
         </div>
-        <div class="pm-sel">Últimos 7 dias ▾</div>
+        <div class="pm-dropdown" id="pmPeriodWrap">
+          <button class="pm-sel" id="pmSelBtn" onclick="togglePmDropdown(event)">Últimos 7 dias ▾</button>
+          <div class="pm-dropdown-menu" id="pmDropMenu">
+            <button onclick="setPmPeriod(7,this)">Últimos 7 dias</button>
+            <button onclick="setPmPeriod(14,this)">Últimos 14 dias</button>
+            <button onclick="setPmPeriod(30,this)">Últimos 30 dias</button>
+          </div>
+        </div>
         <div class="pm-live"><span class="pm-live-dot"></span>verificando...</div>
         <div class="pm-tb-btns">
           <span class="pm-btn-sm">↻ Atualizar</span>
@@ -1105,8 +1214,8 @@
       <div class="pm-db-body">
         <div class="pm-kpi-row">
           <div class="pm-kpi-card">
-            <div class="pm-kpi-hd"><span class="pm-kpi-ttl">Total Visitas</span><span class="pm-badge-up">↑119%</span></div>
-            <div class="pm-kpi-n">474</div>
+            <div class="pm-kpi-hd"><span class="pm-kpi-ttl">Total Visitas</span><span class="pm-badge-up" id="pmBadgeV">↑119%</span></div>
+            <div class="pm-kpi-n" id="pmVisitas">474</div>
             <svg class="pm-spark" viewBox="0 0 140 38" preserveAspectRatio="none">
               <defs><linearGradient id="yg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E5A800" stop-opacity=".3"/><stop offset="100%" stop-color="#E5A800" stop-opacity="0"/></linearGradient></defs>
               <polygon points="0,30 20,36 47,26 70,2 93,22 116,14 140,20 140,38 0,38" fill="url(#yg)"/>
@@ -1115,8 +1224,8 @@
             <div class="pm-sn"><span>58</span><span>31</span><span>59</span><span>126</span><span>62</span><span>77</span><span>61</span></div>
           </div>
           <div class="pm-kpi-card">
-            <div class="pm-kpi-hd"><span class="pm-kpi-ttl">Page Views</span><span class="pm-badge-dn">↓18%</span></div>
-            <div class="pm-kpi-n">338</div>
+            <div class="pm-kpi-hd"><span class="pm-kpi-ttl">Page Views</span><span class="pm-badge-dn" id="pmBadgeVW">↓18%</span></div>
+            <div class="pm-kpi-n" id="pmViews">338</div>
             <svg class="pm-spark" viewBox="0 0 140 38" preserveAspectRatio="none">
               <defs><linearGradient id="bg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3B9EFF" stop-opacity=".25"/><stop offset="100%" stop-color="#3B9EFF" stop-opacity="0"/></linearGradient></defs>
               <polygon points="0,24 20,36 47,29 70,16 93,35 116,12 140,8 140,38 0,38" fill="url(#bg2)"/>
@@ -1230,7 +1339,7 @@
             <div class="gm-fav">C</div>
             <div class="gm-url"><b>Camp Caçambas</b><small>https://campcacambas.com.br</small></div>
           </div>
-          <div class="gm-title">Camp Caçambas — Locação de Caçambas em Campinas e Região</div>
+          <a class="gm-title" href="https://campcacambas.com.br" target="_blank" rel="noopener" style="display:block;text-decoration:none">Camp Caçambas — Locação de Caçambas em Campinas e Região</a>
           <div class="gm-desc">Locação de <b>caçambas</b> para entulho <b>em Campinas</b> e região com entrega rápida. Retirada de resíduos, atendimento ágil e os melhores preços. Solicite seu orçamento!</div>
         </div>
       </div>
@@ -1451,6 +1560,65 @@ fetch('/content.json').then(r=>r.json()).then(applyContent).catch(()=>{});
     banner.classList.remove('visible');
     setTimeout(() => banner.style.display = 'none', 400);
   };
+})();
+
+/* ── Dashboard Period Selector ── */
+(function() {
+  const DATA = {
+    7:  { visitas:474,  views:338,  bv:'↑119%', bvw:'↓18%' },
+    14: { visitas:893,  views:631,  bv:'↑94%',  bvw:'↓6%'  },
+    30: { visitas:1824, views:1290, bv:'↑76%',  bvw:'↑14%' }
+  };
+  function animCount(el, target, dur) {
+    if (!el) return;
+    const from = parseInt(el.textContent.replace(/\D/g,'')) || 0;
+    const t0 = performance.now();
+    (function tick(now) {
+      const p = Math.min((now - t0) / dur, 1);
+      const e = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(from + (target - from) * e);
+      if (p < 1) requestAnimationFrame(tick);
+    })(performance.now());
+  }
+  window.togglePmDropdown = function(ev) {
+    ev.stopPropagation();
+    document.getElementById('pmDropMenu').classList.toggle('open');
+  };
+  window.setPmPeriod = function(days, btn) {
+    document.getElementById('pmDropMenu').classList.remove('open');
+    document.getElementById('pmSelBtn').textContent = 'Últimos ' + days + ' dias ▾';
+    const d = DATA[days];
+    ['pmVisitas','pmViews'].forEach(function(id) {
+      const el = document.getElementById(id);
+      if (el) el.style.opacity = '0';
+    });
+    setTimeout(function() {
+      const elV  = document.getElementById('pmVisitas');
+      const elVW = document.getElementById('pmViews');
+      const bV   = document.getElementById('pmBadgeV');
+      const bVW  = document.getElementById('pmBadgeVW');
+      if (elV)  { elV.style.opacity  = '1'; animCount(elV,  d.visitas, 1400); }
+      if (elVW) { elVW.style.opacity = '1'; animCount(elVW, d.views,   1400); }
+      if (bV)   bV.textContent  = d.bv;
+      if (bVW)  bVW.textContent = d.bvw;
+      document.querySelectorAll('.pm-spark,.pm-grp-bars,.pm-wa-svg,.pm-time-spark').forEach(function(c) {
+        c.style.transition = 'opacity 0s'; c.style.opacity = '0';
+        setTimeout(function() { c.style.transition = 'opacity 1.2s ease'; c.style.opacity = '1'; }, 50);
+      });
+      const mult = days === 7 ? 1 : days === 14 ? 1.88 : 3.84;
+      document.querySelectorAll('.pm-bar-y,.pm-bar-b').forEach(function(b) {
+        if (!b.dataset.h) b.dataset.h = b.style.height;
+        const base = parseFloat(b.dataset.h) || 50;
+        const scaled = Math.min(base * (mult > 1 ? mult * 0.6 + 0.4 : 1), 100);
+        b.style.transition = 'height 1.4s cubic-bezier(.16,1,.3,1)';
+        b.style.height = scaled + '%';
+      });
+    }, 420);
+  };
+  document.addEventListener('click', function() {
+    const m = document.getElementById('pmDropMenu');
+    if (m) m.classList.remove('open');
+  });
 })();
 
 /* ── Rastreamento de eventos para o Analytics Worker ── */
