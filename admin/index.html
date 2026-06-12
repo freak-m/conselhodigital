@@ -676,6 +676,7 @@ function renderPortfolioItems(items) {
 function makePortfolioItem(it,i) {
   const d=document.createElement('div'); d.className='repeat-item';
   const imgId=`port-img-${i}`;
+  const mImgId=`port-mimg-${i}`;
   d.innerHTML=`<div class="item-head"><span class="item-label">Projeto ${i+1}</span><button class="btn-remove" onclick="this.closest('.repeat-item').remove();sendPreview()">✕</button></div>
     <div class="fld"><label>Categoria</label><input type="text" value="${escHtml(it.category||'')}" oninput="sendPreview()"></div>
     <div class="fld"><label>Título</label><input type="text" value="${escHtml(it.title||'')}" oninput="sendPreview()"></div>
@@ -684,7 +685,7 @@ function makePortfolioItem(it,i) {
       <option value="true" ${it.span2?'selected':''}>Sim</option>
       <option value="false" ${!it.span2?'selected':''}>Não</option>
     </select></div>
-    <div class="fld"><label>Imagem</label>
+    <div class="fld"><label>Imagem Desktop</label>
       <label class="img-upload-area" for="${imgId}">
         <div class="upload-icon">🖼️</div>
         <p>${it.image?'Clique para trocar':'Arraste ou clique para enviar'}</p>
@@ -692,18 +693,36 @@ function makePortfolioItem(it,i) {
       </label>
       <input type="file" id="${imgId}" accept="image/*" onchange="handleImgUpload(this,'prev-${imgId}',this.closest('.repeat-item'))">
     </div>
-    <input type="hidden" class="img-url" value="${escHtml(it.image||'')}">`;
+    <input type="hidden" class="img-url" value="${escHtml(it.image||'')}">
+    <div class="fld"><label>Imagem Mobile 📱 (retrato, ex: 390×844px)</label>
+      <label class="img-upload-area" for="${mImgId}">
+        <div class="upload-icon">📱</div>
+        <p>${it.mobile_image?'Clique para trocar':'Arraste ou clique para enviar'}</p>
+        <img class="img-preview" id="prev-${mImgId}" src="${it.mobile_image||''}" style="${it.mobile_image?'display:block':''}">
+      </label>
+      <input type="file" id="${mImgId}" accept="image/*" onchange="handleMobileImgUpload(this,'prev-${mImgId}',this.closest('.repeat-item'))">
+    </div>
+    <input type="hidden" class="mobile-img-url" value="${escHtml(it.mobile_image||'')}">`;
   return d;
 }
 function addPortfolioItem() {
   const c=document.getElementById('portfolio-items');
-  c.appendChild(makePortfolioItem({category:'',title:'',link:'',span2:false,image:'',bg:'linear-gradient(135deg,#071829 0%,#0E4D8C 100%)'}, c.children.length));
+  c.appendChild(makePortfolioItem({category:'',title:'',link:'',span2:false,image:'',mobile_image:'',bg:'linear-gradient(135deg,#071829 0%,#0E4D8C 100%)'}, c.children.length));
 }
 
 function handleImgUpload(input, previewId, container) {
   const file = input.files[0]; if(!file) return;
   uploadImage(file, url => {
     container.querySelector('.img-url').value = url;
+    const prev = document.getElementById(previewId);
+    prev.src = url; prev.style.display = 'block';
+    sendPreview();
+  });
+}
+function handleMobileImgUpload(input, previewId, container) {
+  const file = input.files[0]; if(!file) return;
+  uploadImage(file, url => {
+    container.querySelector('.mobile-img-url').value = url;
     const prev = document.getElementById(previewId);
     prev.src = url; prev.style.display = 'block';
     sendPreview();
@@ -784,8 +803,9 @@ function collectForm() {
       title:    el.querySelectorAll('input[type="text"]')[1]?.value || '',
       link:     el.querySelectorAll('input[type="text"]')[2]?.value || '',
       span2:    el.querySelector('select')?.value === 'true',
-      image:    el.querySelector('.img-url')?.value || '',
-      bg:       currentContent?.portfolio?.items?.[i]?.bg || 'linear-gradient(135deg,#071829 0%,#0E4D8C 100%)',
+      image:        el.querySelector('.img-url')?.value || '',
+      mobile_image: el.querySelector('.mobile-img-url')?.value || '',
+      bg:           currentContent?.portfolio?.items?.[i]?.bg || 'linear-gradient(135deg,#071829 0%,#0E4D8C 100%)',
     }))
   };
   // Process
