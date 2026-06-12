@@ -281,42 +281,65 @@
       min-height:100vh;
       display:flex; flex-direction:column; align-items:center; justify-content:center;
       text-align:center; position:relative; overflow:hidden;
-      padding:160px clamp(20px,5vw,var(--pad)) 90px;
+      padding:80px clamp(20px,5vw,var(--pad)) 60px;
+      gap:24px;
     }
     .hero-copy {
       position:relative; z-index:2;
       display:flex; flex-direction:column; align-items:center;
       max-width:740px;
     }
-    /* ── HERO BG ANIMATION ── */
-    .hero-bg-anim {
-      position:absolute; inset:0; z-index:1;
-      display:flex; flex-direction:column; align-items:center; justify-content:center;
-      pointer-events:none; overflow:hidden;
+    /* ── HERO ORBITAL ── */
+    .hero-orbital {
+      position:relative; z-index:1; flex-shrink:0;
+      width:100%; height:580px;
+      display:flex; align-items:center; justify-content:center;
+      pointer-events:none;
     }
-    .hero-bg-glow {
-      position:absolute; width:700px; height:700px; border-radius:50%;
-      background:radial-gradient(circle, rgba(0,188,255,0.14), transparent 65%);
-      filter:blur(80px); transition:background 1.6s ease;
+    .orb-ring {
+      position:absolute; border-radius:50%;
+      border:1px solid rgba(255,255,255,0.07);
+      animation:orbPulse 5s ease-in-out infinite;
     }
-    .hero-bg-main {
-      position:relative; z-index:2; text-align:center;
-      opacity:0; transform:scale(0.82);
-      transition:opacity 1.1s ease, transform 1.1s ease;
+    .orb-ring.r1 { width:240px; height:240px; }
+    .orb-ring.r2 { width:400px; height:400px; animation-delay:.8s; }
+    .orb-ring.r3 { width:560px; height:560px; animation-delay:1.6s; }
+    @keyframes orbPulse { 0%,100%{opacity:.07} 50%{opacity:.18} }
+    .orb-sun { position:absolute; z-index:5; }
+    .orb-sun img {
+      height:100px; width:auto;
+      animation:orbGlow 3.5s ease-in-out infinite;
     }
-    .hero-bg-main.vis { opacity:1; transform:scale(1); animation:bgBreathe 3.2s ease-in-out infinite; }
-    @keyframes bgBreathe { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
-    .hero-bg-n {
-      font-family:'Space Grotesk',sans-serif; font-weight:900;
-      font-size:clamp(140px,26vw,320px); line-height:.85; display:block;
-      background:var(--grad); -webkit-background-clip:text; background-clip:text;
-      -webkit-text-fill-color:transparent; opacity:.11;
+    @keyframes orbGlow {
+      0%,100%{filter:drop-shadow(0 4px 28px rgba(0,188,255,.40))}
+      50%     {filter:drop-shadow(0 4px 54px rgba(0,188,255,.80))}
     }
-    .hero-bg-e { font-size:clamp(130px,24vw,300px); line-height:.9; display:block; opacity:.16; }
-    .hero-bg-l {
-      display:block; font-size:clamp(12px,1.6vw,20px); font-weight:700;
-      letter-spacing:5px; text-transform:uppercase; color:rgba(255,255,255,0.22); margin-top:22px;
+    .op-wrap {
+      position:absolute; top:50%; left:50%;
+      width:0; height:0;
+      animation:opOrbit var(--spd) linear var(--delay,0s) infinite;
+      transform-origin:0 0;
     }
+    .op-wrap.ring1 { --r:120px; }
+    .op-wrap.ring2 { --r:200px; }
+    .op-wrap.ring3 { --r:280px; }
+    .op {
+      position:absolute; top:0; left:0;
+      margin-top:calc(var(--r) * -1);
+      animation:opCounter var(--spd) linear var(--delay,0s) infinite;
+    }
+    .op-inner {
+      display:inline-flex; align-items:center; gap:6px;
+      background:rgba(10,23,38,0.90); backdrop-filter:blur(8px);
+      border:1px solid rgba(255,255,255,0.11);
+      border-radius:999px; padding:5px 12px 5px 7px;
+      white-space:nowrap; font-size:11.5px; font-weight:600;
+      color:var(--text); box-shadow:0 4px 20px rgba(0,0,0,.40);
+      line-height:1; transform:translateX(-50%);
+    }
+    .op-emoji { font-size:14px; }
+    @keyframes opOrbit   { to{transform:rotate(360deg)} }
+    @keyframes opCounter { to{transform:rotate(-360deg)} }
     .pill-tag {
       display:inline-flex; align-items:center; gap:9px;
       padding:7px 16px 7px 12px; border-radius:var(--r-pill);
@@ -470,29 +493,64 @@
     .pj-ph-icon { font-size:30px; opacity:.32; }
     .pj-ph-txt { font-size:12px; color:var(--muted); font-weight:500; }
 
-    /* ── PROCESS ── */
+    /* ── PROCESS (timeline stepper) ── */
     .process-intro { max-width:560px; margin-bottom:60px; }
-    .process-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
-    .step {
-      position:relative; background:var(--surface); border:1px solid var(--border);
-      border-radius:var(--r-lg); padding:28px 24px;
-      transition:transform .35s cubic-bezier(.16,1,.3,1), border-color .3s;
+    .process-timeline {
+      display:grid; grid-template-columns:repeat(4,1fr);
+      position:relative; gap:24px;
     }
-    .step:hover { transform:translateY(-5px); border-color:var(--border-2); }
-    .step-num {
-      width:50px; height:50px; border-radius:14px; display:flex; align-items:center; justify-content:center;
-      font-family:'Space Grotesk',sans-serif; font-size:18px; font-weight:700;
-      background:var(--surface-2); border:1px solid var(--border); margin-bottom:20px;
+    .process-timeline::before {
+      content:''; position:absolute;
+      top:23px; left:12.5%; right:12.5%; height:2px;
+      background:linear-gradient(90deg,
+        rgba(0,188,255,.55) 0%,
+        rgba(0,221,208,.55) 33%,
+        rgba(141,212,78,.55) 66%,
+        rgba(139,92,246,.55) 100%);
+      z-index:0;
     }
-    .step:nth-child(1) .step-num { color:var(--blue);   border-color:rgba(0,188,255,.35); }
-    .step:nth-child(2) .step-num { color:var(--teal);   border-color:rgba(0,221,208,.35); }
-    .step:nth-child(3) .step-num { color:var(--green);  border-color:rgba(141,212,78,.35); }
-    .step:nth-child(4) .step-num { color:var(--violet); border-color:rgba(139,92,246,.35); }
-    .step h3 { font-size:17px; font-weight:600; margin-bottom:10px; }
-    .step p { color:var(--muted); font-size:14.5px; line-height:1.65; }
+    .tl-step {
+      display:flex; flex-direction:column; align-items:center; text-align:center;
+      position:relative; z-index:1;
+    }
+    .tl-node {
+      width:48px; height:48px; border-radius:50%; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center;
+      font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:700;
+      background:var(--bg); border:2px solid currentColor;
+      margin-bottom:20px; position:relative; z-index:1;
+      transition:transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s;
+    }
+    .tl-step:nth-child(1) .tl-node { color:var(--blue);   box-shadow:0 0 0 5px rgba(0,188,255,.10), 0 0 22px rgba(0,188,255,.25); }
+    .tl-step:nth-child(2) .tl-node { color:var(--teal);   box-shadow:0 0 0 5px rgba(0,221,208,.10), 0 0 22px rgba(0,221,208,.25); }
+    .tl-step:nth-child(3) .tl-node { color:var(--green);  box-shadow:0 0 0 5px rgba(141,212,78,.10), 0 0 22px rgba(141,212,78,.25); }
+    .tl-step:nth-child(4) .tl-node { color:var(--violet); box-shadow:0 0 0 5px rgba(139,92,246,.10), 0 0 22px rgba(139,92,246,.25); }
+    .tl-step:hover .tl-node { transform:scale(1.12); }
+    .tl-step-content h3 { font-size:17px; font-weight:600; margin-bottom:9px; }
+    .tl-step-content p  { color:var(--muted); font-size:14px; line-height:1.65; }
 
     /* ── PAINEL / ADMIN ── */
     .panel-intro { max-width:680px; margin-bottom:40px; }
+    .panel-feat-grid {
+      display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:28px;
+    }
+    .panel-feat-card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--r); padding:20px 16px;
+      display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px;
+      transition:border-color .3s, transform .3s cubic-bezier(.16,1,.3,1);
+    }
+    .panel-feat-card:hover { border-color:var(--border-2); transform:translateY(-3px); }
+    .panel-feat-ic {
+      width:44px; height:44px; border-radius:12px; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center; font-size:20px;
+      background:var(--surface-2); border:1px solid var(--border);
+    }
+    .panel-feat-ic.b { color:var(--blue);   border-color:rgba(0,188,255,.35); }
+    .panel-feat-ic.g { color:var(--green);  border-color:rgba(141,212,78,.35); }
+    .panel-feat-ic.v { color:var(--violet); border-color:rgba(139,92,246,.35); }
+    .panel-feat-ic.t { color:var(--teal);   border-color:rgba(0,221,208,.35); }
+    .panel-feat-card h3 { font-size:13.5px; font-weight:600; margin:0; line-height:1.3; }
     .panel-intro .feat-list { list-style:none; margin-top:24px; display:flex; flex-wrap:wrap; gap:14px 32px; }
     .panel-intro .feat-list li { display:flex; gap:10px; align-items:center; }
     .panel-intro .feat-ic {
@@ -711,14 +769,15 @@
       .ben-grid { grid-template-columns:repeat(2,1fr); }
       .gallery-grid { grid-template-columns:repeat(2,1fr); }
       .pj.span2 { grid-column:span 2; }
-      .process-grid { grid-template-columns:repeat(2,1fr); }
+      .process-timeline { grid-template-columns:repeat(2,1fr); }
+      .process-timeline::before { display:none; }
     }
     @media (max-width:768px){
       .nav-links { display:none; }
       .nav-burger { display:flex; }
       .nav-logo span { display:none; }
       .sec-row { flex-direction:column; align-items:flex-start; }
-      .svc-grid, .ben-grid, .gallery-grid, .process-grid { grid-template-columns:1fr; }
+      .svc-grid, .ben-grid, .gallery-grid { grid-template-columns:1fr; }
       .panel-grid { grid-template-columns:1fr; gap:40px; }
       .pj.span2 { grid-column:span 1; }
       .pj.span2 .pj-inner { aspect-ratio:4/3; }
@@ -726,6 +785,37 @@
       .hero-visual { grid-template-columns:1fr 1fr; }
       .cta-btns { flex-direction:column; align-items:stretch; }
       footer { flex-direction:column; text-align:center; }
+      /* service cards: center icon+title on mobile */
+      .svc-card { text-align:center; }
+      .svc-sym { margin:0 auto 22px; }
+      /* benefit cards: center icon+title on mobile */
+      .ben-card { text-align:center; }
+      .ben-check { margin:0 auto 20px; }
+      /* process: vertical timeline on mobile */
+      .process-timeline { grid-template-columns:1fr; gap:0; }
+      .process-timeline::before {
+        display:block;
+        top:0; bottom:0; left:23px; right:auto; width:2px; height:auto;
+        background:linear-gradient(180deg,
+          rgba(0,188,255,.55) 0%,
+          rgba(0,221,208,.55) 33%,
+          rgba(141,212,78,.55) 66%,
+          rgba(139,92,246,.55) 100%);
+      }
+      .tl-step { flex-direction:row; align-items:flex-start; text-align:left; gap:18px; padding-bottom:28px; }
+      .tl-step:last-child { padding-bottom:0; }
+      .tl-node { margin-bottom:0; }
+      /* panel feat grid: 2x2 on mobile */
+      .panel-feat-grid { grid-template-columns:repeat(2,1fr); }
+      /* orbital: smaller on mobile */
+      .hero-orbital { height:340px; }
+      .orb-ring.r3 { display:none; }
+      .op-wrap.ring3 { display:none; }
+      .op-wrap.ring1 { --r:82px; }
+      .op-wrap.ring2 { --r:140px; }
+      .orb-ring.r1 { width:164px; height:164px; }
+      .orb-ring.r2 { width:280px; height:280px; }
+      .orb-sun img { height:72px; }
     }
     @media (max-width:440px){
       .hero h1 { font-size:clamp(32px,9vw,42px); }
@@ -819,19 +909,27 @@
 
 <!-- ── HERO ── -->
 <section class="hero" id="top">
-  <!-- Animated background -->
-  <div class="hero-bg-anim" aria-hidden="true">
-    <div class="hero-bg-glow" id="heroBgGlow"></div>
-    <div class="hero-bg-main" id="heroBgMain">
-      <span class="hero-bg-n" id="heroBgNum">200+</span>
-      <span class="hero-bg-e" id="heroBgIc" style="display:none"></span>
-      <span class="hero-bg-l" id="heroBgLbl">Sites criados</span>
-    </div>
+  <!-- Orbital system -->
+  <div class="hero-orbital" aria-hidden="true">
+    <div class="orb-ring r1"></div>
+    <div class="orb-ring r2"></div>
+    <div class="orb-ring r3"></div>
+    <div class="orb-sun"><img src="meus/Completo.webp" alt="Conselho Digital"></div>
+    <!-- Ring 1: 3 planets, 16s -->
+    <div class="op-wrap ring1" style="--spd:16s;--delay:0s"><div class="op"><div class="op-inner"><span class="op-emoji">🎨</span>Design Personalizado</div></div></div>
+    <div class="op-wrap ring1" style="--spd:16s;--delay:-5.33s"><div class="op"><div class="op-inner"><span class="op-emoji">⚡</span>Performance</div></div></div>
+    <div class="op-wrap ring1" style="--spd:16s;--delay:-10.67s"><div class="op"><div class="op-inner"><span class="op-emoji">🔒</span>Segurança proativa</div></div></div>
+    <!-- Ring 2: 3 planets, 26s -->
+    <div class="op-wrap ring2" style="--spd:26s;--delay:0s"><div class="op"><div class="op-inner"><span class="op-emoji">🔍</span>SEO & Conteúdo</div></div></div>
+    <div class="op-wrap ring2" style="--spd:26s;--delay:-8.67s"><div class="op"><div class="op-inner"><span class="op-emoji">🔎</span>Descobrir</div></div></div>
+    <div class="op-wrap ring2" style="--spd:26s;--delay:-17.33s"><div class="op"><div class="op-inner"><span class="op-emoji">✏️</span>Design</div></div></div>
+    <!-- Ring 3: 2 planets, 38s -->
+    <div class="op-wrap ring3" style="--spd:38s;--delay:0s"><div class="op"><div class="op-inner"><span class="op-emoji">💻</span>Desenvolver</div></div></div>
+    <div class="op-wrap ring3" style="--spd:38s;--delay:-19s"><div class="op"><div class="op-inner"><span class="op-emoji">🚀</span>Lançar</div></div></div>
   </div>
   <!-- Content -->
   <div class="hero-copy rv">
     <span id="hero-tag-text" hidden></span>
-    <img src="meus/Completo.webp" alt="Conselho Digital" class="hero-logo">
     <h1>Websites que <span class="grad">transformam</span> negócios.</h1>
     <p class="hero-sub" id="hero-subtitle" hidden></p>
     <div class="hero-actions">
@@ -942,11 +1040,23 @@
       <h2 id="proc-title">Do primeiro contato à finalização em menos de <span class="grad">1 semana</span></h2>
       <p class="section-sub" id="proc-subtitle">Processo claro e sem surpresas — você acompanha cada etapa.</p>
     </div>
-    <div class="process-grid" id="proc-grid">
-      <div class="step rv"><div class="step-num">01</div><h3>Descobrir</h3><p>Mergulhamos na sua marca, público e objetivos de negócio para construir a estratégia certa.</p></div>
-      <div class="step rv d1"><div class="step-num">02</div><h3>Design</h3><p>Exemplos planejados para você escolher o que mais combina com sua marca.</p></div>
-      <div class="step rv d2"><div class="step-num">03</div><h3>Desenvolver</h3><p>Código WordPress limpo e personalizado — sem plugins desnecessários, leve e seguro.</p></div>
-      <div class="step rv d3"><div class="step-num">04</div><h3>Lançar</h3><p>Deploy otimizado, treinamento completo e plano de manutenção para crescer sem preocupações.</p></div>
+    <div class="process-timeline" id="proc-grid">
+      <div class="tl-step rv">
+        <div class="tl-node">01</div>
+        <div class="tl-step-content"><h3>Descobrir</h3><p>Mergulhamos na sua marca, público e objetivos de negócio para construir a estratégia certa.</p></div>
+      </div>
+      <div class="tl-step rv d1">
+        <div class="tl-node">02</div>
+        <div class="tl-step-content"><h3>Design</h3><p>Exemplos planejados para você escolher o que mais combina com sua marca.</p></div>
+      </div>
+      <div class="tl-step rv d2">
+        <div class="tl-node">03</div>
+        <div class="tl-step-content"><h3>Desenvolver</h3><p>Código WordPress limpo e personalizado — sem plugins desnecessários, leve e seguro.</p></div>
+      </div>
+      <div class="tl-step rv d3">
+        <div class="tl-node">04</div>
+        <div class="tl-step-content"><h3>Lançar</h3><p>Deploy otimizado, treinamento completo e plano de manutenção para crescer sem preocupações.</p></div>
+      </div>
     </div>
   </div>
 </section>
@@ -958,11 +1068,12 @@
       <span class="s-tag">Bônus exclusivo</span>
       <h2>Seu site com <span class="grad">painel próprio</span>.</h2>
       <p class="section-sub">Todo site que entregamos vem com um painel de administração simples. Você edita textos, imagens e seções quando quiser — e ainda acompanha as métricas de visitas em tempo real.</p>
-      <ul class="feat-list">
-        <li><div class="feat-ic b">✏️</div><h3>Edite você mesmo</h3></li>
-        <li><div class="feat-ic g">📊</div><h3>Métricas em tempo real</h3></li>
-        <li><div class="feat-ic v">🔒</div><h3>Acesso seguro</h3></li>
-      </ul>
+      <div class="panel-feat-grid">
+        <div class="panel-feat-card rv"><div class="panel-feat-ic b">✏️</div><h3>Edite você mesmo</h3></div>
+        <div class="panel-feat-card rv d1"><div class="panel-feat-ic g">📊</div><h3>Métricas em tempo real</h3></div>
+        <div class="panel-feat-card rv d2"><div class="panel-feat-ic v">🔒</div><h3>Acesso seguro</h3></div>
+        <div class="panel-feat-card rv d3"><div class="panel-feat-ic t">📱</div><h3>Totalmente responsivo</h3></div>
+      </div>
       <div class="panel-actions">
         <a href="https://wa.me/5519953222558?text=Quero%20meu%20site%20com%20painel" class="btn btn-primary">Quero meu site com painel
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1187,50 +1298,6 @@ const io = new IntersectionObserver(entries => {
 }, {threshold:0.1, rootMargin:'0px 0px -48px 0px'});
 document.querySelectorAll('.rv').forEach(el => io.observe(el));
 
-/* ── BADGES (global so the CMS preview can re-render) ── */
-function addItems(container, items) {
-  if (!container || !items) return;
-  container.innerHTML = items.map(it =>
-    `<span class="hx-badge" style="--c:${it.color||'#00BCFF'}"><i></i>${it.label}</span>`
-  ).join('');
-}
-addItems(document.getElementById('ring2'), [
-  {label:'Segurança proativa', color:'#00BCFF'},
-  {label:'Design sob medida',  color:'#00DDD0'},
-  {label:'Performance',        color:'#8DD44E'},
-  {label:'SEO & Conteúdo',     color:'#8B5CF6'},
-]);
-
-
-/* ── HERO BG CYCLE ── */
-(function heroBgCycle() {
-  const slides = [
-    {isNum:true,  val:'200+', lbl:'Sites criados',     glow:'rgba(0,188,255,0.18)'},
-    {isNum:false, val:'⚡',   lbl:'Sites Animados',    glow:'rgba(245,158,11,0.22)'},
-    {isNum:false, val:'🚀',   lbl:'Lançamento Rápido', glow:'rgba(139,92,246,0.22)'},
-    {isNum:false, val:'🎯',   lbl:'Focado em Venda',   glow:'rgba(141,212,78,0.20)'},
-    {isNum:false, val:'✦',   lbl:'Novos Designs',     glow:'rgba(0,221,208,0.22)'},
-  ];
-  const main  = document.getElementById('heroBgMain');
-  const numEl = document.getElementById('heroBgNum');
-  const icEl  = document.getElementById('heroBgIc');
-  const lblEl = document.getElementById('heroBgLbl');
-  const glow  = document.getElementById('heroBgGlow');
-  if (!main) return;
-  let idx = 0;
-  function show(s) {
-    if (s.isNum) { numEl.style.display='block'; icEl.style.display='none'; numEl.textContent=s.val; }
-    else         { numEl.style.display='none';  icEl.style.display='block'; icEl.textContent=s.val; }
-    lblEl.textContent = s.lbl;
-    if (glow) glow.style.background = `radial-gradient(circle, ${s.glow}, transparent 65%)`;
-    main.classList.add('vis');
-  }
-  show(slides[0]);
-  setInterval(() => {
-    main.classList.remove('vis');
-    setTimeout(() => { idx=(idx+1)%slides.length; show(slides[idx]); }, 1100);
-  }, 3600);
-})();
 
 /* ── MARQUEE ── */
 (function setupMarquee() {
@@ -1266,9 +1333,6 @@ function applyContent(c) {
     if (sub) { sub.textContent = c.hero.subtitle || ''; sub.hidden = !c.hero.subtitle; }
     setLink('hero-cta-primary',   c.hero.cta_primary_url,   c.hero.cta_primary_text);
     setLink('hero-cta-secondary', c.hero.cta_secondary_url, c.hero.cta_secondary_text);
-  }
-  if (c.orbital_badges && c.orbital_badges.length) {
-    addItems(document.getElementById('ring2'), c.orbital_badges);
   }
   if (c.marquee && c.marquee.length) {
     const track = document.getElementById('marquee');
@@ -1316,7 +1380,7 @@ function applyContent(c) {
     if (pt) pt.textContent = c.process.title;
     const g = document.getElementById('proc-grid');
     if (g && c.process.steps) g.innerHTML = c.process.steps.map((s,i)=>`
-      <div class="step rv on${i?' d'+(i):''}"><div class="step-num">0${i+1}</div><h3>${s.title}</h3><p>${s.desc}</p></div>`).join('');
+      <div class="tl-step rv on${i?' d'+(i):''}"><div class="tl-node">0${i+1}</div><div class="tl-step-content"><h3>${s.title}</h3><p>${s.desc}</p></div></div>`).join('');
   }
   if (c.cta) {
     setText('cta-tag',      c.cta.tag);
