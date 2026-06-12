@@ -303,9 +303,9 @@
       border:1px solid rgba(255,255,255,0.22);
       animation:orbPulse 5s ease-in-out infinite;
     }
-    .orb-ring.r1 { width:240px; height:240px; border-color:rgba(0,188,255,0.45); }
-    .orb-ring.r2 { width:400px; height:400px; border-color:rgba(0,221,208,0.35); animation-delay:.8s; }
-    .orb-ring.r3 { width:560px; height:560px; border-color:rgba(141,212,78,0.28); animation-delay:1.6s; }
+    .orb-ring.r1 { width:240px; height:240px; border-width:1.5px; border-color:rgba(0,188,255,0.65); }
+    .orb-ring.r2 { width:400px; height:400px; border-width:1.5px; border-color:rgba(0,221,208,0.50); animation-delay:.8s; }
+    .orb-ring.r3 { width:560px; height:560px; border-width:1.5px; border-color:rgba(141,212,78,0.40); animation-delay:1.6s; }
     @keyframes orbPulse { 0%,100%{opacity:.55} 50%{opacity:1} }
     .orb-sun { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:5; }
     .orb-sun img {
@@ -836,15 +836,15 @@
       /* panel feat grid: 2x2 on mobile */
       .panel-feat-grid { flex-wrap:wrap; }
       .panel-feat-card { flex:1 1 40%; }
-      /* orbital: smaller on mobile */
-      .hero-orbital { height:340px; }
+      /* orbital: smaller on mobile — keep badges within screen bounds */
+      .hero-orbital { height:310px; }
       .orb-ring.r3 { display:none; }
       .op-wrap.ring3 { display:none; }
-      .op-wrap.ring1 { --r:82px; }
-      .op-wrap.ring2 { --r:140px; }
-      .orb-ring.r1 { width:164px; height:164px; border-color:rgba(0,188,255,0.35); }
-      .orb-ring.r2 { width:280px; height:280px; border-color:rgba(0,221,208,0.28); }
-      .orb-sun img { height:72px; }
+      .op-wrap.ring1 { --r:55px; }
+      .op-wrap.ring2 { --r:95px; }
+      .orb-ring.r1 { width:110px; height:110px; border-width:1.5px; border-color:rgba(0,188,255,0.65); }
+      .orb-ring.r2 { width:190px; height:190px; border-width:1.5px; border-color:rgba(0,221,208,0.55); }
+      .orb-sun img { height:56px; }
     }
     @media (max-width:440px){
       .hero h1 { font-size:clamp(32px,9vw,42px); }
@@ -1462,16 +1462,22 @@ function applyContent(c) {
     setText('svc-tag',   c.services.tag);
     setText('svc-title', c.services.title);
     const g = document.getElementById('svc-grid');
-    if (g && c.services.items) g.innerHTML = c.services.items.map((s,i)=>`
-      <div class="svc-card rv on${i?' d'+i:''}"><div class="svc-sym ${s.color||COLORS[i%4]}">${s.icon}</div><h3>${s.title}</h3><p>${s.desc}</p></div>`).join('');
+    if (g && c.services.items) {
+      g.innerHTML = c.services.items.map((s,i)=>`
+        <div class="svc-card rv${i?' d'+i:''}"><div class="svc-sym ${s.color||COLORS[i%4]}">${s.icon}</div><h3>${s.title}</h3><p>${s.desc}</p></div>`).join('');
+      g.querySelectorAll('.rv').forEach(el => io.observe(el));
+    }
   }
   if (c.benefits) {
     setText('ben-tag',     c.benefits.tag);
     setText('ben-title',   c.benefits.title);
     setText('ben-subtitle',c.benefits.subtitle);
     const g = document.getElementById('ben-grid');
-    if (g && c.benefits.items) g.innerHTML = c.benefits.items.map((b,i)=>`
-      <div class="ben-card rv on${i?' d'+(i):''}"><div class="ben-check">✓</div><h3>${b.title}</h3><p>${b.desc}</p></div>`).join('');
+    if (g && c.benefits.items) {
+      g.innerHTML = c.benefits.items.map((b,i)=>`
+        <div class="ben-card rv ${i%2===0?'sl':'sr'}${i?' d'+i:''}"><div class="ben-check">✓</div><h3>${b.title}</h3><p>${b.desc}</p></div>`).join('');
+      g.querySelectorAll('.rv').forEach(el => io.observe(el));
+    }
   }
   if (c.portfolio) {
     setText('port-tag',  c.portfolio.tag);
