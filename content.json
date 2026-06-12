@@ -58,7 +58,7 @@
     "tag": "Trabalhos recentes",
     "title": "Sites que lançamos recentemente",
     "items": [
-      {"category": "Landing Page", "title": "Evergreen Hidrossemeadura", "link": "https://www.evergreenhidrossemeadura.com.br/", "image": "meus/portfolio-evergreen.jpg", "mobile_image": "meus/portfolio-evergreen.jpg", "bg": "linear-gradient(135deg,#0D1F0A 0%,#2D5A1B 100%)", "span2": true},
+      {"category": "Landing Page", "title": "Evergreen Hidrossemeadura", "link": "https://www.evergreenhidrossemeadura.com.br/", "image": "meus/portfolio-evergreen-desktop.jpg", "mobile_image": "meus/portfolio-evergreen.jpg", "bg": "linear-gradient(135deg,#0D1F0A 0%,#2D5A1B 100%)", "span2": true},
       {"category": "Landing Page",      "title": "Nome do Projeto 2", "link": "", "image": "", "mobile_image": "", "bg": "linear-gradient(135deg,#071020 0%,#00C4B4 100%)", "span2": false},
       {"category": "Site Institucional","title": "Nome do Projeto 3", "link": "", "image": "", "mobile_image": "", "bg": "linear-gradient(135deg,#061408 0%,#7DC241 100%)", "span2": false},
       {"category": "Blog",              "title": "Nome do Projeto 4", "link": "", "image": "", "mobile_image": "", "bg": "linear-gradient(135deg,#130820 0%,#8B5CF6 100%)", "span2": true}
