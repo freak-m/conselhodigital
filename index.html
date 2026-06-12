@@ -788,9 +788,12 @@
       /* service cards: center icon+title on mobile */
       .svc-card { text-align:center; }
       .svc-sym { margin:0 auto 22px; }
-      /* benefit cards: center icon+title on mobile */
+      /* benefit cards: center icon+title + alternating slide on mobile */
       .ben-card { text-align:center; }
       .ben-check { margin:0 auto 20px; }
+      .rv.sl { transform:translateX(-70px); }
+      .rv.sr { transform:translateX(70px); }
+      .rv.sl.on, .rv.sr.on { transform:none; }
       /* process: vertical timeline on mobile */
       .process-timeline { grid-template-columns:1fr; gap:0; }
       .process-timeline::before {
@@ -981,11 +984,11 @@
       <p class="section-sub" id="ben-subtitle">Um site sem manutenção é um problema esperando para acontecer. Cuidamos de tudo para você focar no que importa: o seu negócio.</p>
     </div>
     <div class="ben-grid" id="ben-grid">
-      <div class="ben-card rv"><div class="ben-check">✓</div><h3>Segurança proativa</h3><p>Firewall, bloqueio de bots, varredura de malware e proteção contra brute-force.</p></div>
-      <div class="ben-card rv d1"><div class="ben-check">✓</div><h3>Monitoramento 24/7</h3><p>Alertas instantâneos se o site sair do ar — respondemos antes de você notar.</p></div>
-      <div class="ben-card rv d2"><div class="ben-check">✓</div><h3>Suporte humano</h3><p>Time dedicado por WhatsApp e e-mail, com SLA de resposta de até 4 horas úteis.</p></div>
-      <div class="ben-card rv d3"><div class="ben-check">✓</div><h3>Relatório mensal</h3><p>Resumo claro de uptime, performance, segurança e visitas do período.</p></div>
-      <div class="ben-card rv d4"><div class="ben-check">✓</div><h3>Pequenas alterações</h3><p>Trocas de texto, imagens e ajustes pontuais fácil e rápidos.</p></div>
+      <div class="ben-card rv sl"><div class="ben-check">✓</div><h3>Segurança proativa</h3><p>Firewall, bloqueio de bots, varredura de malware e proteção contra brute-force.</p></div>
+      <div class="ben-card rv sr d1"><div class="ben-check">✓</div><h3>Monitoramento 24/7</h3><p>Alertas instantâneos se o site sair do ar — respondemos antes de você notar.</p></div>
+      <div class="ben-card rv sl d2"><div class="ben-check">✓</div><h3>Suporte humano</h3><p>Time dedicado por WhatsApp e e-mail, com SLA de resposta de até 4 horas úteis.</p></div>
+      <div class="ben-card rv sr d3"><div class="ben-check">✓</div><h3>Relatório mensal</h3><p>Resumo claro de uptime, performance, segurança e visitas do período.</p></div>
+      <div class="ben-card rv sl d4"><div class="ben-check">✓</div><h3>Pequenas alterações</h3><p>Trocas de texto, imagens e ajustes pontuais fácil e rápidos.</p></div>
     </div>
   </div>
 </section>
