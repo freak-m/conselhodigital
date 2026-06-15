@@ -269,7 +269,8 @@
     </div>
     <nav class="sidebar-nav" id="sidebar-nav">
       <div class="nav-section">Conteúdo</div>
-      <button class="nav-item active" data-section="seo">     <span class="icon">🔍</span> SEO & Meta</button>
+      <button class="nav-item active" data-section="global">  <span class="icon">⚙️</span> Global</button>
+      <button class="nav-item" data-section="seo">            <span class="icon">🔍</span> SEO & Meta</button>
       <button class="nav-item" data-section="hero">           <span class="icon">🏠</span> Hero</button>
       <button class="nav-item" data-section="services">       <span class="icon">⚡</span> Serviços</button>
       <button class="nav-item" data-section="benefits">       <span class="icon">✅</span> Benefícios</button>
@@ -304,8 +305,18 @@
       <!-- EDITOR PANE -->
       <div class="editor-pane">
 
+        <!-- GLOBAL -->
+        <div class="section-panel active" id="section-global">
+          <h3>⚙️ Configurações Globais</h3>
+          <div class="fld">
+            <label>WhatsApp — URL Global</label>
+            <input type="text" id="global-whatsapp" placeholder="https://wa.me/5519953222558">
+            <small style="font-size:11px;color:var(--muted);margin-top:4px;display:block">Usado no botão flutuante e em todos os botões de contato do site.</small>
+          </div>
+        </div>
+
         <!-- SEO -->
-        <div class="section-panel active" id="section-seo">
+        <div class="section-panel" id="section-seo">
           <h3>🔍 SEO & Meta Tags</h3>
           <div class="fld"><label>Title da Página</label><input type="text" id="seo-title"></div>
           <div class="fld"><label>Meta Description</label><textarea id="seo-description"></textarea></div>
@@ -316,6 +327,11 @@
         <!-- HERO -->
         <div class="section-panel" id="section-hero">
           <h3>🏠 Seção Hero</h3>
+          <div class="fld">
+            <label>Título Principal (H1)</label>
+            <textarea id="hero-title" style="min-height:64px"></textarea>
+            <small style="font-size:11px;color:var(--muted);margin-top:4px;display:block">Use <code style="background:var(--bg3);padding:1px 5px;border-radius:4px">&lt;span class="grad"&gt;palavra&lt;/span&gt;</code> para efeito gradiente.</small>
+          </div>
           <div class="fld"><label>Tag / Etiqueta</label><input type="text" id="hero-tag"></div>
           <div class="fld"><label>Subtítulo</label><div id="quill-hero-subtitle"></div></div>
           <hr class="section-divider">
@@ -587,7 +603,10 @@ function populateForm(c) {
   setVal('seo-description', c.seo?.description);
   setVal('seo-keywords',    c.seo?.keywords);
   setVal('seo-og_image',    c.seo?.og_image);
+  // Global
+  setVal('global-whatsapp', c.whatsapp);
   // Hero
+  setVal('hero-title',           c.hero?.title);
   setVal('hero-tag',             c.hero?.tag);
   setQuill('hero-subtitle',      c.hero?.subtitle);
   setVal('hero-cta_primary_text',c.hero?.cta_primary_text);
@@ -825,8 +844,11 @@ function collectForm() {
     keywords:    getVal('seo-keywords'),
     og_image:    getVal('seo-og_image'),
   };
+  // Global
+  c.whatsapp = getVal('global-whatsapp');
   // Hero
   c.hero = {
+    title:              getVal('hero-title'),
     tag:                getVal('hero-tag'),
     subtitle:           quills['hero-subtitle']?.root.innerHTML || '',
     cta_primary_text:   getVal('hero-cta_primary_text'),
