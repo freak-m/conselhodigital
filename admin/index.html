@@ -386,6 +386,15 @@
             <div class="fld"><label>Número / Destaque</label><input type="text" id="hero-trust_count" placeholder="200+ negócios"></div>
             <div class="fld"><label>Texto</label><input type="text" id="hero-trust_text" placeholder="já confiaram na Conselho Digital"></div>
           </div>
+          <div class="fld" style="margin-top:10px">
+            <label>Fotos dos clientes (avatares)</label>
+            <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;" id="avatar-row">
+              <div class="avatar-slot" data-idx="0"></div>
+              <div class="avatar-slot" data-idx="1"></div>
+              <div class="avatar-slot" data-idx="2"></div>
+              <div class="avatar-slot" data-idx="3"></div>
+            </div>
+          </div>
           <hr class="section-divider">
           <p style="font-size:11px;color:var(--muted);margin-bottom:10px;">Badges Orbitais</p>
           <div id="orbital-items"></div>
@@ -660,6 +669,7 @@ function populateForm(c) {
   setQuill('hero-subtitle',      c.hero?.subtitle);
   setVal('hero-trust_count',     c.hero?.trust_count);
   setVal('hero-trust_text',      c.hero?.trust_text);
+  renderAvatarSlots(c.hero?.trust_avatars);
   setVal('hero-cta_primary_text',c.hero?.cta_primary_text);
   setVal('hero-cta_primary_url', c.hero?.cta_primary_url);
   setVal('hero-cta_secondary_text',c.hero?.cta_secondary_text);
@@ -716,32 +726,14 @@ function renderOrbitalItems(items) {
 }
 function makeOrbitalItem(it, i) {
   const d = document.createElement('div'); d.className='repeat-item'; d.dataset.idx=i;
-  const imgSrc = it.image ? (it.image.startsWith('http') ? it.image : '../'+it.image) : '';
   d.innerHTML=`<div class="item-head"><span class="item-label">Badge ${i+1}</span><button class="btn-remove" onclick="this.closest('.repeat-item').remove();sendPreview()">✕</button></div>
     <div class="inline-2">
-      <div class="fld"><label>Emoji (fallback)</label><input type="text" value="${escHtml(it.emoji||'')}" oninput="sendPreview()" maxlength="4" placeholder="🎨"></div>
+      <div class="fld"><label>Emoji</label><input type="text" value="${escHtml(it.emoji||'')}" oninput="sendPreview()" maxlength="4" placeholder="🎨"></div>
       <div class="fld"><label>Anel</label><select oninput="sendPreview()">
         <option value="1" ${(it.ring||1)==1?'selected':''}>Anel 1 (interno)</option>
         <option value="2" ${(it.ring||1)==2?'selected':''}>Anel 2 (médio)</option>
         <option value="3" ${(it.ring||1)==3?'selected':''}>Anel 3 (externo)</option>
       </select></div>
-    </div>
-    <div class="fld">
-      <label>Imagem do cliente <span style="font-weight:400;color:var(--muted)">(substitui emoji)</span></label>
-      <div style="display:flex;align-items:center;gap:10px;margin-top:4px;">
-        <div style="width:44px;height:44px;border-radius:50%;background:var(--bg2);border:1px solid var(--cbr);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;">
-          <img class="badge-img-preview" src="${escHtml(imgSrc)}" style="width:100%;height:100%;object-fit:cover;${imgSrc?'':'display:none'}" alt="">
-          <span class="badge-img-empty" style="${imgSrc?'display:none':''}">🖼️</span>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <label style="cursor:pointer;display:block;margin:0">
-            <span class="btn-add" style="margin:0;font-size:11px;padding:5px 10px;display:inline-block">📤 Enviar foto</span>
-            <input type="file" accept="image/*" style="display:none" onchange="handleBadgeImageUpload(this)">
-          </label>
-          <button class="badge-img-clear" onclick="clearBadgeImage(this)" style="font-size:10px;padding:3px 8px;border-radius:6px;background:transparent;border:1px solid var(--cbr);color:var(--muted);cursor:pointer;${imgSrc?'':'display:none'}">✕ Remover</button>
-        </div>
-      </div>
-      <input type="hidden" class="badge-img-url" value="${escHtml(it.image||'')}">
     </div>
     <div class="fld"><label>Texto</label><input type="text" value="${escHtml(it.label||'')}" oninput="sendPreview()" placeholder="Nome do cliente"></div>
     <div class="fld"><label>Link do cliente</label><input type="text" value="${escHtml(it.link||'')}" oninput="sendPreview()" placeholder="https://sitedocliente.com.br"></div>`;
@@ -749,28 +741,49 @@ function makeOrbitalItem(it, i) {
 }
 function addOrbital() {
   const c=document.getElementById('orbital-items');
-  c.appendChild(makeOrbitalItem({emoji:'',label:'',link:'',image:'',ring:1}, c.children.length));
+  c.appendChild(makeOrbitalItem({emoji:'',label:'',link:'',ring:1}, c.children.length));
 }
-function handleBadgeImageUpload(input) {
+
+const AVATAR_GRADS = [
+  'linear-gradient(135deg,#00C4B4,#00BCFF)',
+  'linear-gradient(135deg,#8B5CF6,#00BCFF)',
+  'linear-gradient(135deg,#8DD44E,#00DDD0)',
+  'linear-gradient(135deg,#F5A524,#8DD44E)',
+];
+function renderAvatarSlots(avatars) {
+  document.querySelectorAll('.avatar-slot').forEach(slot => {
+    const idx = +slot.dataset.idx;
+    const url = avatars?.[idx] || '';
+    const displaySrc = url ? (url.startsWith('http') ? url : '../'+url) : '';
+    slot.innerHTML = `
+      <div style="display:flex;flex-direction:column;align-items:center;gap:5px;">
+        <div style="width:48px;height:48px;border-radius:50%;overflow:hidden;background:${AVATAR_GRADS[idx]};border:2px solid var(--cbr);position:relative;cursor:pointer;" onclick="this.nextElementSibling.click()">
+          <img class="av-preview" src="${escHtml(displaySrc)}" style="width:100%;height:100%;object-fit:cover;${displaySrc?'':'display:none'}" alt="">
+        </div>
+        <input type="file" accept="image/*" style="display:none" onchange="handleAvatarUpload(this,${idx})">
+        <button onclick="clearAvatar(${idx})" style="font-size:9px;color:var(--muted);background:none;border:none;cursor:pointer;${url?'':'visibility:hidden'}">✕</button>
+        <input type="hidden" class="av-url" value="${escHtml(url)}">
+      </div>`;
+  });
+}
+function handleAvatarUpload(input, idx) {
   const file = input.files[0]; if (!file) return;
-  const item = input.closest('.repeat-item');
   uploadImage(file, url => {
-    item.querySelector('.badge-img-url').value = url;
+    const slot = document.querySelector(`.avatar-slot[data-idx="${idx}"]`);
+    slot.querySelector('.av-url').value = url;
     const displaySrc = url.startsWith('http') ? url : '../'+url;
-    const img = item.querySelector('.badge-img-preview');
+    const img = slot.querySelector('.av-preview');
     img.src = displaySrc; img.style.display = 'block';
-    item.querySelector('.badge-img-empty').style.display = 'none';
-    item.querySelector('.badge-img-clear').style.display = '';
+    slot.querySelector('button').style.visibility = '';
     sendPreview();
   });
 }
-function clearBadgeImage(btn) {
-  const item = btn.closest('.repeat-item');
-  item.querySelector('.badge-img-url').value = '';
-  const img = item.querySelector('.badge-img-preview');
+function clearAvatar(idx) {
+  const slot = document.querySelector(`.avatar-slot[data-idx="${idx}"]`);
+  slot.querySelector('.av-url').value = '';
+  const img = slot.querySelector('.av-preview');
   img.src = ''; img.style.display = 'none';
-  item.querySelector('.badge-img-empty').style.display = '';
-  btn.style.display = 'none';
+  slot.querySelector('button').style.visibility = 'hidden';
   sendPreview();
 }
 
@@ -943,6 +956,7 @@ function collectForm() {
     subtitle:           getQuillHtml('hero-subtitle'),
     trust_count:        getVal('hero-trust_count'),
     trust_text:         getVal('hero-trust_text'),
+    trust_avatars:      [...document.querySelectorAll('.av-url')].map(el=>el.value),
     cta_primary_text:   getVal('hero-cta_primary_text'),
     cta_primary_url:    getVal('hero-cta_primary_url'),
     cta_secondary_text: getVal('hero-cta_secondary_text'),
@@ -953,7 +967,6 @@ function collectForm() {
     return {
       emoji: inputs[0]?.value || '',
       ring:  parseInt(el.querySelector('select')?.value||'1') || 1,
-      image: el.querySelector('.badge-img-url')?.value || '',
       label: inputs[1]?.value || '',
       link:  inputs[2]?.value || '',
     };

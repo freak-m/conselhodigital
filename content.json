@@ -15,20 +15,21 @@
     "subtitle": "",
     "trust_count": "200+ negócios",
     "trust_text": "já confiaram na Conselho Digital",
+    "trust_avatars": ["", "", "", ""],
     "cta_primary_text": "Contactar",
     "cta_primary_url": "https://wa.me/5519953222558",
     "cta_secondary_text": "Ver Portfólio",
     "cta_secondary_url": "#portfolio"
   },
   "orbital_badges": [
-    {"emoji": "🎨", "label": "Design Personalizado", "link": "", "image": "", "ring": 1},
-    {"emoji": "⚡", "label": "Performance",           "link": "", "image": "", "ring": 1},
-    {"emoji": "🔒", "label": "Segurança proativa",    "link": "", "image": "", "ring": 1},
-    {"emoji": "🔍", "label": "SEO & Conteúdo",        "link": "", "image": "", "ring": 2},
-    {"emoji": "🔎", "label": "Descobrir",              "link": "", "image": "", "ring": 2},
-    {"emoji": "✏️", "label": "Design",                "link": "", "image": "", "ring": 2},
-    {"emoji": "💻", "label": "Desenvolver",            "link": "", "image": "", "ring": 3},
-    {"emoji": "🚀", "label": "Lançar",                 "link": "", "image": "", "ring": 3}
+    {"emoji": "🎨", "label": "Design Personalizado", "link": "", "ring": 1},
+    {"emoji": "⚡", "label": "Performance",           "link": "", "ring": 1},
+    {"emoji": "🔒", "label": "Segurança proativa",    "link": "", "ring": 1},
+    {"emoji": "🔍", "label": "SEO & Conteúdo",        "link": "", "ring": 2},
+    {"emoji": "🔎", "label": "Descobrir",              "link": "", "ring": 2},
+    {"emoji": "✏️", "label": "Design",                "link": "", "ring": 2},
+    {"emoji": "💻", "label": "Desenvolver",            "link": "", "ring": 3},
+    {"emoji": "🚀", "label": "Lançar",                 "link": "", "ring": 3}
   ],
   "marquee": ["WordPress","Elementor","Yoast SEO","Cloudflare","PHP 8","MySQL","CSS"],
   "services": {
