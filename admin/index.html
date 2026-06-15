@@ -105,6 +105,7 @@
 
     /* ── EDITOR PANE ── */
     .editor-pane { width:420px; flex-shrink:0; overflow-y:auto; background:var(--bg); border-right:1px solid var(--cbr); }
+    .editor-pane.wide { width:100%; flex:1; border-right:none; max-width:none; }
     .section-panel { display:none; padding:20px; }
     .section-panel.active { display:block; }
     .section-panel h3 { font-family:'Syne',sans-serif; font-weight:700; font-size:14px; margin-bottom:16px; }
@@ -562,6 +563,10 @@ function showApp() {
   initQuills();
   loadContent();
   loadIntegrations();
+  // Dashboard is the default active section — expand editor, hide preview
+  document.querySelector('.preview-pane').style.display = 'none';
+  document.querySelector('.editor-pane').classList.add('wide');
+  initDashboard();
 }
 
 /* ── QUILL ── */
@@ -1069,7 +1074,10 @@ document.getElementById('sidebar-nav').addEventListener('click', e => {
   // Hide preview for non-content sections
   const noPreview = new Set(['global','integrations','seo']);
   const pv = document.querySelector('.preview-pane');
-  if (pv) pv.style.display = noPreview.has(sec) ? 'none' : '';
+  const ep = document.querySelector('.editor-pane');
+  const hide = noPreview.has(sec);
+  if (pv) pv.style.display = hide ? 'none' : '';
+  if (ep) ep.classList.toggle('wide', hide);
   // Scroll preview to matching section
   const anchor = SECTION_ANCHORS[sec];
   if (anchor && previewReady) {
