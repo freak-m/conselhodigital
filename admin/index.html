@@ -741,13 +741,15 @@ function makePortfolioItem(it,i) {
   const ttl=escHtml(it.title||'');
   const img=escHtml(it.image||'');
   const mimg=escHtml(it.mobile_image||'');
+  const imgSrc  = img  && !img.startsWith('http')  ? '../'+img  : img;
+  const mimgSrc = mimg && !mimg.startsWith('http') ? '../'+mimg : mimg;
   d.innerHTML=`
     <div class="item-head"><span class="item-label">Projeto ${i+1}</span><button class="btn-remove" onclick="this.closest('.repeat-item').remove();sendPreview()">✕</button></div>
     <!-- Dual image previews -->
     <div class="pf-previews">
       <label class="pf-prev-desktop" for="${imgId}" title="Clique para trocar imagem desktop">
         <div class="pf-prev-inner">
-          ${img?`<img class="pf-prev-img" id="prev-${imgId}" src="${img}" alt="">`
+          ${img?`<img class="pf-prev-img" id="prev-${imgId}" src="${imgSrc}" alt="">`
                :`<div class="pf-prev-empty"><span class="pf-prev-empty-icon">🖥️</span><span>Clique para adicionar</span></div><img class="pf-prev-img" id="prev-${imgId}" src="" alt="" style="display:none">`}
           <div class="pf-prev-overlay"><div class="pf-prev-cat pf-dyn-cat">${cat}</div><div class="pf-prev-title pf-dyn-title">${ttl}</div></div>
           <span class="pf-prev-badge">🖥 Desktop</span>
@@ -756,7 +758,7 @@ function makePortfolioItem(it,i) {
       </label>
       <label class="pf-prev-mobile" for="${mImgId}" title="Clique para trocar imagem mobile">
         <div class="pf-prev-inner">
-          ${mimg?`<img class="pf-prev-img" id="prev-${mImgId}" src="${mimg}" alt="">`
+          ${mimg?`<img class="pf-prev-img" id="prev-${mImgId}" src="${mimgSrc}" alt="">`
                 :`<div class="pf-prev-empty"><span class="pf-prev-empty-icon">📱</span><span>Clique para adicionar</span></div><img class="pf-prev-img" id="prev-${mImgId}" src="" alt="" style="display:none">`}
           <div class="pf-prev-overlay"><div class="pf-prev-cat pf-dyn-cat">${cat}</div><div class="pf-prev-title pf-dyn-title">${ttl}</div></div>
           <span class="pf-prev-badge">📱 Mobile</span>
