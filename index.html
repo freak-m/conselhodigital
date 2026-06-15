@@ -355,6 +355,24 @@
       75%  { transform:translateY(var(--ry));               animation-timing-function:cubic-bezier(.5,0,.5,1); }
       100% { transform:translateY(0px); }
     }
+    /* ── ORBITAL MOVEMENT MODES ── */
+    /* circular */
+    @keyframes opOrbit   { to{transform:rotate(360deg)} }
+    @keyframes opCounter { to{transform:rotate(-360deg)} }
+    .hero-orbital.mv-circular .op-wrap { animation:opOrbit var(--spd) linear var(--delay,0s) infinite; transform-origin:0 0; }
+    .hero-orbital.mv-circular .op { margin-top:calc(var(--rx)*-1); animation:opCounter var(--spd) linear var(--delay,0s) infinite; }
+    .hero-orbital.mv-circular .orb-ring.r1 { height:240px; }
+    .hero-orbital.mv-circular .orb-ring.r2 { height:400px; }
+    .hero-orbital.mv-circular .orb-ring.r3 { height:560px; }
+    /* flutuante */
+    @keyframes floatH { from{transform:translateX(calc(var(--rx)*-1))} to{transform:translateX(var(--rx))} }
+    @keyframes floatV { 0%,100%{transform:translateY(0)} 50%{transform:translateY(calc(var(--ry)*-1))} }
+    .hero-orbital.mv-float .op-wrap { animation:floatH var(--spd) ease-in-out var(--delay,0s) infinite alternate; }
+    .hero-orbital.mv-float .op { animation:floatV calc(var(--spd)*0.6+0s) ease-in-out var(--delay,0s) infinite; }
+    .hero-orbital.mv-float .orb-ring { opacity:0; transition:opacity .4s; }
+    /* estático */
+    .hero-orbital.mv-static .op-wrap,
+    .hero-orbital.mv-static .op { animation-play-state:paused; }
     .pill-tag {
       display:inline-flex; align-items:center; gap:9px;
       padding:7px 16px 7px 12px; border-radius:var(--r-pill);
@@ -1591,6 +1609,9 @@ function applyContent(c) {
   if (c.orbital_badges && c.orbital_badges.length) {
     const heroOrb = document.querySelector('.hero-orbital');
     if (heroOrb) {
+      heroOrb.classList.remove('mv-ellipse','mv-circular','mv-float','mv-static');
+      const mv = c.hero?.orbital_movement || 'ellipse';
+      if (mv !== 'ellipse') heroOrb.classList.add('mv-'+mv);
       heroOrb.querySelectorAll('.op-wrap').forEach(el => el.remove());
       const ringSpd = { 1:16, 2:26, 3:38 };
       const ringCount = {}; const ringIdx = {};

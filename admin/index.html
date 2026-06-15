@@ -435,7 +435,16 @@
             </div>
           </div>
           <hr class="section-divider">
-          <p style="font-size:11px;color:var(--muted);margin-bottom:10px;">Badges Orbitais</p>
+          <p style="font-size:11px;color:var(--muted);margin-bottom:10px;font-weight:600">Badges Orbitais</p>
+          <div class="fld">
+            <label>Tipo de Movimento</label>
+            <select id="hero-orbital_movement" oninput="sendPreview()">
+              <option value="ellipse">🔄 Elipse — orbita oval suave (padrão)</option>
+              <option value="circular">⭕ Circular — orbita circular clássica</option>
+              <option value="float">🌊 Flutuante — drift lento de lado a lado</option>
+              <option value="static">⏸ Estático — badges fixos, sem animação</option>
+            </select>
+          </div>
           <div id="orbital-items"></div>
           <button class="btn-add" onclick="addOrbital()">+ Adicionar badge</button>
           <hr class="section-divider">
@@ -644,6 +653,8 @@ function populateForm(c) {
   setVal('hero-title',           c.hero?.title);
   setVal('hero-tag',             c.hero?.tag);
   setQuill('hero-subtitle',      c.hero?.subtitle);
+  const omSel = document.getElementById('hero-orbital_movement');
+  if (omSel) omSel.value = c.hero?.orbital_movement || 'ellipse';
   setVal('hero-trust_count',     c.hero?.trust_count);
   setVal('hero-trust_text',      c.hero?.trust_text);
   renderAvatarSlots(c.hero?.trust_avatars);
@@ -930,6 +941,7 @@ function collectForm() {
     title:              getVal('hero-title'),
     tag:                getVal('hero-tag'),
     subtitle:           getQuillHtml('hero-subtitle'),
+    orbital_movement:   getVal('hero-orbital_movement'),
     trust_count:        getVal('hero-trust_count'),
     trust_text:         getVal('hero-trust_text'),
     trust_avatars:      [...document.querySelectorAll('.av-url')].map(el=>el.value),
@@ -1054,6 +1066,10 @@ document.getElementById('sidebar-nav').addEventListener('click', e => {
   document.querySelectorAll('.section-panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('section-'+sec).classList.add('active');
   if (sec === 'global') initDashboard();
+  // Hide preview for non-content sections
+  const noPreview = new Set(['global','integrations','seo']);
+  const pv = document.querySelector('.preview-pane');
+  if (pv) pv.style.display = noPreview.has(sec) ? 'none' : '';
   // Scroll preview to matching section
   const anchor = SECTION_ANCHORS[sec];
   if (anchor && previewReady) {
