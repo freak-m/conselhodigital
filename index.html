@@ -340,6 +340,7 @@
       line-height:1; transform:translate(-50%, -50%);
     }
     .op-emoji { font-size:14px; }
+    .op-img { width:20px; height:20px; border-radius:50%; object-fit:cover; flex-shrink:0; }
     a.op-inner { pointer-events:all; text-decoration:none; color:inherit; cursor:pointer; }
     a.op-inner:hover { border-color:rgba(0,188,255,0.4); background:rgba(10,23,38,0.95); }
     @keyframes opOrbit   { to{transform:rotate(360deg)} }
@@ -1563,9 +1564,12 @@ function applyContent(c) {
         const i = ringIdx[r]++;
         const delay = -(spd*i/cnt);
         const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        const icon = b.image
+          ? `<img class="op-img" src="${esc(b.image)}" alt="${esc(b.label||'')}">`
+          : `<span class="op-emoji">${b.emoji||''}</span>`;
         const inner = b.link
-          ? `<a class="op-inner" href="${esc(b.link)}" target="_blank" rel="noopener"><span class="op-emoji">${b.emoji||''}</span>${esc(b.label||'')}</a>`
-          : `<div class="op-inner"><span class="op-emoji">${b.emoji||''}</span>${esc(b.label||'')}</div>`;
+          ? `<a class="op-inner" href="${esc(b.link)}" target="_blank" rel="noopener">${icon}${esc(b.label||'')}</a>`
+          : `<div class="op-inner">${icon}${esc(b.label||'')}</div>`;
         const wrap = document.createElement('div');
         wrap.className = `op-wrap ring${r}`;
         wrap.style.setProperty('--spd', spd+'s');
