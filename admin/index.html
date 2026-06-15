@@ -956,6 +956,17 @@ function setupChangeListeners() {
 function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t=setTimeout(()=>fn(...a),ms); }; }
 
 /* ── NAVIGATION ── */
+const SECTION_ANCHORS = {
+  global:    '#top',
+  seo:       '#top',
+  hero:      '#top',
+  services:  '#servicos',
+  benefits:  '#beneficios',
+  portfolio: '#portfolio',
+  process:   '#processo',
+  cta:       '#contato',
+  footer:    '#contato',
+};
 document.getElementById('sidebar-nav').addEventListener('click', e => {
   const btn = e.target.closest('.nav-item'); if(!btn) return;
   document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
@@ -963,6 +974,11 @@ document.getElementById('sidebar-nav').addEventListener('click', e => {
   const sec = btn.dataset.section;
   document.querySelectorAll('.section-panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('section-'+sec).classList.add('active');
+  // Scroll preview to matching section
+  const anchor = SECTION_ANCHORS[sec];
+  if (anchor && previewReady) {
+    document.getElementById('preview-frame')?.contentWindow?.postMessage({ type:'scrollTo', target:anchor }, '*');
+  }
 });
 
 function switchTab(tab, btn) {
