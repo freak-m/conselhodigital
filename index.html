@@ -976,7 +976,7 @@
     </div>
     <div class="hero-trust">
       <div class="avatars"><i></i><i></i><i></i><i></i></div>
-      <small><b>200+ negócios</b> já confiaram<br>na Conselho Digital</small>
+      <small><b>200+ negócios</b> já confiaram na Conselho Digital</small>
     </div>
   </div>
 </section>
@@ -1473,6 +1473,13 @@ function applyContent(c) {
     if (sub) { sub.innerHTML = c.hero.subtitle || ''; sub.hidden = !c.hero.subtitle; }
     setLink('hero-cta-primary',   c.hero.cta_primary_url,   c.hero.cta_primary_text);
     setLink('hero-cta-secondary', c.hero.cta_secondary_url, c.hero.cta_secondary_text);
+    const trust = document.querySelector('.hero-trust');
+    if (trust) {
+      const tc = c.hero.trust_count; const tt = c.hero.trust_text;
+      trust.hidden = !tc && !tt;
+      const sm = trust.querySelector('small');
+      if (sm) sm.innerHTML = tc ? `<b>${tc}</b> ${tt||''}` : (tt||'');
+    }
   }
   if (c.marquee && c.marquee.length) {
     const track = document.getElementById('marquee');

@@ -13,18 +13,13 @@
     "tag": "Agência de Criação de Websites",
     "title": "Websites que <span class=\"grad\">transformam</span> negócios.",
     "subtitle": "",
+    "trust_count": "200+ negócios",
+    "trust_text": "já confiaram na Conselho Digital",
     "cta_primary_text": "Contactar",
     "cta_primary_url": "https://wa.me/5519953222558",
     "cta_secondary_text": "Ver Portfólio",
     "cta_secondary_url": "#portfolio"
   },
-  "stats": [
-    {"num": "200+", "lbl": "Sites criados"},
-    {"num": "✦",    "lbl": "Novos Designs"},
-    {"num": "⚡",   "lbl": "Sites Animados"},
-    {"num": "🎯",   "lbl": "Focado em Venda"},
-    {"num": "🚀",   "lbl": "Lançamento Rápido"}
-  ],
   "orbital_badges": [
     {"emoji": "🎨", "label": "Design Personalizado", "link": "", "ring": 1},
     {"emoji": "⚡", "label": "Performance",           "link": "", "ring": 1},

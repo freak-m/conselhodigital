@@ -381,13 +381,15 @@
           <div class="fld"><label>CTA Secundário — Texto</label><input type="text" id="hero-cta_secondary_text"></div>
           <div class="fld"><label>CTA Secundário — URL</label><input type="text" id="hero-cta_secondary_url"></div>
           <hr class="section-divider">
+          <p style="font-size:11px;color:var(--muted);margin-bottom:10px;font-weight:600">Prova Social</p>
+          <div class="inline-2">
+            <div class="fld"><label>Número / Destaque</label><input type="text" id="hero-trust_count" placeholder="200+ negócios"></div>
+            <div class="fld"><label>Texto</label><input type="text" id="hero-trust_text" placeholder="já confiaram na Conselho Digital"></div>
+          </div>
+          <hr class="section-divider">
           <p style="font-size:11px;color:var(--muted);margin-bottom:10px;">Badges Orbitais</p>
           <div id="orbital-items"></div>
           <button class="btn-add" onclick="addOrbital()">+ Adicionar badge</button>
-          <hr class="section-divider">
-          <p style="font-size:11px;color:var(--muted);margin-bottom:10px;">Estatísticas (centro orbital)</p>
-          <div id="stats-items"></div>
-          <button class="btn-add" onclick="addStat()">+ Adicionar estatística</button>
           <hr class="section-divider">
           <p style="font-size:11px;color:var(--muted);margin-bottom:10px;">Marquee (barra de tecnologias)</p>
           <div class="fld"><label>Itens (separados por vírgula)</label><input type="text" id="marquee-items"></div>
@@ -656,13 +658,14 @@ function populateForm(c) {
   setVal('hero-title',           c.hero?.title);
   setVal('hero-tag',             c.hero?.tag);
   setQuill('hero-subtitle',      c.hero?.subtitle);
+  setVal('hero-trust_count',     c.hero?.trust_count);
+  setVal('hero-trust_text',      c.hero?.trust_text);
   setVal('hero-cta_primary_text',c.hero?.cta_primary_text);
   setVal('hero-cta_primary_url', c.hero?.cta_primary_url);
   setVal('hero-cta_secondary_text',c.hero?.cta_secondary_text);
   setVal('hero-cta_secondary_url', c.hero?.cta_secondary_url);
   // Orbital
   renderOrbitalItems(c.orbital_badges || []);
-  renderStatItems(c.stats || []);
   setVal('marquee-items', (c.marquee||[]).join(', '));
   // Services
   setVal('services-tag',   c.services?.tag);
@@ -731,23 +734,6 @@ function addOrbital() {
   c.appendChild(makeOrbitalItem({emoji:'',label:'',link:'',ring:1}, c.children.length));
 }
 
-function renderStatItems(items) {
-  const c = document.getElementById('stats-items'); c.innerHTML='';
-  items.forEach((it,i) => c.appendChild(makeStatItem(it,i)));
-}
-function makeStatItem(it, i) {
-  const d=document.createElement('div'); d.className='repeat-item'; d.dataset.idx=i;
-  d.innerHTML=`<div class="item-head"><span class="item-label">Stat ${i+1}</span><button class="btn-remove" onclick="this.closest('.repeat-item').remove();sendPreview()">✕</button></div>
-    <div class="inline-2">
-      <div class="fld"><label>Número</label><input type="text" value="${escHtml(it.num||'')}" oninput="sendPreview()" placeholder="200+"></div>
-      <div class="fld"><label>Label</label><input type="text" value="${escHtml(it.lbl||'')}" oninput="sendPreview()" placeholder="Sites criados"></div>
-    </div>`;
-  return d;
-}
-function addStat() {
-  const c=document.getElementById('stats-items');
-  c.appendChild(makeStatItem({num:'',lbl:''}, c.children.length));
-}
 
 function renderServiceItems(items) {
   const c=document.getElementById('services-items'); c.innerHTML='';
@@ -915,6 +901,8 @@ function collectForm() {
     title:              getVal('hero-title'),
     tag:                getVal('hero-tag'),
     subtitle:           getQuillHtml('hero-subtitle'),
+    trust_count:        getVal('hero-trust_count'),
+    trust_text:         getVal('hero-trust_text'),
     cta_primary_text:   getVal('hero-cta_primary_text'),
     cta_primary_url:    getVal('hero-cta_primary_url'),
     cta_secondary_text: getVal('hero-cta_secondary_text'),
@@ -929,10 +917,6 @@ function collectForm() {
       link:  inputs[2]?.value || '',
     };
   });
-  c.stats = [...document.querySelectorAll('#stats-items .repeat-item')].map(el => ({
-    num: el.querySelectorAll('input')[0].value,
-    lbl: el.querySelectorAll('input')[1].value,
-  }));
   c.marquee = getVal('marquee-items').split(',').map(s=>s.trim()).filter(Boolean);
   // Services
   c.services = {
