@@ -201,8 +201,6 @@
     .tab-panel.active { display:flex; }
 
     /* ── DASHBOARD ── */
-    #tab-dashboard { overflow-y:auto; padding:24px; flex-direction:column; gap:20px; background:var(--bg); }
-    #tab-dashboard.active { display:flex; }
     .dash-source { background:var(--bg2); border:1px solid var(--cbr); border-radius:var(--r); padding:16px 18px; }
     .dash-source-label { font-size:12px; font-weight:600; color:var(--white); margin-bottom:10px; }
     .dash-source-row { display:flex; gap:10px; }
@@ -236,8 +234,6 @@
     .dash-2col { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
 
     /* ── INTEGRATIONS ── */
-    #tab-integrations { overflow-y:auto; padding:24px; flex-direction:column; gap:20px; background:var(--bg); }
-    #tab-integrations.active { display:flex; }
     .int-card { background:var(--bg2); border:1px solid var(--cbr); border-radius:var(--r); padding:20px; }
     .int-card h4 { font-family:'Syne',sans-serif; font-size:13px; font-weight:700; margin-bottom:4px; }
     .int-card .desc { font-size:11px; color:var(--muted); margin-bottom:14px; line-height:1.5; }
@@ -269,15 +265,15 @@
     </div>
     <nav class="sidebar-nav" id="sidebar-nav">
       <div class="nav-section">Conteúdo</div>
-      <button class="nav-item active" data-section="global">  <span class="icon">⚙️</span> Global</button>
-      <button class="nav-item" data-section="seo">            <span class="icon">🔍</span> SEO & Meta</button>
-      <button class="nav-item" data-section="hero">           <span class="icon">🏠</span> Hero</button>
-      <button class="nav-item" data-section="services">       <span class="icon">⚡</span> Serviços</button>
-      <button class="nav-item" data-section="benefits">       <span class="icon">✅</span> Benefícios</button>
-      <button class="nav-item" data-section="portfolio">      <span class="icon">🎨</span> Portfólio</button>
-      <button class="nav-item" data-section="process">        <span class="icon">🔄</span> Processo</button>
-      <button class="nav-item" data-section="cta">            <span class="icon">🚀</span> CTA</button>
-      <button class="nav-item" data-section="footer">         <span class="icon">📄</span> Rodapé</button>
+      <button class="nav-item active" data-section="global">        <span class="icon">📊</span> Dashboard</button>
+      <button class="nav-item" data-section="integrations">         <span class="icon">⚙️</span> Integrações</button>
+      <button class="nav-item" data-section="seo">                  <span class="icon">🔍</span> SEO & Meta</button>
+      <button class="nav-item" data-section="hero">                 <span class="icon">🏠</span> Hero</button>
+      <button class="nav-item" data-section="services">             <span class="icon">⚡</span> Serviços</button>
+      <button class="nav-item" data-section="benefits">             <span class="icon">✅</span> Benefícios</button>
+      <button class="nav-item" data-section="portfolio">            <span class="icon">🎨</span> Portfólio</button>
+      <button class="nav-item" data-section="process">              <span class="icon">🔄</span> Processo</button>
+      <button class="nav-item" data-section="cta">                  <span class="icon">🚀</span> CTA</button>
     </nav>
     <div class="sidebar-footer">
       <button class="btn-logout" onclick="doLogout()">Sair (Cloudflare)</button>
@@ -289,9 +285,7 @@
     <!-- TOPBAR -->
     <div class="topbar">
       <div class="topbar-left">
-        <button class="tab-btn active" onclick="switchTab('content',this)">Conteúdo</button>
-        <button class="tab-btn" onclick="switchTab('dashboard',this)">Dashboard</button>
-        <button class="tab-btn" onclick="switchTab('integrations',this)">Integrações</button>
+        <span style="font-size:13px;font-weight:600;color:var(--blue)">Conselho Digital — CMS</span>
       </div>
       <div class="topbar-right">
         <span id="save-indicator">Carregando…</span>
@@ -305,14 +299,59 @@
       <!-- EDITOR PANE -->
       <div class="editor-pane">
 
-        <!-- GLOBAL -->
+        <!-- GLOBAL / DASHBOARD -->
         <div class="section-panel active" id="section-global">
-          <h3>⚙️ Configurações Globais</h3>
-          <div class="fld">
-            <label>WhatsApp — URL Global</label>
-            <input type="text" id="global-whatsapp" placeholder="https://wa.me/5519953222558">
-            <small style="font-size:11px;color:var(--muted);margin-top:4px;display:block">Usado no botão flutuante e em todos os botões de contato do site.</small>
+          <h3>📊 Dashboard</h3>
+          <div class="dash-source">
+            <div class="dash-source-label">🔗 Link das métricas (Cloudflare Analytics Worker)</div>
+            <div class="dash-source-row">
+              <input type="text" id="dash-worker-url" placeholder="https://analytics.conselhodigital.com/">
+              <button class="btn-primary" onclick="connectWorker()">Importar dados</button>
+            </div>
+            <div class="dash-source-hint" id="dash-source-hint">Cole o link e clique em importar para carregar as métricas nos cards abaixo.</div>
           </div>
+          <div id="dash-banner-update" class="dash-banner yellow">Atualizando dados…</div>
+          <div id="dash-banner-error"  class="dash-banner red">Falha ao importar. Verifique o link das métricas.</div>
+          <div id="dash-content">
+            <div class="dash-period">
+              <button class="period-btn active" onclick="setPeriod(7,this)">7 dias</button>
+              <button class="period-btn" onclick="setPeriod(30,this)">30 dias</button>
+              <button class="period-btn" onclick="setPeriod(90,this)">90 dias</button>
+            </div>
+            <div class="dash-stats" id="dash-stats">
+              <div class="dash-stat"><div class="lbl">Visitas</div><div class="val" id="d-visits">—</div><div class="sub">período selecionado</div></div>
+              <div class="dash-stat"><div class="lbl">Cliques WhatsApp</div><div class="val" id="d-wa">—</div><div class="sub">evento wa</div></div>
+              <div class="dash-stat"><div class="lbl">Tempo médio</div><div class="val" id="d-time">—</div><div class="sub">segundos na página</div></div>
+              <div class="dash-stat"><div class="lbl">Visualiz. foto</div><div class="val" id="d-photo">—</div><div class="sub">evento photo</div></div>
+            </div>
+            <div class="dash-2col">
+              <div class="chart-card"><h4>Visitas por dia</h4><div class="chart-wrap"><canvas id="chart-visits"></canvas></div></div>
+              <div class="chart-card"><h4>Países (top 5)</h4><div class="chart-wrap"><canvas id="chart-countries"></canvas></div></div>
+            </div>
+            <div class="chart-card"><h4>Páginas mais acessadas</h4><div class="chart-wrap" style="height:160px"><canvas id="chart-pages"></canvas></div></div>
+          </div>
+        </div>
+
+        <!-- INTEGRATIONS -->
+        <div class="section-panel" id="section-integrations">
+          <h3>⚙️ Integrações</h3>
+          <div class="int-card">
+            <h4>Google Analytics</h4>
+            <p class="desc">ID de medição GA4 (ex: G-XXXXXXXX). Será injetado automaticamente na landing page.</p>
+            <div class="fld"><label>GA4 Measurement ID</label><input type="text" id="int-ga" placeholder="G-XXXXXXXX"></div>
+          </div>
+          <div class="int-card">
+            <h4>Meta Pixel</h4>
+            <p class="desc">ID do Pixel do Facebook/Meta para rastreamento de conversões.</p>
+            <div class="fld"><label>Meta Pixel ID</label><input type="text" id="int-pixel" placeholder="123456789"></div>
+            <div class="fld"><label>Meta Domain Verification</label><input type="text" id="int-verify" placeholder="abcdef123456"></div>
+          </div>
+          <div class="int-card">
+            <h4>Cloudflare Analytics Worker</h4>
+            <p class="desc">URL do Worker que consulta a API de Analytics da Cloudflare. Usado para o Dashboard.</p>
+            <div class="fld"><label>Worker URL</label><input type="text" id="int-worker" placeholder="https://analytics.conselhodigital.com/" value="https://analytics.conselhodigital.com/"></div>
+          </div>
+          <button class="btn-primary" onclick="saveIntegrations()" style="width:fit-content">💾 Salvar Integrações</button>
         </div>
 
         <!-- SEO -->
@@ -457,13 +496,14 @@
           <div class="fld"><label>Botão Principal — URL</label><input type="text" id="cta-cta_primary_url"></div>
           <div class="fld"><label>Botão Secundário — Texto</label><input type="text" id="cta-cta_secondary_text"></div>
           <div class="fld"><label>Botão Secundário — URL</label><input type="text" id="cta-cta_secondary_url"></div>
+          <hr class="section-divider">
+          <div class="fld">
+            <label>WhatsApp — URL Global</label>
+            <input type="text" id="global-whatsapp" placeholder="https://wa.me/5519953222558">
+            <small style="font-size:11px;color:var(--muted);margin-top:4px;display:block">Usado no botão flutuante e em todos os botões de contato do site.</small>
+          </div>
         </div>
 
-        <!-- FOOTER -->
-        <div class="section-panel" id="section-footer">
-          <h3>📄 Rodapé</h3>
-          <div class="fld"><label>Texto do Rodapé</label><input type="text" id="footer-text"></div>
-        </div>
 
       </div><!-- /editor-pane -->
 
@@ -478,68 +518,6 @@
       </div>
     </div><!-- /tab-content -->
 
-    <!-- TAB: DASHBOARD -->
-    <div class="tab-panel" id="tab-dashboard">
-      <!-- Link das métricas -->
-      <div class="dash-source">
-        <div class="dash-source-label">🔗 Link das métricas (Cloudflare Analytics Worker)</div>
-        <div class="dash-source-row">
-          <input type="text" id="dash-worker-url" placeholder="https://analytics.conselhodigital.com/">
-          <button class="btn-primary" onclick="connectWorker()">Importar dados</button>
-        </div>
-        <div class="dash-source-hint" id="dash-source-hint">Cole o link e clique em importar para carregar as métricas nos cards abaixo.</div>
-      </div>
-      <div id="dash-banner-update" class="dash-banner yellow">Atualizando dados…</div>
-      <div id="dash-banner-error"  class="dash-banner red">Falha ao importar. Verifique o link das métricas.</div>
-      <div id="dash-content">
-        <div class="dash-period">
-          <button class="period-btn active" onclick="setPeriod(7,this)">7 dias</button>
-          <button class="period-btn" onclick="setPeriod(30,this)">30 dias</button>
-          <button class="period-btn" onclick="setPeriod(90,this)">90 dias</button>
-        </div>
-        <div class="dash-stats" id="dash-stats">
-          <div class="dash-stat"><div class="lbl">Visitas</div><div class="val" id="d-visits">—</div><div class="sub">período selecionado</div></div>
-          <div class="dash-stat"><div class="lbl">Cliques WhatsApp</div><div class="val" id="d-wa">—</div><div class="sub">evento wa</div></div>
-          <div class="dash-stat"><div class="lbl">Tempo médio</div><div class="val" id="d-time">—</div><div class="sub">segundos na página</div></div>
-          <div class="dash-stat"><div class="lbl">Visualiz. foto</div><div class="val" id="d-photo">—</div><div class="sub">evento photo</div></div>
-        </div>
-        <div class="dash-2col">
-          <div class="chart-card">
-            <h4>Visitas por dia</h4>
-            <div class="chart-wrap"><canvas id="chart-visits"></canvas></div>
-          </div>
-          <div class="chart-card">
-            <h4>Países (top 5)</h4>
-            <div class="chart-wrap"><canvas id="chart-countries"></canvas></div>
-          </div>
-        </div>
-        <div class="chart-card">
-          <h4>Páginas mais acessadas</h4>
-          <div class="chart-wrap" style="height:160px"><canvas id="chart-pages"></canvas></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB: INTEGRAÇÕES -->
-    <div class="tab-panel" id="tab-integrations">
-      <div class="int-card">
-        <h4>Google Analytics</h4>
-        <p class="desc">ID de medição GA4 (ex: G-XXXXXXXX). Será injetado automaticamente na landing page.</p>
-        <div class="fld"><label>GA4 Measurement ID</label><input type="text" id="int-ga" placeholder="G-XXXXXXXX"></div>
-      </div>
-      <div class="int-card">
-        <h4>Meta Pixel</h4>
-        <p class="desc">ID do Pixel do Facebook/Meta para rastreamento de conversões.</p>
-        <div class="fld"><label>Meta Pixel ID</label><input type="text" id="int-pixel" placeholder="123456789"></div>
-        <div class="fld"><label>Meta Domain Verification</label><input type="text" id="int-verify" placeholder="abcdef123456"></div>
-      </div>
-      <div class="int-card">
-        <h4>Cloudflare Analytics Worker</h4>
-        <p class="desc">URL do Worker que consulta a API de Analytics da Cloudflare. Usado para o Dashboard acima.</p>
-        <div class="fld"><label>Worker URL</label><input type="text" id="int-worker" placeholder="https://analytics.conselhodigital.com/" value="https://analytics.conselhodigital.com/"></div>
-      </div>
-      <button class="btn-primary" onclick="saveIntegrations()" style="width:fit-content">💾 Salvar Integrações</button>
-    </div>
 
   </div><!-- /main -->
 </div><!-- /app -->
@@ -558,7 +536,6 @@ const CF_WORKER_KEY= 'cf_worker_url';
 const CF_WORKER_DEFAULT = 'https://analytics.conselhodigital.com/';
 const CACHE_MAX_MS = 2 * 60 * 60 * 1000;
 const CACHE_CHECK_MS = 5 * 60 * 1000;
-const NO_PREVIEW_TABS = new Set(['dashboard','integrations']);
 
 let currentContent = null;
 let previewReady = false;
@@ -704,7 +681,6 @@ function populateForm(c) {
   setVal('cta-cta_secondary_text',c.cta?.cta_secondary_text);
   setVal('cta-cta_secondary_url', c.cta?.cta_secondary_url);
   // Footer
-  setVal('footer-text', c.footer?.text);
   // Setup change listeners
   setupChangeListeners();
   // Initial preview
@@ -1028,7 +1004,6 @@ function collectForm() {
     cta_secondary_url:  getVal('cta-cta_secondary_url'),
   };
   // Footer
-  c.footer = { text: getVal('footer-text') };
   // Keep integrations
   c.integrations = currentContent?.integrations || {};
   return c;
@@ -1070,7 +1045,6 @@ const SECTION_ANCHORS = {
   portfolio: '#portfolio',
   process:   '#processo',
   cta:       '#contato',
-  footer:    '#contato',
 };
 document.getElementById('sidebar-nav').addEventListener('click', e => {
   const btn = e.target.closest('.nav-item'); if(!btn) return;
@@ -1079,6 +1053,7 @@ document.getElementById('sidebar-nav').addEventListener('click', e => {
   const sec = btn.dataset.section;
   document.querySelectorAll('.section-panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('section-'+sec).classList.add('active');
+  if (sec === 'global') initDashboard();
   // Scroll preview to matching section
   const anchor = SECTION_ANCHORS[sec];
   if (anchor && previewReady) {
@@ -1086,22 +1061,7 @@ document.getElementById('sidebar-nav').addEventListener('click', e => {
   }
 });
 
-function switchTab(tab, btn) {
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('tab-'+tab).classList.add('active');
-  const sidebar = document.querySelector('.sidebar');
-  const editorPane = document.querySelector('.editor-pane');
-  if (NO_PREVIEW_TABS.has(tab)) {
-    sidebar.style.display='none'; editorPane.style.display='none';
-    document.querySelector('.preview-pane').style.display='none';
-  } else {
-    sidebar.style.display=''; editorPane.style.display='';
-    document.querySelector('.preview-pane').style.display='';
-  }
-  if (tab==='dashboard') initDashboard();
-}
+function switchTab() {}
 
 /* ── INDICATOR / TOAST ── */
 function setIndicator(msg) { document.getElementById('save-indicator').textContent = msg; }
