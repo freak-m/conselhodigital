@@ -340,6 +340,8 @@
       line-height:1; transform:translate(-50%, -50%);
     }
     .op-emoji { font-size:14px; }
+    a.op-inner { pointer-events:all; text-decoration:none; color:inherit; cursor:pointer; }
+    a.op-inner:hover { border-color:rgba(0,188,255,0.4); background:rgba(10,23,38,0.95); }
     @keyframes opOrbit   { to{transform:rotate(360deg)} }
     @keyframes opCounter { to{transform:rotate(-360deg)} }
     .pill-tag {
@@ -1440,8 +1442,20 @@ function applyContent(c) {
   if (!c) return;
   if (c.seo) {
     if (c.seo.title) document.title = c.seo.title;
-    const md = document.querySelector('meta[name="description"]');
-    if (md && c.seo.description) md.setAttribute('content', c.seo.description);
+    const setMeta = (sel, val) => { if(!val) return; const m=document.querySelector(sel); if(m) m.setAttribute('content',val); };
+    setMeta('meta[name="description"]',              c.seo.description);
+    setMeta('meta[name="keywords"]',                 c.seo.keywords);
+    setMeta('meta[name="robots"]',                   c.seo.robots);
+    setMeta('meta[property="og:title"]',             c.seo.title);
+    setMeta('meta[property="og:description"]',       c.seo.description);
+    setMeta('meta[property="og:image"]',             c.seo.og_image);
+    setMeta('meta[name="twitter:title"]',            c.seo.twitter_title||c.seo.title);
+    setMeta('meta[name="twitter:description"]',      c.seo.twitter_desc||c.seo.description);
+    setMeta('meta[name="twitter:image"]',            c.seo.og_image);
+    if (c.seo.canonical) {
+      const can = document.querySelector('link[rel="canonical"]');
+      if (can) can.setAttribute('href', c.seo.canonical);
+    }
   }
   if (c.integrations) {
     if (c.integrations.google_analytics) injectGA(c.integrations.google_analytics);
@@ -1456,7 +1470,7 @@ function applyContent(c) {
     setText('hero-tag-text',      c.hero.tag);
     if (c.hero.title) { const h = document.getElementById('hero-h1'); if (h) h.innerHTML = c.hero.title; }
     const sub = document.getElementById('hero-subtitle');
-    if (sub) { sub.textContent = c.hero.subtitle || ''; sub.hidden = !c.hero.subtitle; }
+    if (sub) { sub.innerHTML = c.hero.subtitle || ''; sub.hidden = !c.hero.subtitle; }
     setLink('hero-cta-primary',   c.hero.cta_primary_url,   c.hero.cta_primary_text);
     setLink('hero-cta-secondary', c.hero.cta_secondary_url, c.hero.cta_secondary_text);
   }
@@ -1478,9 +1492,9 @@ function applyContent(c) {
     }
   }
   if (c.benefits) {
-    setText('ben-tag',     c.benefits.tag);
-    setText('ben-title',   c.benefits.title);
-    setText('ben-subtitle',c.benefits.subtitle);
+    setText('ben-tag',   c.benefits.tag);
+    setText('ben-title', c.benefits.title);
+    setHtml('ben-subtitle', c.benefits.subtitle);
     const g = document.getElementById('ben-grid');
     if (g && c.benefits.items) {
       g.innerHTML = c.benefits.items.map((b,i)=>`
@@ -1520,16 +1534,43 @@ function applyContent(c) {
       <div class="tl-step rv on${i?' d'+(i):''}"><div class="tl-node">0${i+1}</div><div class="tl-step-content"><h3>${s.title}</h3><p>${s.desc}</p></div></div>`).join('');
   }
   if (c.cta) {
-    setText('cta-tag',      c.cta.tag);
-    setText('cta-title',    c.cta.title);
-    setText('cta-subtitle', c.cta.subtitle);
+    setText('cta-tag',   c.cta.tag);
+    setText('cta-title', c.cta.title);
+    setHtml('cta-subtitle', c.cta.subtitle);
     setLink('cta-btn-primary',   c.cta.cta_primary_url,   c.cta.cta_primary_text);
     setLink('cta-btn-secondary', c.cta.cta_secondary_url, c.cta.cta_secondary_text);
   }
   if (c.footer) setText('footer-text', c.footer.text);
   if (c.whatsapp) { const wa = document.getElementById('float-wa'); if (wa) wa.href = c.whatsapp; }
+  if (c.orbital_badges && c.orbital_badges.length) {
+    const heroOrb = document.querySelector('.hero-orbital');
+    if (heroOrb) {
+      heroOrb.querySelectorAll('.op-wrap').forEach(el => el.remove());
+      const ringSpd = { 1:16, 2:26, 3:38 };
+      const ringCount = {}; const ringIdx = {};
+      c.orbital_badges.forEach(b => { const r = +b.ring||1; ringCount[r]=(ringCount[r]||0)+1; ringIdx[r]=0; });
+      c.orbital_badges.forEach(b => {
+        const r = +b.ring||1;
+        const spd = ringSpd[r]||16;
+        const cnt = ringCount[r]||1;
+        const i = ringIdx[r]++;
+        const delay = -(spd*i/cnt);
+        const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        const inner = b.link
+          ? `<a class="op-inner" href="${esc(b.link)}" target="_blank" rel="noopener"><span class="op-emoji">${b.emoji||''}</span>${esc(b.label||'')}</a>`
+          : `<div class="op-inner"><span class="op-emoji">${b.emoji||''}</span>${esc(b.label||'')}</div>`;
+        const wrap = document.createElement('div');
+        wrap.className = `op-wrap ring${r}`;
+        wrap.style.setProperty('--spd', spd+'s');
+        wrap.style.setProperty('--delay', delay.toFixed(2)+'s');
+        wrap.innerHTML = `<div class="op">${inner}</div>`;
+        heroOrb.appendChild(wrap);
+      });
+    }
+  }
 }
 function setText(id, val) { const el=document.getElementById(id); if(el&&val!=null) el.textContent=val; }
+function setHtml(id, val)  { const el=document.getElementById(id); if(el&&val!=null) el.innerHTML=val; }
 function setLink(id, href, text) {
   const el=document.getElementById(id); if(!el) return;
   if(href!=null) el.href=href; if(text!=null) el.textContent=text;

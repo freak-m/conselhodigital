@@ -3,7 +3,11 @@
     "title": "Criação de Sites Profissionais | Conselho Digital",
     "description": "Criamos sites profissionais com design exclusivo, SEO incluso e entrega em menos de 1 semana. 200+ clientes satisfeitos. Solicite orçamento grátis!",
     "keywords": "criação de sites, criação de sites profissionais, agência web, design de sites, sites para empresas, landing page, e-commerce, desenvolvimento de sites, site profissional, agência digital Brasil",
-    "og_image": "https://conselhodigital.com/meus/og-image.webp"
+    "og_image": "https://conselhodigital.com/meus/og-image.webp",
+    "canonical": "https://conselhodigital.com/",
+    "robots": "index, follow",
+    "twitter_title": "",
+    "twitter_desc": ""
   },
   "hero": {
     "tag": "Agência de Criação de Websites",
@@ -22,11 +26,14 @@
     {"num": "🚀",   "lbl": "Lançamento Rápido"}
   ],
   "orbital_badges": [
-    {"label": "Segurança proativa", "color": "#00bcff"},
-    {"label": "Descobrir",          "color": "#00DDD0"},
-    {"label": "Design",             "color": "#8DD44E"},
-    {"label": "Desenvolver",        "color": "#8B5CF6"},
-    {"label": "Lançar",             "color": "#F59E0B"}
+    {"emoji": "🎨", "label": "Design Personalizado", "link": "", "ring": 1},
+    {"emoji": "⚡", "label": "Performance",           "link": "", "ring": 1},
+    {"emoji": "🔒", "label": "Segurança proativa",    "link": "", "ring": 1},
+    {"emoji": "🔍", "label": "SEO & Conteúdo",        "link": "", "ring": 2},
+    {"emoji": "🔎", "label": "Descobrir",              "link": "", "ring": 2},
+    {"emoji": "✏️", "label": "Design",                "link": "", "ring": 2},
+    {"emoji": "💻", "label": "Desenvolver",            "link": "", "ring": 3},
+    {"emoji": "🚀", "label": "Lançar",                 "link": "", "ring": 3}
   ],
   "marquee": ["WordPress","Elementor","Yoast SEO","Cloudflare","PHP 8","MySQL","CSS"],
   "services": {
