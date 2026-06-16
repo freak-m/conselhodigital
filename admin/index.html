@@ -603,6 +603,7 @@ async function publishContent() {
     const content = collectForm();
     const r = await fetch(`${PUBLISH_API}/publish`, {
       method: 'POST',
+      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ content }),
     });
@@ -629,6 +630,7 @@ async function uploadImage(file, callback) {
       const filename = `meus/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.]/g,'-')}`;
       const r = await fetch(`${PUBLISH_API}/upload`, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ filename, data }),
       });
