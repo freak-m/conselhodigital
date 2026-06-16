@@ -5,68 +5,208 @@
     "keywords": "criação de sites, criação de sites profissionais, agência web, design de sites, sites para empresas, landing page, e-commerce, desenvolvimento de sites, site profissional, agência digital Brasil",
     "og_image": "https://conselhodigital.com/meus/og-image.webp",
     "canonical": "https://conselhodigital.com/",
-    "robots": "index, follow",
     "twitter_title": "",
-    "twitter_desc": ""
+    "twitter_desc": "",
+    "robots": "index, follow"
   },
   "hero": {
-    "tag": "Agência de Criação de Websites",
     "title": "Websites que <span class=\"grad\">transformam</span> negócios.",
+    "tag": "Agência de Criação de Websites",
     "subtitle": "",
     "orbital_movement": "ellipse",
     "trust_count": "200+ negócios",
     "trust_text": "já confiaram na Conselho Digital",
-    "trust_avatars": ["", "", "", ""],
+    "trust_avatars": [
+      "",
+      "",
+      "",
+      ""
+    ],
     "cta_primary_text": "Contactar",
     "cta_primary_url": "https://wa.me/5519953222558",
     "cta_secondary_text": "Ver Portfólio",
     "cta_secondary_url": "#portfolio"
   },
   "orbital_badges": [
-    {"emoji": "🎨", "label": "Design Personalizado", "link": "", "ring": 1},
-    {"emoji": "⚡", "label": "Performance",           "link": "", "ring": 1},
-    {"emoji": "🔒", "label": "Segurança proativa",    "link": "", "ring": 1},
-    {"emoji": "🔍", "label": "SEO & Conteúdo",        "link": "", "ring": 2},
-    {"emoji": "🔎", "label": "Descobrir",              "link": "", "ring": 2},
-    {"emoji": "✏️", "label": "Design",                "link": "", "ring": 2},
-    {"emoji": "💻", "label": "Desenvolver",            "link": "", "ring": 3},
-    {"emoji": "🚀", "label": "Lançar",                 "link": "", "ring": 3}
+    {
+      "emoji": "🎨",
+      "ring": 1,
+      "label": "Design Personalizado",
+      "link": ""
+    },
+    {
+      "emoji": "⚡",
+      "ring": 1,
+      "label": "Performance",
+      "link": ""
+    },
+    {
+      "emoji": "🔒",
+      "ring": 1,
+      "label": "Segurança proativa",
+      "link": ""
+    },
+    {
+      "emoji": "🔍",
+      "ring": 2,
+      "label": "SEO & Conteúdo",
+      "link": ""
+    },
+    {
+      "emoji": "🔎",
+      "ring": 2,
+      "label": "Descobrir",
+      "link": ""
+    },
+    {
+      "emoji": "✏️",
+      "ring": 2,
+      "label": "Design",
+      "link": ""
+    },
+    {
+      "emoji": "💻",
+      "ring": 3,
+      "label": "Desenvolver",
+      "link": ""
+    },
+    {
+      "emoji": "🚀",
+      "ring": 3,
+      "label": "Lançar",
+      "link": ""
+    }
   ],
-  "marquee": ["WordPress","Elementor","Yoast SEO","Cloudflare","PHP 8","MySQL","CSS"],
+  "marquee": [
+    "WordPress",
+    "Elementor",
+    "Yoast SEO",
+    "Cloudflare",
+    "PHP 8",
+    "MySQL",
+    "CSS"
+  ],
   "services": {
     "tag": "O que fazemos",
     "title": "Tudo que seu site precisa",
     "items": [
-      {"icon": "🎨", "color": "b", "title": "Design Personalizado",  "desc": "Layouts desenvolvidos à mão e ajustados à identidade da sua marca — únicos, modernos e memoráveis."},
-      {"icon": "🔍", "color": "t", "title": "SEO & Conteúdo",        "desc": "Estrutura otimizada para o Google, conteúdo estratégico que atrai visitantes qualificados organicamente."},
-      {"icon": "⚡", "color": "g", "title": "Performance",            "desc": "sites ultrarrápidos que não percam clientes."},
-      {"icon": "🔒", "color": "p", "title": "Segurança proativa",     "desc": "Firewall, bloqueio de bots e proteção contra ataques para manter seu site sempre seguro."},
-      {"icon": "🔎", "color": "b", "title": "Descobrir",              "desc": "Mergulhamos na sua marca, público e objetivos para construir a estratégia certa."},
-      {"icon": "✏️", "color": "t", "title": "Design",                 "desc": "Protótipos pixel-perfect, refinados até cada detalhe ficar do seu jeito."},
-      {"icon": "💻", "color": "g", "title": "Desenvolver",            "desc": "Código limpo e personalizado — leve, rápido e sem plugins desnecessários."},
-      {"icon": "🚀", "color": "p", "title": "Lançar",                 "desc": "Deploy otimizado, treinamento completo e suporte para crescer sem preocupações."}
+      {
+        "icon": "🎨",
+        "color": "b",
+        "title": "Design Personalizado",
+        "desc": "Layouts desenvolvidos à mão e ajustados à identidade da sua marca — únicos, modernos e memoráveis."
+      },
+      {
+        "icon": "🔍",
+        "color": "t",
+        "title": "SEO & Conteúdo",
+        "desc": "Estrutura otimizada para o Google, conteúdo estratégico que atrai visitantes qualificados organicamente."
+      },
+      {
+        "icon": "⚡",
+        "color": "g",
+        "title": "Performance",
+        "desc": "sites ultrarrápidos que não percam clientes."
+      },
+      {
+        "icon": "🔒",
+        "color": "p",
+        "title": "Segurança proativa",
+        "desc": "Firewall, bloqueio de bots e proteção contra ataques para manter seu site sempre seguro."
+      },
+      {
+        "icon": "🔎",
+        "color": "b",
+        "title": "Descobrir",
+        "desc": "Mergulhamos na sua marca, público e objetivos para construir a estratégia certa."
+      },
+      {
+        "icon": "✏️",
+        "color": "t",
+        "title": "Design",
+        "desc": "Protótipos pixel-perfect, refinados até cada detalhe ficar do seu jeito."
+      },
+      {
+        "icon": "💻",
+        "color": "g",
+        "title": "Desenvolver",
+        "desc": "Código limpo e personalizado — leve, rápido e sem plugins desnecessários."
+      },
+      {
+        "icon": "🚀",
+        "color": "p",
+        "title": "Lançar",
+        "desc": "Deploy otimizado, treinamento completo e suporte para crescer sem preocupações."
+      }
     ]
   },
   "benefits": {
     "tag": "Manutenção Contínua",
     "title": "Seu site sempre rápido, seguro e no ar.",
-    "subtitle": "Um site sem manutenção é um problema esperando para acontecer. Cuidamos de tudo para você focar no que importa: o seu negócio.",
+    "subtitle": "<p>Um site sem manutenção é um problema esperando para acontecer. Cuidamos de tudo para você focar no que importa: o seu negócio.</p>",
     "items": [
-      {"title": "Segurança proativa",   "desc": "Firewall, bloqueio de bots, varredura de malware e proteção contra brute-force."},
-      {"title": "Monitoramento 24/7",  "desc": "Alertas instantâneos se o site sair do ar — respondemos antes de você notar."},
-      {"title": "Suporte humano",      "desc": "Time dedicado por WhatsApp e e-mail, com SLA de resposta de até 4 horas úteis."},
-      {"title": "Relatório mensal",    "desc": "Resumo claro de uptime, performance, segurança e visitas do período."},
-      {"title": "Pequenas alterações", "desc": "Trocas de texto, imagens e ajustes pontuais fácil e rápidos."}
+      {
+        "title": "Segurança proativa",
+        "desc": "Firewall, bloqueio de bots, varredura de malware e proteção contra brute-force."
+      },
+      {
+        "title": "Monitoramento 24/7",
+        "desc": "Alertas instantâneos se o site sair do ar — respondemos antes de você notar."
+      },
+      {
+        "title": "Suporte humano",
+        "desc": "Time dedicado por WhatsApp e e-mail, com SLA de resposta de até 4 horas úteis."
+      },
+      {
+        "title": "Relatório mensal",
+        "desc": "Resumo claro de uptime, performance, segurança e visitas do período."
+      },
+      {
+        "title": "Pequenas alterações",
+        "desc": "Trocas de texto, imagens e ajustes pontuais fácil e rápidos."
+      }
     ]
   },
   "portfolio": {
     "tag": "Trabalhos recentes",
     "title": "Sites que lançamos recentemente",
     "items": [
-      {"category": "Landing Page", "title": "Evergreen Hidrossemeadura", "link": "https://www.evergreenhidrossemeadura.com.br/", "image": "meus/portfolio-evergreen-desktop.jpg", "mobile_image": "meus/portfolio-evergreen.jpg", "bg": "linear-gradient(135deg,#0D1F0A 0%,#2D5A1B 100%)", "span2": false},
-      {"category": "Landing Page",      "title": "Nome do Projeto 2", "link": "", "image": "", "mobile_image": "", "bg": "linear-gradient(135deg,#071020 0%,#00C4B4 100%)", "span2": false},
-      {"category": "Site Institucional","title": "Nome do Projeto 3", "link": "", "image": "", "mobile_image": "", "bg": "linear-gradient(135deg,#071020 0%,#00C4B4 100%)", "span2": false},
-      {"category": "Blog",              "title": "Nome do Projeto 4", "link": "", "image": "", "mobile_image": "", "bg": "linear-gradient(135deg,#071020 0%,#00C4B4 100%)", "span2": false}
+      {
+        "category": "Landing Page",
+        "title": "Evergreen Hidrossemeadura",
+        "link": "https://www.evergreenhidrossemeadura.com.br/",
+        "span2": false,
+        "image": "meus/portfolio-evergreen-desktop.jpg",
+        "mobile_image": "meus/portfolio-evergreen.jpg",
+        "bg": "linear-gradient(135deg,#0D1F0A 0%,#2D5A1B 100%)"
+      },
+      {
+        "category": "Landing Page",
+        "title": "Nome do Projeto 2",
+        "link": "",
+        "span2": false,
+        "image": "",
+        "mobile_image": "",
+        "bg": "linear-gradient(135deg,#071020 0%,#00C4B4 100%)"
+      },
+      {
+        "category": "Site Institucional",
+        "title": "Nome do Projeto 3",
+        "link": "",
+        "span2": false,
+        "image": "",
+        "mobile_image": "",
+        "bg": "linear-gradient(135deg,#071020 0%,#00C4B4 100%)"
+      },
+      {
+        "category": "Blog",
+        "title": "Nome do Projeto 4",
+        "link": "",
+        "span2": false,
+        "image": "",
+        "mobile_image": "",
+        "bg": "linear-gradient(135deg,#071020 0%,#00C4B4 100%)"
+      }
     ]
   },
   "process": {
@@ -74,16 +214,28 @@
     "title": "Do primeiro contato à finalização em menos de 1 semana",
     "subtitle": "Processo claro e sem surpresas — você acompanha cada etapa.",
     "steps": [
-      {"title": "Descobrir",    "desc": "Mergulhamos na sua marca, público e objetivos de negócio para construir a estratégia certa."},
-      {"title": "Design",      "desc": "Exemplos planejados para você escolher o que mais combina com sua marca."},
-      {"title": "Desenvolver", "desc": "Código WordPress limpo e personalizado — sem plugins desnecessários, leve e seguro."},
-      {"title": "Lançar",      "desc": "Deploy otimizado, treinamento completo e plano de manutenção para crescer sem preocupações."}
+      {
+        "title": "Descobrir",
+        "desc": "Mergulhamos na sua marca, público e objetivos de negócio para construir a estratégia certa."
+      },
+      {
+        "title": "Design",
+        "desc": "Exemplos planejados para você escolher o que mais combina com sua marca."
+      },
+      {
+        "title": "Desenvolver",
+        "desc": "Código WordPress limpo e personalizado — sem plugins desnecessários, leve e seguro."
+      },
+      {
+        "title": "Lançar",
+        "desc": "Deploy otimizado, treinamento completo e plano de manutenção para crescer sem preocupações."
+      }
     ]
   },
   "cta": {
     "tag": "Pronto para começar?",
     "title": "Pronto para lançar um site do qual você se orgulha?",
-    "subtitle": "Agende uma conversa gratuita de 30 minutos. Sem compromisso, sem enrolação.",
+    "subtitle": "<p>Agende uma conversa gratuita de 30 minutos. Sem compromisso, sem enrolação.</p>",
     "cta_primary_text": "Solicitar Orçamento Grátis →",
     "cta_primary_url": "https://wa.me/5519953222558",
     "cta_secondary_text": "Falar no WhatsApp",
