@@ -31,22 +31,26 @@ export default {
     }
 
     try {
-      /* ── api.conselhodigital.com — PUBLICAÇÃO ── */
-      if (host === 'api.conselhodigital.com') {
-        if (!ALLOWED_ORIGINS.includes(origin)) {
-          return new Response('NONE', { status: 200 });
+      /* ── conselhodigital.com/admin-api/* — PUBLICAÇÃO (same-origin, Zero Trust) ── */
+      if (path.startsWith('/admin-api')) {
+        // Zero Trust injeta este header após validar o cookie do Access.
+        // A rota conselhodigital.com/admin-api/* deve estar na política do Access.
+        if (!request.headers.get('Cf-Access-Jwt-Assertion')) {
+          return new Response('Unauthorized', { status: 401 });
         }
-        const token = request.headers.get('X-Publish-Token');
-        if (!token || token !== env.PUBLISH_TOKEN) {
-          return corsResp(JSON.stringify({ error: 'Unauthorized' }), 401, origin);
-        }
-        if (request.method === 'POST' && path === '/publish') {
+        const sub = path.replace('/admin-api', '') || '/';
+        if (request.method === 'POST' && sub === '/publish') {
           return handlePublish(request, env, origin);
         }
-        if (request.method === 'POST' && path === '/upload') {
+        if (request.method === 'POST' && sub === '/upload') {
           return handleUpload(request, env, origin);
         }
-        return corsResp(JSON.stringify({ error: 'Not found' }), 404, origin);
+        return new Response('Not found', { status: 404 });
+      }
+
+      /* ── api.conselhodigital.com — mantido por compatibilidade ── */
+      if (host === 'api.conselhodigital.com') {
+        return new Response('NONE', { status: 200 });
       }
 
       /* ── analytics.conselhodigital.com — ANALYTICS (público) ── */
