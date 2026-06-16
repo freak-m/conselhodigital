@@ -53,6 +53,9 @@ export default {
 
       /* ── analytics.conselhodigital.com — ANALYTICS (público) ── */
       if (request.method === 'GET' && path === '/') {
+        if (!ALLOWED_ORIGINS.includes(origin)) {
+          return new Response('NONE', { status: 200 });
+        }
         const days = Math.min(parseInt(url.searchParams.get('days') || '30', 10), 365);
         const data = await fetchAnalytics(env, days);
         return corsResp(JSON.stringify(data), 200, origin);
