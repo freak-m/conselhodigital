@@ -33,6 +33,10 @@ export default {
     try {
       /* ── api.conselhodigital.com — PUBLICAÇÃO (protegido pelo Cloudflare Access) ── */
       if (host === 'api.conselhodigital.com') {
+        // Rejeita requests fora do domínio autorizado
+        if (!ALLOWED_ORIGINS.includes(origin)) {
+          return corsResp(JSON.stringify({ error: 'Forbidden' }), 403, origin);
+        }
         // Zero Trust injeta este header após verificar o usuário.
         // O subdomínio api.conselhodigital.com deve estar na política do Access.
         if (!request.headers.get('Cf-Access-Jwt-Assertion')) {
@@ -55,6 +59,9 @@ export default {
       }
 
       if (request.method === 'POST' && path === '/event') {
+        if (!ALLOWED_ORIGINS.includes(origin)) {
+          return corsResp(JSON.stringify({ error: 'Forbidden' }), 403, origin);
+        }
         const body = await request.json();
         await recordEvent(env, body.type, body.value);
         return corsResp(JSON.stringify({ ok: true }), 200, origin);
