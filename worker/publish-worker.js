@@ -262,6 +262,7 @@ function corsResp(body, status, origin) {
       'Access-Control-Allow-Origin': allow,
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Cf-Access-Jwt-Assertion',
+      'Access-Control-Allow-Credentials': 'true',
     },
   });
 }
