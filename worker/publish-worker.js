@@ -151,7 +151,7 @@ async function fetchAnalytics(env, days) {
 
   const query = `{
     viewer {
-      zones(filter: { zoneTag: "${env.CF_ZONE_ID}" }) {
+      zones(filter: { zoneTag: "${env.CF_ZONE_ID.trim()}" }) {
         httpRequests1dGroups(
           limit: 365
           filter: { date_geq: "${since}", date_leq: "${until}" }
