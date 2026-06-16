@@ -31,15 +31,13 @@ export default {
     }
 
     try {
-      /* ── api.conselhodigital.com — PUBLICAÇÃO (protegido pelo Cloudflare Access) ── */
+      /* ── api.conselhodigital.com — PUBLICAÇÃO ── */
       if (host === 'api.conselhodigital.com') {
-        // Rejeita requests fora do domínio autorizado
         if (!ALLOWED_ORIGINS.includes(origin)) {
           return new Response('NONE', { status: 200 });
         }
-        // Zero Trust injeta este header após verificar o usuário.
-        // O subdomínio api.conselhodigital.com deve estar na política do Access.
-        if (!request.headers.get('Cf-Access-Jwt-Assertion')) {
+        const token = request.headers.get('X-Publish-Token');
+        if (!token || token !== env.PUBLISH_TOKEN) {
           return corsResp(JSON.stringify({ error: 'Unauthorized' }), 401, origin);
         }
         if (request.method === 'POST' && path === '/publish') {

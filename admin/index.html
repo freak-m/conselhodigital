@@ -337,6 +337,11 @@
         <div class="section-panel" id="section-integrations">
           <h3>⚙️ Integrações</h3>
           <div class="int-card">
+            <h4>Publicação — Token CMS</h4>
+            <p class="desc">Token de acesso para publicar no site. Defina um valor secreto aqui e o mesmo valor na variável <code>PUBLISH_TOKEN</code> do Worker. Fica salvo <strong>só neste navegador</strong>.</p>
+            <div class="fld"><label>Publish Token</label><input type="password" id="int-publish-token" placeholder="meu-token-secreto" autocomplete="off"></div>
+          </div>
+          <div class="int-card">
             <h4>Google Analytics</h4>
             <p class="desc">ID de medição GA4 (ex: G-XXXXXXXX). Será injetado automaticamente na landing page.</p>
             <div class="fld"><label>GA4 Measurement ID</label><input type="text" id="int-ga" placeholder="G-XXXXXXXX"></div>
@@ -592,10 +597,20 @@ async function loadContent() {
   }
 }
 
-/* ── PUBLISH (via Cloudflare Worker em api.conselhodigital.com — Zero Trust) ── */
+/* ── PUBLISH (via Cloudflare Worker em api.conselhodigital.com) ── */
 const PUBLISH_API = 'https://api.conselhodigital.com';
 
+function publishHeaders() {
+  return { 'Content-Type': 'application/json', 'X-Publish-Token': localStorage.getItem('publish_token') || '' };
+}
+
 async function publishContent() {
+  const token = localStorage.getItem('publish_token');
+  if (!token) {
+    showToast('Configure o Publish Token em ⚙️ Integrações primeiro.', 'error');
+    setIndicator('Token não configurado');
+    return;
+  }
   const btn = document.getElementById('publish-btn');
   btn.disabled = true; btn.textContent = '⏳ Publicando…';
   setIndicator('Publicando…');
@@ -603,8 +618,7 @@ async function publishContent() {
     const content = collectForm();
     const r = await fetch(`${PUBLISH_API}/publish`, {
       method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
+      headers: publishHeaders(),
       body: JSON.stringify({ content }),
     });
     if (!r.ok) {
@@ -630,8 +644,7 @@ async function uploadImage(file, callback) {
       const filename = `meus/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.]/g,'-')}`;
       const r = await fetch(`${PUBLISH_API}/upload`, {
         method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+        headers: publishHeaders(),
         body: JSON.stringify({ filename, data }),
       });
       if (!r.ok) {
@@ -1107,6 +1120,7 @@ function showToast(msg, type='success') {
 
 /* ── INTEGRATIONS ── */
 function loadIntegrations() {
+  document.getElementById('int-publish-token').value = localStorage.getItem('publish_token') || '';
   const workerUrl = localStorage.getItem(CF_WORKER_KEY) || currentContent?.integrations?.worker_url || CF_WORKER_DEFAULT;
   document.getElementById('int-worker').value = workerUrl;
   if (currentContent?.integrations) {
@@ -1117,6 +1131,8 @@ function loadIntegrations() {
 }
 
 async function saveIntegrations() {
+  const pt = document.getElementById('int-publish-token').value.trim();
+  if (pt) localStorage.setItem('publish_token', pt);
   const workerUrl = document.getElementById('int-worker').value.trim();
   if (workerUrl) localStorage.setItem(CF_WORKER_KEY, workerUrl);
   if (!currentContent) { showToast('Salvo localmente!', 'success'); return; }
