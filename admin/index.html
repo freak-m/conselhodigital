@@ -541,7 +541,6 @@
    A página abre direto. Para PUBLICAR, o painel fala com um Cloudflare
    Worker (mesma proteção do Access) que guarda o token do GitHub em
    segredo e faz os commits. Nenhum token fica no navegador ou no código. */
-const PUBLISH_API  = '/admin-api';            // rota do Worker (mesmo domínio, atrás do Access)
 const CF_WORKER_KEY= 'cf_worker_url';
 const CF_WORKER_DEFAULT = 'https://analytics.conselhodigital.com/';
 const CACHE_MAX_MS = 2 * 60 * 60 * 1000;
@@ -593,14 +592,16 @@ async function loadContent() {
   }
 }
 
-/* ── PUBLISH (via Cloudflare Worker — protegido pelo Zero Trust) ── */
+/* ── PUBLISH (via Cloudflare Worker em api.conselhodigital.com — Zero Trust) ── */
+const PUBLISH_API = 'https://api.conselhodigital.com';
+
 async function publishContent() {
   const btn = document.getElementById('publish-btn');
   btn.disabled = true; btn.textContent = '⏳ Publicando…';
   setIndicator('Publicando…');
   try {
     const content = collectForm();
-    const r = await fetch('/admin-api/publish', {
+    const r = await fetch(`${PUBLISH_API}/publish`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ content }),
@@ -614,7 +615,7 @@ async function publishContent() {
     showToast('Publicado com sucesso! O site atualiza em ~30s.', 'success');
   } catch(e) {
     setIndicator('Erro ao publicar');
-    showToast('Falha: ' + (e.message || 'Worker não configurado em /admin-api'), 'error');
+    showToast('Falha: ' + (e.message || 'Worker não configurado'), 'error');
   }
   btn.disabled = false; btn.textContent = '🚀 Publicar';
 }
@@ -626,7 +627,7 @@ async function uploadImage(file, callback) {
     try {
       const data = ev.target.result.split(',')[1];
       const filename = `meus/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.]/g,'-')}`;
-      const r = await fetch('/admin-api/upload', {
+      const r = await fetch(`${PUBLISH_API}/upload`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ filename, data }),

@@ -1,17 +1,17 @@
 /**
  * Conselho Digital — Analytics + Publish Worker
- * Rota analytics:  analytics.conselhodigital.com  (público, para rastrear eventos)
- * Rota publish:    conselhodigital.com/admin-api/* (protegido pelo Cloudflare Access)
  *
- * GET  /?days=N         — Dados do Cloudflare Analytics + eventos KV
- * POST /event           — Registra evento (wa, photo, time) no KV
- * POST /admin-api/publish — Atualiza content.json no GitHub  ← NOVO
- * POST /admin-api/upload  — Faz upload de imagem no GitHub   ← NOVO
+ * analytics.conselhodigital.com  → Analytics (público)
+ *   GET  /?days=N   — Dados do Cloudflare Analytics + eventos KV
+ *   POST /event     — Registra evento (wa, photo, time) no KV
  *
- * Secrets (analytics):  CF_API_TOKEN, CF_ZONE_ID
- * Secrets (publish):    GITHUB_TOKEN
- * Text vars:            REPO  (ex: freak-m/conselhodigital)
- * KV binding:           analytics → namespace KVconselhodigital
+ * api.conselhodigital.com        → Publicação (protegido pelo Cloudflare Access)
+ *   POST /publish   — Atualiza content.json no GitHub
+ *   POST /upload    — Faz upload de imagem no GitHub
+ *
+ * Secrets: CF_API_TOKEN, CF_ZONE_ID, GITHUB_TOKEN
+ * Text:    REPO  (ex: freak-m/conselhodigital)
+ * KV:      analytics → namespace KVconselhodigital
  */
 
 const ALLOWED_ORIGINS = [
@@ -24,30 +24,30 @@ export default {
     const url = new URL(request.url);
     const origin = request.headers.get('Origin') || '';
     const path = url.pathname.replace(/\/$/, '') || '/';
+    const host = url.hostname;
 
     if (request.method === 'OPTIONS') {
       return corsResp(null, 204, origin);
     }
 
     try {
-      /* ── ROTAS DE PUBLICAÇÃO (protegidas pelo Cloudflare Access) ── */
-      if (path.startsWith('/admin-api')) {
-        // O Zero Trust injeta este header após verificar o usuário.
-        // A rota /admin-api/* deve estar coberta pela política do Access.
+      /* ── api.conselhodigital.com — PUBLICAÇÃO (protegido pelo Cloudflare Access) ── */
+      if (host === 'api.conselhodigital.com') {
+        // Zero Trust injeta este header após verificar o usuário.
+        // O subdomínio api.conselhodigital.com deve estar na política do Access.
         if (!request.headers.get('Cf-Access-Jwt-Assertion')) {
           return corsResp(JSON.stringify({ error: 'Unauthorized' }), 401, origin);
         }
-        const sub = path.replace('/admin-api', '') || '/';
-        if (request.method === 'POST' && sub === '/publish') {
+        if (request.method === 'POST' && path === '/publish') {
           return handlePublish(request, env, origin);
         }
-        if (request.method === 'POST' && sub === '/upload') {
+        if (request.method === 'POST' && path === '/upload') {
           return handleUpload(request, env, origin);
         }
         return corsResp(JSON.stringify({ error: 'Not found' }), 404, origin);
       }
 
-      /* ── ROTAS DE ANALYTICS (públicas) ── */
+      /* ── analytics.conselhodigital.com — ANALYTICS (público) ── */
       if (request.method === 'GET' && path === '/') {
         const days = Math.min(parseInt(url.searchParams.get('days') || '30', 10), 365);
         const data = await fetchAnalytics(env, days);
