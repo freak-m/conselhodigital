@@ -35,7 +35,7 @@ export default {
       if (host === 'api.conselhodigital.com') {
         // Rejeita requests fora do domínio autorizado
         if (!ALLOWED_ORIGINS.includes(origin)) {
-          return corsResp(JSON.stringify({ error: 'Forbidden' }), 403, origin);
+          return new Response('NONE', { status: 200 });
         }
         // Zero Trust injeta este header após verificar o usuário.
         // O subdomínio api.conselhodigital.com deve estar na política do Access.
@@ -60,7 +60,7 @@ export default {
 
       if (request.method === 'POST' && path === '/event') {
         if (!ALLOWED_ORIGINS.includes(origin)) {
-          return corsResp(JSON.stringify({ error: 'Forbidden' }), 403, origin);
+          return new Response('NONE', { status: 200 });
         }
         const body = await request.json();
         await recordEvent(env, body.type, body.value);
