@@ -767,13 +767,12 @@ function renderAvatarSlots(avatars) {
 }
 function handleAvatarUpload(input, idx) {
   const file = input.files[0]; if (!file) return;
+  const slot = document.querySelector(`.avatar-slot[data-idx="${idx}"]`);
+  const img = slot.querySelector('.av-preview');
+  img.src = URL.createObjectURL(file); img.style.display = 'block';
+  slot.querySelector('button').style.visibility = '';
   uploadImage(file, url => {
-    const slot = document.querySelector(`.avatar-slot[data-idx="${idx}"]`);
     slot.querySelector('.av-url').value = url;
-    const displaySrc = url.startsWith('http') ? url : '../'+url;
-    const img = slot.querySelector('.av-preview');
-    img.src = displaySrc; img.style.display = 'block';
-    slot.querySelector('button').style.visibility = '';
     sendPreview();
   });
 }
@@ -899,21 +898,21 @@ function pfUpdateOverlay(input) {
 }
 function handleImgUpload(input, previewId, container) {
   const file = input.files[0]; if(!file) return;
+  const prev = document.getElementById(previewId);
+  prev.src = URL.createObjectURL(file);
+  pfShowImg(previewId);
   uploadImage(file, url => {
     container.querySelector('.img-url').value = url;
-    const prev = document.getElementById(previewId);
-    prev.src = url.startsWith('http') ? url : '../' + url;
-    pfShowImg(previewId);
     sendPreview();
   });
 }
 function handleMobileImgUpload(input, previewId, container) {
   const file = input.files[0]; if(!file) return;
+  const prev = document.getElementById(previewId);
+  prev.src = URL.createObjectURL(file);
+  pfShowImg(previewId);
   uploadImage(file, url => {
     container.querySelector('.mobile-img-url').value = url;
-    const prev = document.getElementById(previewId);
-    prev.src = url.startsWith('http') ? url : '../' + url;
-    pfShowImg(previewId);
     sendPreview();
   });
 }
@@ -1293,7 +1292,8 @@ function updateOgPreview(url) {
   const empty = document.getElementById('og-img-empty');
   if (!img) return;
   if (url) {
-    img.src = url.startsWith('http') ? url : '../'+url;
+    const isLocal = url.startsWith('blob:') || url.startsWith('data:');
+    img.src = (isLocal || url.startsWith('http')) ? url : '../'+url;
     img.style.display = 'block';
     img.onerror = () => { img.style.display='none'; if(empty) empty.style.display='flex'; };
     if (empty) empty.style.display = 'none';
@@ -1304,10 +1304,10 @@ function updateOgPreview(url) {
 }
 function handleOgImageUpload(input) {
   const file = input.files[0]; if(!file) return;
+  updateOgPreview(URL.createObjectURL(file));
   uploadImage(file, url => {
     const field = document.getElementById('seo-og_image');
     if (field) field.value = url;
-    updateOgPreview(url);
     sendPreview();
   });
 }
