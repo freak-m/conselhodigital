@@ -121,7 +121,7 @@ async function handleUpload(request, env, origin) {
     const putR = await fetch(api, { method: 'PUT', headers, body: JSON.stringify(body) });
     if (!putR.ok) throw new Error(`GitHub retornou ${putR.status}`);
 
-    return corsResp(JSON.stringify({ ok: true, url: `https://freak-m.github.io/conselhodigital/${filename}` }), 200, origin);
+    return corsResp(JSON.stringify({ ok: true, url: filename }), 200, origin);
   } catch (e) {
     return corsResp(JSON.stringify({ error: e.message }), 500, origin);
   }
