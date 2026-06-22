@@ -902,7 +902,8 @@ function handleImgUpload(input, previewId, container) {
   uploadImage(file, url => {
     container.querySelector('.img-url').value = url;
     const prev = document.getElementById(previewId);
-    prev.src = url; pfShowImg(previewId);
+    prev.src = url.startsWith('http') ? url : '../' + url;
+    pfShowImg(previewId);
     sendPreview();
   });
 }
@@ -911,7 +912,8 @@ function handleMobileImgUpload(input, previewId, container) {
   uploadImage(file, url => {
     container.querySelector('.mobile-img-url').value = url;
     const prev = document.getElementById(previewId);
-    prev.src = url; pfShowImg(previewId);
+    prev.src = url.startsWith('http') ? url : '../' + url;
+    pfShowImg(previewId);
     sendPreview();
   });
 }
