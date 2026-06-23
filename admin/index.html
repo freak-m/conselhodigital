@@ -62,6 +62,7 @@
     .nav-item:hover { background:var(--cb); color:var(--white); }
     .nav-item.active { background:rgba(0,188,255,.12); color:var(--blue); }
     .nav-item .icon { font-size:14px; width:16px; flex-shrink:0; }
+    .nav-item .ext { font-size:9px; margin-left:auto; opacity:.4; }
     .sidebar-footer { padding:12px 8px; border-top:1px solid var(--cbr); }
     .btn-logout {
       width:100%; background:none; border:1px solid var(--cbr); color:var(--muted);
@@ -269,7 +270,6 @@
     <nav class="sidebar-nav" id="sidebar-nav">
       <div class="nav-section">Conteúdo</div>
       <button class="nav-item active" data-section="global">        <span class="icon">📊</span> Dashboard</button>
-      <button class="nav-item" data-section="integrations">         <span class="icon">⚙️</span> Integrações</button>
       <button class="nav-item" data-section="seo">                  <span class="icon">🔍</span> SEO & Meta</button>
       <button class="nav-item" data-section="hero">                 <span class="icon">🏠</span> Hero</button>
       <button class="nav-item" data-section="services">             <span class="icon">⚡</span> Serviços</button>
@@ -277,6 +277,11 @@
       <button class="nav-item" data-section="portfolio">            <span class="icon">🎨</span> Portfólio</button>
       <button class="nav-item" data-section="process">              <span class="icon">🔄</span> Processo</button>
       <button class="nav-item" data-section="cta">                  <span class="icon">🚀</span> CTA</button>
+      <button class="nav-item" data-section="integrations">         <span class="icon">⚙️</span> Integrações</button>
+      <div class="nav-section" style="margin-top:8px">Ferramentas</div>
+      <a class="nav-item" href="/prospector/" target="_blank" style="text-decoration:none">
+        <span class="icon">🗺️</span> Prospector de Leads <span class="ext">↗</span>
+      </a>
     </nav>
     <div class="sidebar-footer">
       <button class="btn-logout" onclick="doLogout()">Sair (Cloudflare)</button>
