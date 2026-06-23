@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prospector de Leads | Conselho Digital</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;font-family:'Inter',system-ui,sans-serif}
+body{background:#0b0e14;color:#e2e8f0;display:flex;flex-direction:column}
+
+/* NAVBAR */
+#navbar{height:48px;background:#111622;border-bottom:1px solid #1e2a40;display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0;z-index:1000}
+.nav-logo{font-size:15px;font-weight:700;color:#3b82f6;letter-spacing:-.5px}
+.nav-sep{color:#1e2a40;font-size:18px}
+.nav-title{font-size:13px;color:#94a3b8}
+.nav-badge{font-size:10px;padding:2px 8px;background:#1e3a5f;color:#60a5fa;border-radius:10px;font-weight:600}
+.nav-back{margin-left:auto;font-size:12px;color:#64748b;text-decoration:none;padding:4px 12px;border:1px solid #1e2a40;border-radius:6px;transition:.15s}
+.nav-back:hover{color:#e2e8f0;border-color:#3b82f6}
+
+/* MAIN */
+#main{flex:1;display:flex;overflow:hidden;position:relative}
+
+/* SIDEBAR */
+#sidebar{width:320px;background:#111622;border-right:1px solid #1e2a40;display:flex;flex-direction:column;flex-shrink:0;z-index:500}
+#sb-header{padding:14px 16px;border-bottom:1px solid #1e2a40}
+#sb-header h2{font-size:13px;font-weight:600;color:#e2e8f0;margin-bottom:3px}
+#sb-header p{font-size:11px;color:#64748b;line-height:1.5}
+#controls{padding:12px 16px;border-bottom:1px solid #1e2a40;display:flex;flex-direction:column;gap:8px}
+
+/* Buttons */
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 14px;border-radius:8px;border:none;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;width:100%}
+.btn-primary{background:#3b82f6;color:#fff}
+.btn-primary:hover:not(:disabled){background:#2563eb}
+.btn-primary:disabled{background:#1e2a40;color:#475569;cursor:not-allowed}
+.btn-secondary{background:transparent;color:#94a3b8;border:1px solid #1e2a40}
+.btn-secondary:hover{border-color:#3b82f6;color:#e2e8f0}
+.btn-draw-active{background:#1e3a5f;color:#60a5fa;border:1px solid #3b82f6}
+
+.draw-hint{font-size:11px;color:#64748b;text-align:center;line-height:1.5;min-height:16px}
+.draw-hint.ok{color:#86efac}
+
+/* Filter tabs */
+.ftabs{display:flex;gap:6px}
+.ftab{flex:1;padding:6px 8px;border-radius:6px;border:1px solid #1e2a40;background:transparent;color:#64748b;font-size:11px;cursor:pointer;transition:.15s;text-align:center}
+.ftab.active{background:#1e3a5f;border-color:#3b82f6;color:#93c5fd}
+
+.result-info{font-size:11px;color:#64748b;text-align:center;display:none}
+.result-info strong{color:#e2e8f0}
+
+/* Business list */
+#biz-list{flex:1;overflow-y:auto;padding:8px}
+#biz-list::-webkit-scrollbar{width:4px}
+#biz-list::-webkit-scrollbar-thumb{background:#1e2a40;border-radius:2px}
+
+.biz-card{padding:10px 12px;border-radius:8px;border:1px solid #1e2a40;margin-bottom:6px;cursor:pointer;transition:.15s;background:#0d1220}
+.biz-card:hover{border-color:#3b82f6;background:#111d30}
+.biz-card.sel{border-color:#3b82f6;background:#112240;box-shadow:0 0 0 1px #3b82f620}
+.biz-top{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:3px}
+.biz-name{font-size:12px;font-weight:600;color:#e2e8f0;line-height:1.3}
+.biz-cat{font-size:11px;color:#64748b}
+.biz-phone{font-size:10px;color:#475569;margin-top:2px}
+.badge{font-size:10px;padding:2px 6px;border-radius:4px;flex-shrink:0;font-weight:600;white-space:nowrap}
+.badge-nw{background:#450a0a;color:#fca5a5}
+.badge-yw{background:#052e16;color:#86efac}
+
+/* State messages */
+.state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:40px 20px;color:#475569;font-size:12px;text-align:center;line-height:1.6}
+.state-icon{font-size:32px;opacity:.5}
+.spinner{width:20px;height:20px;border:2px solid #1e2a40;border-top-color:#3b82f6;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* MAP */
+#map{flex:1;z-index:100}
+.leaflet-draw-toolbar{display:none!important}
+
+/* DETAIL PANEL */
+#detail{position:absolute;bottom:0;left:320px;right:0;height:0;background:#111622;border-top:2px solid #3b82f6;transition:height .3s cubic-bezier(.16,1,.3,1);overflow:hidden;z-index:400;display:flex;flex-direction:column}
+#detail.open{height:370px}
+
+#det-head{padding:14px 18px 10px;border-bottom:1px solid #1e2a40;display:flex;align-items:flex-start;justify-content:space-between;flex-shrink:0}
+.det-name{font-size:16px;font-weight:700;color:#e2e8f0;margin-bottom:2px}
+.det-cat{font-size:12px;color:#64748b;margin-bottom:6px}
+.det-badges{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.badge-lg{font-size:11px;padding:3px 10px;border-radius:5px;font-weight:600}
+.badge-nw-lg{background:#450a0a;color:#fca5a5}
+.badge-yw-lg{background:#052e16;color:#86efac}
+.gmaps-link{font-size:11px;color:#64748b;text-decoration:none;padding:3px 8px;border:1px solid #1e2a40;border-radius:5px}
+.gmaps-link:hover{color:#e2e8f0;border-color:#3b82f6}
+.close-btn{background:none;border:none;color:#64748b;font-size:16px;cursor:pointer;padding:4px 8px;border-radius:4px;flex-shrink:0}
+.close-btn:hover{color:#e2e8f0;background:#1e2a40}
+
+#det-body{flex:1;display:flex;overflow:hidden}
+
+/* Info column */
+.det-info{width:240px;flex-shrink:0;padding:12px 16px;border-right:1px solid #1e2a40;overflow-y:auto}
+.det-info::-webkit-scrollbar{width:3px}
+.det-info::-webkit-scrollbar-thumb{background:#1e2a40}
+.info-row{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.info-ico{font-size:13px;flex-shrink:0;padding-top:1px;line-height:1}
+.info-txt{font-size:12px;color:#94a3b8;line-height:1.5}
+.info-txt a{color:#60a5fa;text-decoration:none}
+.info-txt a:hover{text-decoration:underline}
+.info-none{font-size:11px;color:#334155;font-style:italic;line-height:1.6;margin-top:8px}
+
+/* Tools column */
+.det-tools{flex:1;display:flex;flex-direction:column;padding:12px 18px;overflow:hidden}
+.tool-tabs{display:flex;gap:6px;margin-bottom:10px;flex-shrink:0}
+.ttab{padding:6px 14px;border-radius:6px;border:1px solid #1e2a40;background:transparent;color:#64748b;font-size:12px;font-weight:500;cursor:pointer;transition:.15s}
+.ttab.active{background:#3b82f6;border-color:#3b82f6;color:#fff}
+.tool-area{flex:1;display:flex;flex-direction:column;gap:8px;overflow:hidden}
+.tool-ta{flex:1;background:#0b0e14;border:1px solid #1e2a40;border-radius:8px;color:#e2e8f0;font-size:11.5px;line-height:1.7;padding:12px;resize:none;font-family:inherit;overflow-y:auto}
+.tool-ta::-webkit-scrollbar{width:4px}
+.tool-ta::-webkit-scrollbar-thumb{background:#1e2a40;border-radius:2px}
+.tool-foot{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.tool-hint{font-size:10px;color:#334155;flex:1}
+.copy-btn{padding:6px 14px;border-radius:6px;border:1px solid #1e2a40;background:transparent;color:#94a3b8;font-size:12px;cursor:pointer;transition:.15s}
+.copy-btn:hover{background:#1e2a40;color:#e2e8f0}
+.copy-btn.ok{background:#052e16;color:#86efac;border-color:#166534}
+</style>
+</head>
+<body>
+
+<div id="navbar">
+  <span class="nav-logo">CD</span>
+  <span class="nav-sep">|</span>
+  <span class="nav-title">Prospector de Leads</span>
+  <span class="nav-badge">Beta</span>
+  <a href="/admin/" class="nav-back">← Admin</a>
+</div>
+
+<div id="main">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div id="sb-header">
+      <h2>Empresas sem website</h2>
+      <p>Busque negócios na área e filtre os que ainda não têm site — seus futuros clientes.</p>
+    </div>
+
+    <div id="controls">
+      <button class="btn btn-secondary" id="draw-btn" onclick="startDraw()">✏️ Desenhar área</button>
+      <button class="btn btn-primary" id="search-btn" onclick="doSearch()">🔍 Pesquisar no mapa</button>
+      <div class="draw-hint" id="draw-hint">Ou navegue no mapa e clique em Pesquisar</div>
+
+      <div class="ftabs">
+        <button class="ftab active" id="tab-all" onclick="setFilter('all')">Todos&nbsp;(<span id="cnt-all">0</span>)</button>
+        <button class="ftab" id="tab-nw" onclick="setFilter('nw')">Sem site&nbsp;(<span id="cnt-nw">0</span>)</button>
+      </div>
+      <div class="result-info" id="result-info">
+        Mostrando <strong id="cnt-show">0</strong> empresa(s)
+      </div>
+    </div>
+
+    <div id="biz-list">
+      <div class="state">
+        <div class="state-icon">🗺️</div>
+        <span>Navegue até a área desejada<br>e clique em <strong>Pesquisar no mapa</strong>.</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAP -->
+  <div id="map"></div>
+
+  <!-- DETAIL PANEL -->
+  <div id="detail">
+    <div id="det-head">
+      <div style="flex:1;min-width:0">
+        <div class="det-name" id="dp-name">—</div>
+        <div class="det-cat" id="dp-cat">—</div>
+        <div class="det-badges" id="dp-badges"></div>
+      </div>
+      <button class="close-btn" onclick="closeDetail()">✕</button>
+    </div>
+    <div id="det-body">
+      <div class="det-info" id="dp-info"></div>
+      <div class="det-tools">
+        <div class="tool-tabs">
+          <button class="ttab active" onclick="setTab('prompt',this)">🤖 Prompt para Claude</button>
+          <button class="ttab" onclick="setTab('pitch',this)">💬 Abordagem Comercial</button>
+        </div>
+        <div class="tool-area">
+          <textarea class="tool-ta" id="tool-out" readonly></textarea>
+          <div class="tool-foot">
+            <span class="tool-hint" id="tool-hint"></span>
+            <button class="copy-btn" id="copy-btn" onclick="copyOut()">📋 Copiar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- #main -->
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+<script>
+// ── MAP ──────────────────────────────────────────────────────────────
+const map = L.map('map',{center:[-22.9056,-47.0608],zoom:14,zoomControl:true});
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+  attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',maxZoom:19
+}).addTo(map);
+
+const drawnItems = new L.FeatureGroup().addTo(map);
+let drawnBounds = null;
+let drawInstance = null;
+
+map.on(L.Draw.Event.CREATED, e => {
+  drawnItems.clearLayers();
+  drawnItems.addLayer(e.layer);
+  drawnBounds = e.layer.getBounds();
+  drawInstance = null;
+  document.getElementById('draw-btn').className='btn btn-secondary';
+  document.getElementById('draw-btn').textContent='✏️ Redesenhar área';
+  document.getElementById('draw-hint').className='draw-hint ok';
+  document.getElementById('draw-hint').textContent='✓ Área selecionada — clique em Pesquisar';
+  document.getElementById('search-btn').textContent='🔍 Pesquisar área selecionada';
+});
+
+function startDraw() {
+  if(drawInstance){drawInstance.disable();drawInstance=null;}
+  drawnItems.clearLayers();drawnBounds=null;
+  drawInstance=new L.Draw.Rectangle(map,{
+    shapeOptions:{color:'#3b82f6',weight:2,fillOpacity:.08,dashArray:'6,4'}
+  });
+  drawInstance.enable();
+  document.getElementById('draw-btn').className='btn btn-draw-active';
+  document.getElementById('draw-btn').textContent='⏹ Cancelar desenho';
+  document.getElementById('draw-hint').className='draw-hint';
+  document.getElementById('draw-hint').textContent='Clique e arraste no mapa para selecionar';
+  document.getElementById('search-btn').textContent='🔍 Pesquisar no mapa';
+}
+
+// ── CATEGORY MAP ─────────────────────────────────────────────────────
+const CAT={
+  supermarket:'Supermercado',bakery:'Padaria',butcher:'Açougue',
+  pharmacy:'Farmácia',chemist:'Drogaria',clothing:'Loja de Roupas',
+  electronics:'Eletrônicos',furniture:'Móveis',shoes:'Calçados',
+  jewelry:'Joalheria',hairdresser:'Cabeleireiro',beauty:'Salão de Beleza',
+  optician:'Ótica',hardware:'Ferragens / Material de Construção',
+  florist:'Floricultura',bicycle:'Bicicletaria',car:'Concessionária',
+  auto_parts:'Autopeças',mobile_phone:'Celulares / Assistência',
+  pet:'Pet Shop',books:'Livraria',sports:'Artigos Esportivos',
+  toys:'Brinquedos',gift:'Presentes',stationery:'Papelaria',
+  convenience:'Mercadinho',deli:'Empório',variety:'Variedades',
+  restaurant:'Restaurante',cafe:'Café / Cafeteria',bar:'Bar',
+  pub:'Bar / Pub',fast_food:'Lanchonete',pizza:'Pizzaria',
+  ice_cream:'Sorveteria',food_court:'Praça de Alimentação',
+  clinic:'Clínica',dentist:'Dentista',doctor:'Consultório Médico',
+  veterinary:'Veterinário',school:'Escola / Curso',
+  kindergarten:'Creche / Escola Infantil',
+  bank:'Banco',hotel:'Hotel / Pousada',
+  fitness_centre:'Academia',car_wash:'Lava-Rápido',
+  car_repair:'Mecânica / Oficina',laundry:'Lavanderia',
+  dry_cleaning:'Lavanderia',funeral_hall:'Funerária',
+  company:'Empresa',lawyer:'Advocacia',accountant:'Contabilidade',
+  estate_agent:'Imobiliária',insurance:'Seguradora',
+  travel_agent:'Agência de Viagens',yes:'Escritório',
+  shoemaker:'Sapataria / Sapato',tailor:'Alfaiataria',
+  electrician:'Elétrica / Instalações',plumber:'Encanamento / Hidráulica',
+  carpenter:'Marcenaria',painter:'Pintura e Reforma',
+  locksmith:'Chaveiro',hvac:'Climatização / Ar Condicionado',
+  photographer:'Fotógrafo / Estúdio',printing:'Gráfica / Impressão',
+};
+
+function getCat(tags){
+  const v=tags.shop||tags.amenity||tags.office||tags.craft||tags.tourism;
+  return CAT[v]||v||'Empresa / Comércio';
+}
+
+// ── OVERPASS QUERY ───────────────────────────────────────────────────
+const OVERPASS='https://overpass-api.de/api/interpreter';
+
+async function fetchBusinesses(bounds){
+  const s=bounds.getSouth().toFixed(6),w=bounds.getWest().toFixed(6);
+  const n=bounds.getNorth().toFixed(6),e=bounds.getEast().toFixed(6);
+  const q=`[out:json][timeout:30];
+(
+  node["name"]["shop"](${s},${w},${n},${e});
+  node["name"]["amenity"~"^(restaurant|cafe|bar|pub|fast_food|pizza|ice_cream|pharmacy|chemist|clinic|dentist|doctor|veterinary|school|kindergarten|bank|hotel|fitness_centre|car_wash|car_repair|laundry|dry_cleaning|funeral_hall|hairdresser|beauty)$"](${s},${w},${n},${e});
+  node["name"]["office"](${s},${w},${n},${e});
+  node["name"]["craft"](${s},${w},${n},${e});
+  way["name"]["shop"](${s},${w},${n},${e});
+  way["name"]["amenity"~"^(restaurant|cafe|bar|pub|fast_food|pizza|ice_cream|pharmacy|chemist|clinic|dentist|doctor|veterinary|school|kindergarten|bank|hotel|fitness_centre|car_wash|car_repair|laundry|dry_cleaning|funeral_hall|hairdresser|beauty)$"](${s},${w},${n},${e});
+  way["name"]["office"](${s},${w},${n},${e});
+  way["name"]["craft"](${s},${w},${n},${e});
+);
+out center;`;
+  const r=await fetch(OVERPASS,{method:'POST',body:q});
+  if(!r.ok) throw new Error(`Overpass retornou ${r.status}`);
+  return (await r.json()).elements;
+}
+
+// ── STATE ─────────────────────────────────────────────────────────────
+let ALL=[];
+let markers=[];
+let filter='all';
+let selected=null;
+let activeTab='prompt';
+
+// ── SEARCH ────────────────────────────────────────────────────────────
+async function doSearch(){
+  const bounds=drawnBounds||map.getBounds();
+  setLoading(true);
+  clearMarkers();
+  closeDetail();
+  try{
+    const els=await fetchBusinesses(bounds);
+    ALL=els.map(el=>({
+      id:el.id,
+      lat:el.lat??el.center?.lat,
+      lon:el.lon??el.center?.lon,
+      tags:el.tags||{},
+      hasWeb:!!(el.tags?.website||el.tags?.['contact:website']),
+      cat:getCat(el.tags||{}),
+    })).filter(b=>b.lat&&b.lon);
+
+    updateCounts();renderList();renderMarkers();
+
+    if(!ALL.length){
+      document.getElementById('biz-list').innerHTML=`<div class="state"><div class="state-icon">🔍</div><span>Nenhuma empresa encontrada.<br>Tente uma área maior ou diferente.</span></div>`;
+    }
+  }catch(err){
+    document.getElementById('biz-list').innerHTML=`<div class="state"><div class="state-icon">⚠️</div><span>Erro ao buscar dados.<br>${escH(err.message)}<br>Tente uma área menor.</span></div>`;
+  }
+  setLoading(false);
+}
+
+function setLoading(on){
+  const btn=document.getElementById('search-btn');
+  btn.disabled=on;
+  btn.textContent=on?'⏳ Pesquisando…':(drawnBounds?'🔍 Pesquisar área selecionada':'🔍 Pesquisar no mapa');
+  if(on){
+    document.getElementById('biz-list').innerHTML=`<div class="state"><div class="spinner"></div><span>Buscando empresas…<br><small style="color:#334155">Dados: OpenStreetMap</small></span></div>`;
+    document.getElementById('result-info').style.display='none';
+  }
+}
+
+// ── FILTER & LIST ──────────────────────────────────────────────────────
+function setFilter(f){
+  filter=f;
+  document.getElementById('tab-all').classList.toggle('active',f==='all');
+  document.getElementById('tab-nw').classList.toggle('active',f==='nw');
+  renderList();renderMarkers();
+}
+
+function visible(){return filter==='nw'?ALL.filter(b=>!b.hasWeb):ALL;}
+
+function updateCounts(){
+  document.getElementById('cnt-all').textContent=ALL.length;
+  document.getElementById('cnt-nw').textContent=ALL.filter(b=>!b.hasWeb).length;
+}
+
+function renderList(){
+  const list=document.getElementById('biz-list');
+  const items=visible();
+  const ri=document.getElementById('result-info');
+  ri.style.display='block';
+  document.getElementById('cnt-show').textContent=items.length;
+  if(!items.length){
+    list.innerHTML=`<div class="state"><div class="state-icon">🔍</div><span>Nenhuma empresa neste filtro.</span></div>`;
+    return;
+  }
+  list.innerHTML=items.map(b=>{
+    const n=b.tags.name||'Sem nome';
+    const ph=b.tags.phone||b.tags['contact:phone']||b.tags['contact:mobile']||'';
+    const sel=selected?.id===b.id?' sel':'';
+    return `<div class="biz-card${sel}" onclick="selectBiz(${b.id})">
+      <div class="biz-top">
+        <div class="biz-name">${escH(n)}</div>
+        ${b.hasWeb?'<span class="badge badge-yw">✓ Site</span>':'<span class="badge badge-nw">Sem site</span>'}
+      </div>
+      <div class="biz-cat">${escH(b.cat)}</div>
+      ${ph?`<div class="biz-phone">📞 ${escH(ph)}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+// ── MARKERS ───────────────────────────────────────────────────────────
+function clearMarkers(){markers.forEach(m=>map.removeLayer(m));markers=[];}
+
+function renderMarkers(){
+  clearMarkers();
+  visible().forEach(b=>{
+    const c=b.hasWeb?'#475569':'#ef4444';
+    const bc=b.hasWeb?'#334155':'#dc2626';
+    const m=L.circleMarker([b.lat,b.lon],{
+      radius:7,fillColor:c,color:bc,weight:1.5,fillOpacity:.85,
+    }).addTo(map);
+    m.on('click',()=>selectBiz(b.id));
+    m.bindTooltip(b.tags.name||'Sem nome',{direction:'top',offset:[0,-6],className:'biz-tt'});
+    markers.push(m);
+  });
+}
+
+// ── DETAIL ────────────────────────────────────────────────────────────
+function selectBiz(id){
+  selected=ALL.find(b=>b.id===id);
+  if(!selected)return;
+  renderList();
+
+  const t=selected.tags;
+  const name=t.name||'Sem nome';
+  const web=t.website||t['contact:website']||'';
+  const phone=t.phone||t['contact:phone']||t['contact:mobile']||'';
+  const street=[t['addr:street'],t['addr:housenumber']].filter(Boolean).join(', ');
+  const city=t['addr:city']||t['addr:suburb']||t['addr:neighbourhood']||'';
+  const addr=[street,city].filter(Boolean).join(' — ');
+  const hours=t.opening_hours||'';
+  const fb=t['contact:facebook']||t.facebook||'';
+
+  document.getElementById('dp-name').textContent=name;
+  document.getElementById('dp-cat').textContent=selected.cat;
+
+  const gmq=encodeURIComponent(name+(addr?' '+addr:''));
+  document.getElementById('dp-badges').innerHTML=
+    (selected.hasWeb
+      ?`<span class="badge-lg badge-yw-lg">✓ Tem website</span>${web?`<a href="${escH(web)}" target="_blank" class="gmaps-link">🔗 Abrir site</a>`:''}`
+      :'<span class="badge-lg badge-nw-lg">⚠ Sem website</span>')
+    +`<a href="https://www.google.com/maps/search/${gmq}" target="_blank" class="gmaps-link">📍 Google Maps</a>`;
+
+  const rows=[];
+  if(phone) rows.push(`<div class="info-row"><span class="info-ico">📞</span><span class="info-txt"><a href="tel:${escH(phone)}">${escH(phone)}</a></span></div>`);
+  if(addr)  rows.push(`<div class="info-row"><span class="info-ico">📍</span><span class="info-txt">${escH(addr)}</span></div>`);
+  if(hours) rows.push(`<div class="info-row"><span class="info-ico">🕐</span><span class="info-txt">${escH(hours)}</span></div>`);
+  if(web)   rows.push(`<div class="info-row"><span class="info-ico">🌐</span><span class="info-txt"><a href="${escH(web)}" target="_blank">${escH(web)}</a></span></div>`);
+  if(fb)    rows.push(`<div class="info-row"><span class="info-ico">📘</span><span class="info-txt"><a href="${escH(fb)}" target="_blank">Facebook</a></span></div>`);
+  if(!rows.length) rows.push('<div class="info-none">Dados limitados no OpenStreetMap.<br>Pesquise no Google Maps para mais detalhes.</div>');
+
+  document.getElementById('dp-info').innerHTML=rows.join('');
+  document.getElementById('detail').classList.add('open');
+  map.panTo([selected.lat,selected.lon]);
+
+  setTab(activeTab);
+}
+
+function closeDetail(){
+  document.getElementById('detail').classList.remove('open');
+  selected=null;
+  renderList();
+}
+
+// ── TOOL TABS ─────────────────────────────────────────────────────────
+function setTab(tab,btn){
+  activeTab=tab;
+  document.querySelectorAll('.ttab').forEach((b,i)=>b.classList.toggle('active',(i===0&&tab==='prompt')||(i===1&&tab==='pitch')));
+  if(!selected)return;
+
+  const t=selected.tags;
+  const name=t.name||'esta empresa';
+  const cat=selected.cat;
+  const phone=t.phone||t['contact:phone']||t['contact:mobile']||'';
+  const street=[t['addr:street'],t['addr:housenumber']].filter(Boolean).join(', ');
+  const city=t['addr:city']||t['addr:suburb']||'';
+  const addr=[street,city].filter(Boolean).join(', ');
+
+  document.getElementById('tool-out').value=
+    tab==='prompt'?makePrompt(name,cat,phone,addr,city,t.opening_hours||'')
+                  :makePitch(name,cat,phone,city);
+
+  const hints={
+    prompt:'Cole este prompt diretamente no Claude para gerar o site.',
+    pitch:'Envie pelo WhatsApp ou e-mail. Personalize antes de enviar!',
+  };
+  document.getElementById('tool-hint').textContent=hints[tab];
+  document.getElementById('copy-btn').className='copy-btn';
+  document.getElementById('copy-btn').textContent='📋 Copiar';
+}
+
+// ── GENERATORS ────────────────────────────────────────────────────────
+const COLOR_HINTS={
+  'Restaurante':'tons quentes — laranja queimado, terracota e creme',
+  'Café / Cafeteria':'marrom aconchegante, bege e dourado envelhecido',
+  'Pizzaria':'vermelho italiano, branco e verde',
+  'Salão de Beleza':'rosé, champagne e dourado rose — elegante e feminino',
+  'Academia':'preto e laranja elétrico — energia e performance',
+  'Farmácia':'verde menta e branco — clean e confiável',
+  'Dentista':'azul celeste e branco — higiene e confiança',
+  'Clínica':'azul ou verde suave — saúde e profissionalismo',
+  'Mecânica / Oficina':'cinza escuro, preto e laranja — robusto e masculino',
+  'Imobiliária':'azul marinho e dourado — seriedade e status',
+  'Advocacia':'cinza grafite e dourado — autoridade e prestígio',
+  'Contabilidade':'azul corporativo e branco — confiança e organização',
+  'Padaria':'trigo, marrom e branco — artesanal e aconchegante',
+  'Lava-Rápido':'azul água e branco — limpeza e rapidez',
+  'Pet Shop':'amarelo e azul — amigável e alegre',
+  'Ótica':'azul navy e prata — moderno e preciso',
+};
+
+function makePrompt(name,cat,phone,addr,city,hours){
+  const color=COLOR_HINTS[cat]||'profissional e moderno, adequado ao segmento';
+  const lines=[
+    `Crie um site profissional de uma página (landing page) para **${name}**, um(a) **${cat}**${city?` em ${city}`:''}.\n`,
+    `## Informações do negócio`,
+    `- **Nome:** ${name}`,
+    `- **Tipo:** ${cat}`,
+    addr?`- **Endereço:** ${addr}`:'',
+    phone?`- **Telefone / WhatsApp:** ${phone}`:'',
+    hours?`- **Horários:** ${hours}`:'',
+    ``,
+    `## Design`,
+    `- Estilo: moderno, clean, mobile-first e totalmente responsivo`,
+    `- Paleta de cores: ${color}`,
+    `- Tipografia: título bold e impactante, corpo legível (Google Fonts)`,
+    `- Animações sutis de scroll reveal nas seções`,
+    `- Botão flutuante do WhatsApp (canto inferior direito)`,
+    ``,
+    `## Seções`,
+    `1. **Hero** — headline forte, subtítulo e botão de CTA "Falar no WhatsApp"`,
+    `2. **Sobre nós** — texto breve apresentando o negócio e seus diferenciais`,
+    `3. **Serviços / Produtos** — grade com 3-6 cards (ícone + título + descrição)`,
+    `4. **Por que nos escolher** — 3 diferenciais com ícone (ex: qualidade, preço, rapidez)`,
+    `5. **Depoimentos** — 3 avaliações fictícias mas realistas para o segmento`,
+    `6. **Galeria** — 6 placeholders com gradiente temático (sem imagens reais)`,
+    `7. **Contato** — endereço, telefone, horários e link para Google Maps`,
+    ``,
+    `## Entregável`,
+    `**Arquivo HTML único**, com CSS e JS inline. Sem frameworks externos além de:`,
+    `- Font Awesome 6 (via CDN, só ícones usados)`,
+    `- Google Fonts (1-2 fontes)`,
+    ``,
+    `Pronto para publicar no GitHub Pages. Inclua meta tags de SEO (title, description, Open Graph).`,
+  ].filter(l=>l!=='');
+  return lines.join('\n');
+}
+
+function makePitch(name,cat,phone,city){
+  const cityTxt=city?` em ${city}`:'';
+  const ps=phone?`\n\nPs: Se preferir, pode me ligar ou mandar mensagem agora: ${phone}`:'';
+  return `Olá, ${name}! 👋
+
+Estava pesquisando ${cat.toLowerCase()}${cityTxt} e encontrei o perfil de vocês — mas não consegui achar o site de vocês na internet.
+
+Hoje, mais de 8 em cada 10 pessoas pesquisam no Google antes de visitar um negócio. Quem não aparece online acaba perdendo esses clientes para a concorrência. 😕
+
+Aqui na **Conselho Digital** criamos sites profissionais para pequenos negócios:
+✅ Design exclusivo (não é template)
+✅ Aparece no Google — SEO já incluso
+✅ 100% adaptado para celular
+✅ Entrega em menos de 1 semana
+✅ Preço justo para PMEs
+
+Posso criar um **protótipo gratuito** do site do ${name} para você ver como ficaria — sem compromisso, sem custo.
+
+É só me responder aqui ou me chamar no WhatsApp:
+👉 https://wa.me/5519953222558${ps}
+
+— Felipe
+Conselho Digital 🚀
+conselhodigital.com`;
+}
+
+// ── COPY ──────────────────────────────────────────────────────────────
+function copyOut(){
+  navigator.clipboard.writeText(document.getElementById('tool-out').value).then(()=>{
+    const b=document.getElementById('copy-btn');
+    b.textContent='✓ Copiado!';b.className='copy-btn ok';
+    setTimeout(()=>{b.textContent='📋 Copiar';b.className='copy-btn';},2200);
+  });
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────────
+function escH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+map.on('click',()=>closeDetail());
+document.getElementById('detail').addEventListener('click',e=>e.stopPropagation());
+</script>
+</body>
+</html>
