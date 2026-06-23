@@ -23,7 +23,7 @@ body{background:#0b0e14;color:#e2e8f0;display:flex;flex-direction:column}
 #main{flex:1;display:flex;overflow:hidden}
 
 /* ── SIDEBAR 50% ── */
-#sidebar{width:50%;background:#111622;border-right:1px solid #1e2a40;display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
+#sidebar{width:50%;min-width:240px;max-width:75%;background:#111622;border-right:none;display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
 
 /* Sidebar header */
 #sb-head{padding:12px 16px 10px;border-bottom:1px solid #1e2a40;flex-shrink:0}
@@ -123,11 +123,17 @@ body{background:#0b0e14;color:#e2e8f0;display:flex;flex-direction:column}
 .copy-btn:hover{background:#1e2a40;color:#e2e8f0}
 .copy-btn.ok{background:#052e16;color:#86efac;border-color:#166534}
 
+/* ── RESIZER ── */
+#resizer{width:5px;background:#1e2a40;cursor:col-resize;flex-shrink:0;transition:background .15s;position:relative;z-index:10}
+#resizer:hover,#resizer.dragging{background:#3b82f6}
+#resizer::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:3px;height:40px;border-radius:2px;background:inherit;opacity:.6}
+
 /* ── MAP 50% ── */
-#map-wrap{flex:1;position:relative;overflow:hidden}
+#map-wrap{flex:1;position:relative;overflow:hidden;min-width:200px}
 #map{width:100%;height:100%;cursor:crosshair}
 #map.nav-mode{cursor:grab}
 #map.nav-mode:active{cursor:grabbing}
+#map.mid-pan{cursor:grabbing!important}
 </style>
 </head>
 <body>
@@ -152,10 +158,11 @@ body{background:#0b0e14;color:#e2e8f0;display:flex;flex-direction:column}
 
     <div id="controls">
       <div class="ctrl-row">
-        <button class="btn btn-draw" id="mode-btn" onclick="toggleMode()">🖐 Navegar</button>
+        <button class="btn btn-draw" id="btn-draw" onclick="setDrawMode(true)">✏️ Desenhar</button>
+        <button class="btn btn-outline" id="btn-nav" onclick="setDrawMode(false)">🖐 Navegar</button>
         <button class="btn btn-primary btn-grow" id="search-btn" onclick="doSearch()">🔍 Pesquisar no mapa</button>
       </div>
-      <div class="draw-hint" id="draw-hint">Modo Desenho: clique e arraste no mapa para selecionar área</div>
+      <div class="draw-hint" id="draw-hint">Modo Desenho: clique e arraste no mapa · scroll do meio = mover</div>
       <div class="ftabs">
         <button class="ftab active" id="tab-all" onclick="setFilter('all')">Todos (<span id="cnt-all">0</span>)</button>
         <button class="ftab" id="tab-nw" onclick="setFilter('nw')">Sem site (<span id="cnt-nw">0</span>)</button>
@@ -202,6 +209,9 @@ body{background:#0b0e14;color:#e2e8f0;display:flex;flex-direction:column}
 
   </aside>
 
+  <!-- ── RESIZER ── -->
+  <div id="resizer"></div>
+
   <!-- ── MAP 50% ── -->
   <div id="map-wrap">
     <div id="map"></div>
@@ -225,23 +235,24 @@ let drawRect = null;
 let drawnBounds = null;
 const mapEl = document.getElementById('map');
 
-function toggleMode() {
-  drawMode = !drawMode;
-  if (drawMode) {
+function setDrawMode(on) {
+  drawMode = on;
+  if (on) {
+    if (drawing) { drawing = false; drawStart = null; if(drawRect){map.removeLayer(drawRect);drawRect=null;} }
     map.dragging.disable();
     mapEl.classList.remove('nav-mode');
-    document.getElementById('mode-btn').className = 'btn btn-draw';
-    document.getElementById('mode-btn').textContent = '🖐 Navegar';
+    document.getElementById('btn-draw').className = 'btn btn-draw';
+    document.getElementById('btn-nav').className  = 'btn btn-outline';
     setHint(false);
   } else {
     if (drawing) { drawing = false; drawStart = null; if(drawRect){map.removeLayer(drawRect);drawRect=null;} }
     map.dragging.enable();
     mapEl.classList.add('nav-mode');
-    document.getElementById('mode-btn').className = 'btn btn-outline';
-    document.getElementById('mode-btn').textContent = '✏️ Desenhar';
+    document.getElementById('btn-draw').className = 'btn btn-outline';
+    document.getElementById('btn-nav').className  = 'btn btn-draw';
     const h = document.getElementById('draw-hint');
     h.className = 'draw-hint';
-    h.textContent = 'Modo Navegação: mova o mapa livremente. Clique em "Desenhar" para voltar.';
+    h.textContent = 'Modo Navegação: arraste o mapa · scroll do meio = mover · "Desenhar" para voltar';
   }
 }
 
@@ -252,13 +263,14 @@ function setHint(ok) {
     h.textContent = '✓ Área selecionada — redesenhe ou clique em Pesquisar';
   } else {
     h.className = 'draw-hint';
-    h.textContent = 'Modo Desenho: clique e arraste no mapa para selecionar área';
+    h.textContent = 'Modo Desenho: clique e arraste no mapa · scroll do meio = mover';
   }
 }
 
+// Left button — draw rectangle (only in draw mode)
 mapEl.addEventListener('mousedown', e => {
   if (e.button !== 0 || !drawMode) return;
-  if (e.target.closest('.leaflet-interactive')) return; // let markers handle their own clicks
+  if (e.target.closest('.leaflet-interactive')) return;
   e.preventDefault();
   drawing = true;
   drawStart = map.containerPointToLatLng(map.mouseEventToContainerPoint(e));
@@ -277,24 +289,88 @@ document.addEventListener('mousemove', e => {
 });
 
 document.addEventListener('mouseup', e => {
-  if (!drawing || e.button !== 0) return;
-  drawing = false;
-  if (!drawStart) return;
-  const r = mapEl.getBoundingClientRect();
-  const x = Math.max(0, Math.min(e.clientX - r.left, r.width));
-  const y = Math.max(0, Math.min(e.clientY - r.top, r.height));
-  const endPt = L.point(x, y);
-  const startPt = map.latLngToContainerPoint(drawStart);
-  const dist = Math.sqrt(Math.pow(startPt.x-endPt.x,2)+Math.pow(startPt.y-endPt.y,2));
-  if (dist > 15 && drawRect) {
-    drawnBounds = drawRect.getBounds();
-    setHint(true);
-    document.getElementById('search-btn').textContent = '🔍 Pesquisar área';
-  } else {
-    if (drawRect) { map.removeLayer(drawRect); drawRect = null; }
+  if (e.button === 0 && drawing) {
+    drawing = false;
+    if (!drawStart) return;
+    const r = mapEl.getBoundingClientRect();
+    const x = Math.max(0, Math.min(e.clientX - r.left, r.width));
+    const y = Math.max(0, Math.min(e.clientY - r.top, r.height));
+    const endPt  = L.point(x, y);
+    const startPt = map.latLngToContainerPoint(drawStart);
+    const dist = Math.sqrt(Math.pow(startPt.x-endPt.x,2)+Math.pow(startPt.y-endPt.y,2));
+    if (dist > 15 && drawRect) {
+      drawnBounds = drawRect.getBounds();
+      setHint(true);
+      document.getElementById('search-btn').textContent = '🔍 Pesquisar área';
+    } else {
+      if (drawRect) { map.removeLayer(drawRect); drawRect = null; }
+    }
+    drawStart = null;
   }
-  drawStart = null;
 });
+
+// Middle button — pan the map (always, regardless of draw/navigate mode)
+let midPan = false, midLast = null;
+
+mapEl.addEventListener('mousedown', e => {
+  if (e.button !== 1) return;
+  e.preventDefault();
+  midPan = true;
+  midLast = {x: e.clientX, y: e.clientY};
+  mapEl.classList.add('mid-pan');
+});
+
+document.addEventListener('mousemove', e => {
+  if (!midPan || !midLast) return;
+  const dx = midLast.x - e.clientX;
+  const dy = midLast.y - e.clientY;
+  map.panBy([dx, dy], {animate: false});
+  midLast = {x: e.clientX, y: e.clientY};
+});
+
+document.addEventListener('mouseup', e => {
+  if (e.button === 1 && midPan) {
+    midPan = false; midLast = null;
+    mapEl.classList.remove('mid-pan');
+  }
+});
+
+// ── RESIZER ───────────────────────────────────────────────────────────
+(function() {
+  const resizer  = document.getElementById('resizer');
+  const sidebar  = document.getElementById('sidebar');
+  const mainEl   = document.getElementById('main');
+  let resizing = false;
+
+  resizer.addEventListener('mousedown', e => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    resizing = true;
+    resizer.classList.add('dragging');
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+    document.getElementById('map-wrap').style.pointerEvents = 'none';
+  });
+
+  document.addEventListener('mousemove', e => {
+    if (!resizing) return;
+    const rect = mainEl.getBoundingClientRect();
+    const newW = Math.max(240, Math.min(e.clientX - rect.left, rect.width * 0.75));
+    sidebar.style.width = newW + 'px';
+    map.invalidateSize();
+  });
+
+  document.addEventListener('mouseup', e => {
+    if (e.button === 0 && resizing) {
+      resizing = false;
+      resizer.classList.remove('dragging');
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+      document.getElementById('map-wrap').style.pointerEvents = '';
+      map.invalidateSize();
+    }
+  });
+})();
 
 // ── CATEGORY MAP ──────────────────────────────────────────────────────
 const CAT = {
