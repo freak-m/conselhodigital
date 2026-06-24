@@ -644,7 +644,8 @@ async function uploadImage(file, callback) {
         throw new Error(err.error || `HTTP ${r.status}`);
       }
       const result = await r.json();
-      callback(result.url);
+      const imgUrl = (result.url || '').replace(/^https?:\/\/freak-m\.github\.io\/conselhodigital\//,'');
+      callback(imgUrl);
       showToast('Imagem enviada!', 'success');
     } catch(e) { showToast('Erro ao enviar imagem: ' + e.message, 'error'); }
   };
