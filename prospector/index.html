@@ -10,14 +10,6 @@
 html,body{height:100%;overflow:hidden;font-family:'Inter',system-ui,sans-serif}
 body{background:#0b0e14;color:#e2e8f0;display:flex;flex-direction:column}
 
-/* ── NAVBAR ── */
-#navbar{height:46px;background:#111622;border-bottom:1px solid #1e2a40;display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0;z-index:1000}
-.nav-logo{font-size:15px;font-weight:700;color:#3b82f6}
-.nav-sep{color:#1e2a40;font-size:18px}
-.nav-title{font-size:13px;color:#94a3b8}
-.nav-badge{font-size:10px;padding:2px 8px;background:#1e3a5f;color:#60a5fa;border-radius:10px;font-weight:600;letter-spacing:.3px}
-.nav-back{margin-left:auto;font-size:12px;color:#64748b;text-decoration:none;padding:4px 12px;border:1px solid #1e2a40;border-radius:6px;transition:.15s}
-.nav-back:hover{color:#e2e8f0;border-color:#3b82f6}
 
 /* ── LAYOUT ── */
 #main{flex:1;display:flex;overflow:hidden}
@@ -44,7 +36,6 @@ body{background:#0b0e14;color:#e2e8f0;display:flex;flex-direction:column}
 .btn-danger:hover{background:#991b1b}
 .btn-outline{background:transparent;color:#94a3b8;border:1px solid #1e2a40}
 .btn-outline:hover{border-color:#3b82f6;color:#e2e8f0}
-.btn-draw{background:#1e3a5f;color:#60a5fa;border:1px solid #3b82f6}
 .btn-grow{flex:1}
 
 /* Filter tabs */
@@ -131,20 +122,10 @@ body{background:#0b0e14;color:#e2e8f0;display:flex;flex-direction:column}
 /* ── MAP 50% ── */
 #map-wrap{flex:1;position:relative;overflow:hidden;min-width:200px}
 #map{width:100%;height:100%;cursor:crosshair}
-#map.nav-mode{cursor:grab}
-#map.nav-mode:active{cursor:grabbing}
 #map.mid-pan{cursor:grabbing!important}
 </style>
 </head>
 <body>
-
-<div id="navbar">
-  <span class="nav-logo">CD</span>
-  <span class="nav-sep">|</span>
-  <span class="nav-title">Prospector de Leads</span>
-  <span class="nav-badge">Beta · OSM</span>
-  <a href="/admin/" class="nav-back">← Admin</a>
-</div>
 
 <div id="main">
 
@@ -158,11 +139,9 @@ body{background:#0b0e14;color:#e2e8f0;display:flex;flex-direction:column}
 
     <div id="controls">
       <div class="ctrl-row">
-        <button class="btn btn-draw" id="btn-draw" onclick="setDrawMode(true)">✏️ Desenhar</button>
-        <button class="btn btn-outline" id="btn-nav" onclick="setDrawMode(false)">🖐 Navegar</button>
         <button class="btn btn-primary btn-grow" id="search-btn" onclick="doSearch()">🔍 Pesquisar no mapa</button>
       </div>
-      <div class="draw-hint" id="draw-hint">Modo Desenho: clique e arraste no mapa · scroll do meio = mover</div>
+      <div class="draw-hint" id="draw-hint">Clique e arraste no mapa para selecionar a área</div>
       <div class="ftabs">
         <button class="ftab active" id="tab-all" onclick="setFilter('all')">Todos (<span id="cnt-all">0</span>)</button>
         <button class="ftab" id="tab-nw" onclick="setFilter('nw')">Sem site (<span id="cnt-nw">0</span>)</button>
@@ -235,27 +214,6 @@ let drawRect = null;
 let drawnBounds = null;
 const mapEl = document.getElementById('map');
 
-function setDrawMode(on) {
-  drawMode = on;
-  if (on) {
-    if (drawing) { drawing = false; drawStart = null; if(drawRect){map.removeLayer(drawRect);drawRect=null;} }
-    map.dragging.disable();
-    mapEl.classList.remove('nav-mode');
-    document.getElementById('btn-draw').className = 'btn btn-draw';
-    document.getElementById('btn-nav').className  = 'btn btn-outline';
-    setHint(false);
-  } else {
-    if (drawing) { drawing = false; drawStart = null; if(drawRect){map.removeLayer(drawRect);drawRect=null;} }
-    map.dragging.enable();
-    mapEl.classList.add('nav-mode');
-    document.getElementById('btn-draw').className = 'btn btn-outline';
-    document.getElementById('btn-nav').className  = 'btn btn-draw';
-    const h = document.getElementById('draw-hint');
-    h.className = 'draw-hint';
-    h.textContent = 'Modo Navegação: arraste o mapa · scroll do meio = mover · "Desenhar" para voltar';
-  }
-}
-
 function setHint(ok) {
   const h = document.getElementById('draw-hint');
   if (ok) {
@@ -263,7 +221,7 @@ function setHint(ok) {
     h.textContent = '✓ Área selecionada — redesenhe ou clique em Pesquisar';
   } else {
     h.className = 'draw-hint';
-    h.textContent = 'Modo Desenho: clique e arraste no mapa · scroll do meio = mover';
+    h.textContent = 'Clique e arraste no mapa para selecionar a área';
   }
 }
 
