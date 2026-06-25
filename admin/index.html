@@ -544,7 +544,7 @@
 
         <!-- PROSPECTOR (iframe embed) -->
         <div class="section-panel" id="section-prospector">
-          <iframe id="prospector-frame" src="" title="Prospector de Leads" allow="geolocation"></iframe>
+          <iframe id="prospector-frame" title="Prospector de Leads" allow="geolocation"></iframe>
         </div>
 
       </div><!-- /editor-pane -->
@@ -1113,7 +1113,7 @@ document.getElementById('sidebar-nav').addEventListener('click', e => {
   // Lazy-load prospector iframe on first click
   if (sec === 'prospector') {
     const fr = document.getElementById('prospector-frame');
-    if (fr && !fr.src) fr.src = '/prospector/';
+    if (fr && !fr.getAttribute('src')) fr.src = '/prospector/';
   }
   // Hide preview for non-content sections
   const noPreview = new Set(['global','integrations','seo','prospector']);
