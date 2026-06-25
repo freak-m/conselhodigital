@@ -109,6 +109,10 @@
     .editor-pane.wide { width:100%; flex:1; border-right:none; max-width:none; }
     .section-panel { display:none; padding:20px; }
     .section-panel.active { display:block; }
+    #section-prospector { height:100%; }
+    #section-prospector.active { display:flex; flex-direction:column; padding:0; overflow:hidden; }
+    #section-prospector iframe { flex:1; border:none; width:100%; min-height:0; display:block; }
+    .editor-pane.prospector-mode { overflow:hidden; }
     .section-panel h3 { font-family:'Syne',sans-serif; font-weight:700; font-size:14px; margin-bottom:16px; }
     .section-divider { border:none; border-top:1px solid var(--cbr); margin:16px 0; }
     .repeat-item {
@@ -279,9 +283,9 @@
       <button class="nav-item" data-section="cta">                  <span class="icon">🚀</span> CTA</button>
       <button class="nav-item" data-section="integrations">         <span class="icon">⚙️</span> Integrações</button>
       <div class="nav-section" style="margin-top:8px">Ferramentas</div>
-      <a class="nav-item" href="/prospector/" target="_blank" style="text-decoration:none">
-        <span class="icon">🗺️</span> Prospector de Leads <span class="ext">↗</span>
-      </a>
+      <button class="nav-item" data-section="prospector">
+        <span class="icon">🗺️</span> Prospector de Leads
+      </button>
     </nav>
     <div class="sidebar-footer">
       <button class="btn-logout" onclick="doLogout()">Sair (Cloudflare)</button>
@@ -537,6 +541,11 @@
           </div>
         </div>
 
+
+        <!-- PROSPECTOR (iframe embed) -->
+        <div class="section-panel" id="section-prospector">
+          <iframe id="prospector-frame" src="" title="Prospector de Leads" allow="geolocation"></iframe>
+        </div>
 
       </div><!-- /editor-pane -->
 
@@ -1101,13 +1110,19 @@ document.getElementById('sidebar-nav').addEventListener('click', e => {
   document.querySelectorAll('.section-panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('section-'+sec).classList.add('active');
   if (sec === 'global') initDashboard();
+  // Lazy-load prospector iframe on first click
+  if (sec === 'prospector') {
+    const fr = document.getElementById('prospector-frame');
+    if (fr && !fr.src) fr.src = '/prospector/';
+  }
   // Hide preview for non-content sections
-  const noPreview = new Set(['global','integrations','seo']);
+  const noPreview = new Set(['global','integrations','seo','prospector']);
   const pv = document.querySelector('.preview-pane');
   const ep = document.querySelector('.editor-pane');
   const hide = noPreview.has(sec);
   if (pv) pv.style.display = hide ? 'none' : '';
   if (ep) ep.classList.toggle('wide', hide);
+  if (ep) ep.classList.toggle('prospector-mode', sec === 'prospector');
   // Scroll preview to matching section
   const anchor = SECTION_ANCHORS[sec];
   if (anchor && previewReady) {
