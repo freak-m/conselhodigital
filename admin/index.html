@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
   <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
   <style>
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -111,8 +112,88 @@
     .section-panel.active { display:block; }
     #section-prospector { height:100%; }
     #section-prospector.active { display:flex; flex-direction:column; padding:0; overflow:hidden; }
-    #section-prospector iframe { flex:1; border:none; width:100%; min-height:0; display:block; }
     .editor-pane.prospector-mode { overflow:hidden; }
+    /* ── PROSPECTOR embedded styles ── */
+    #section-prospector #psp-main{flex:1;display:flex;overflow:hidden}
+    #section-prospector #psp-sidebar{width:50%;min-width:240px;max-width:75%;background:#111622;display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
+    #section-prospector #psp-sb-head{padding:12px 16px 10px;border-bottom:1px solid #1e2a40;flex-shrink:0}
+    #section-prospector #psp-sb-head h2{font-size:14px;font-weight:700;color:#e2e8f0;margin-bottom:1px}
+    #section-prospector #psp-sb-head p{font-size:11px;color:#64748b}
+    #section-prospector #psp-controls{padding:10px 14px;border-bottom:1px solid #1e2a40;display:flex;flex-direction:column;gap:8px;flex-shrink:0}
+    #section-prospector .psp-ctrl-row{display:flex;gap:8px}
+    #section-prospector .psp-draw-hint{font-size:11px;color:#64748b;line-height:1.4}
+    #section-prospector .psp-draw-hint.ok{color:#86efac}
+    #section-prospector .pbtn{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:7px 12px;border-radius:7px;border:none;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap}
+    #section-prospector .pbtn-primary{background:#3b82f6;color:#fff}
+    #section-prospector .pbtn-primary:hover{background:#2563eb}
+    #section-prospector .pbtn-danger{background:#7f1d1d;color:#fca5a5;border:1px solid #991b1b}
+    #section-prospector .pbtn-danger:hover{background:#991b1b}
+    #section-prospector .pbtn-grow{flex:1}
+    #section-prospector .psp-ftabs{display:flex;gap:6px}
+    #section-prospector .psp-ftab{flex:1;padding:6px 8px;border-radius:6px;border:1px solid #1e2a40;background:transparent;color:#64748b;font-size:11px;cursor:pointer;transition:.15s;text-align:center;font-weight:500;font-family:inherit}
+    #section-prospector .psp-ftab.active{background:#1e3a5f;border-color:#3b82f6;color:#93c5fd}
+    #section-prospector .psp-result-info{font-size:11px;color:#64748b;display:none}
+    #section-prospector .psp-result-info strong{color:#e2e8f0}
+    #section-prospector .psp-osm-note{font-size:10px;color:#334155;margin-top:1px}
+    #section-prospector #psp-list-view{flex:1;display:flex;flex-direction:column;overflow:hidden}
+    #section-prospector #psp-biz-list{flex:1;overflow-y:auto;padding:8px}
+    #section-prospector #psp-biz-list::-webkit-scrollbar{width:5px}
+    #section-prospector #psp-biz-list::-webkit-scrollbar-thumb{background:#1e2a40;border-radius:3px}
+    #section-prospector .psp-biz-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+    #section-prospector .psp-biz-card{padding:10px 11px;border-radius:8px;border:1px solid #1e2a40;cursor:pointer;transition:.15s;background:#0d1220}
+    #section-prospector .psp-biz-card:hover{border-color:#3b82f6;background:#111d30}
+    #section-prospector .psp-biz-card.sel{border-color:#3b82f6;background:#112240;box-shadow:0 0 0 1px #3b82f620}
+    #section-prospector .psp-biz-top{display:flex;align-items:flex-start;justify-content:space-between;gap:5px;margin-bottom:3px}
+    #section-prospector .psp-biz-name{font-size:11.5px;font-weight:600;color:#e2e8f0;line-height:1.3}
+    #section-prospector .psp-biz-cat{font-size:10px;color:#64748b;margin-bottom:2px}
+    #section-prospector .psp-biz-phone{font-size:10px;color:#475569}
+    #section-prospector .psp-badge{font-size:9px;padding:2px 5px;border-radius:4px;flex-shrink:0;font-weight:700;white-space:nowrap}
+    #section-prospector .psp-badge-nw{background:#450a0a;color:#fca5a5}
+    #section-prospector .psp-badge-yw{background:#052e16;color:#86efac}
+    #section-prospector .psp-state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:48px 24px;color:#475569;font-size:12px;text-align:center;line-height:1.6}
+    #section-prospector .psp-state-icon{font-size:32px;opacity:.45}
+    #section-prospector .psp-spinner{width:20px;height:20px;border:2px solid #1e2a40;border-top-color:#3b82f6;border-radius:50%;animation:psp-spin .7s linear infinite}
+    @keyframes psp-spin{to{transform:rotate(360deg)}}
+    #section-prospector #psp-detail-view{flex:1;display:none;flex-direction:column;overflow:hidden}
+    #section-prospector #psp-dv-head{padding:12px 16px 10px;border-bottom:1px solid #1e2a40;flex-shrink:0}
+    #section-prospector .psp-dv-back{margin-bottom:8px}
+    #section-prospector .psp-dv-back button{background:none;border:1px solid #1e2a40;color:#64748b;cursor:pointer;font-size:11px;padding:3px 10px;border-radius:5px;transition:.15s;font-family:inherit}
+    #section-prospector .psp-dv-back button:hover{color:#e2e8f0;border-color:#3b82f6}
+    #section-prospector .psp-dv-name{font-size:16px;font-weight:700;color:#e2e8f0;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    #section-prospector .psp-dv-cat{font-size:11px;color:#64748b;margin-bottom:6px}
+    #section-prospector .psp-dv-badges{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+    #section-prospector .psp-badge-lg{font-size:11px;padding:3px 10px;border-radius:5px;font-weight:600}
+    #section-prospector .psp-badge-nw-lg{background:#450a0a;color:#fca5a5}
+    #section-prospector .psp-badge-yw-lg{background:#052e16;color:#86efac}
+    #section-prospector .psp-ext-link{font-size:11px;color:#64748b;text-decoration:none;padding:3px 8px;border:1px solid #1e2a40;border-radius:5px;transition:.15s}
+    #section-prospector .psp-ext-link:hover{color:#e2e8f0;border-color:#3b82f6}
+    #section-prospector #psp-dv-body{flex:1;display:flex;flex-direction:column;overflow:hidden}
+    #section-prospector .psp-dv-info{padding:10px 16px;border-bottom:1px solid #1e2a40;flex-shrink:0}
+    #section-prospector .psp-info-row{display:flex;gap:9px;margin-bottom:7px;align-items:flex-start}
+    #section-prospector .psp-info-row:last-child{margin-bottom:0}
+    #section-prospector .psp-info-ico{font-size:12px;flex-shrink:0;line-height:1.6}
+    #section-prospector .psp-info-txt{font-size:11.5px;color:#94a3b8;line-height:1.5}
+    #section-prospector .psp-info-txt a{color:#60a5fa;text-decoration:none}
+    #section-prospector .psp-info-txt a:hover{text-decoration:underline}
+    #section-prospector .psp-info-empty{font-size:11px;color:#334155;font-style:italic;line-height:1.5}
+    #section-prospector .psp-dv-tools{padding:10px 16px 12px;display:flex;flex-direction:column;gap:8px;flex-shrink:0}
+    #section-prospector .psp-ttabs{display:flex;gap:6px}
+    #section-prospector .psp-ttab{padding:5px 14px;border-radius:6px;border:1px solid #1e2a40;background:transparent;color:#64748b;font-size:12px;font-weight:500;cursor:pointer;transition:.15s;font-family:inherit}
+    #section-prospector .psp-ttab.active{background:#3b82f6;border-color:#3b82f6;color:#fff}
+    #section-prospector .psp-tool-ta{width:100%;height:130px;background:#0b0e14;border:1px solid #1e2a40;border-radius:8px;color:#e2e8f0;font-size:11px;line-height:1.65;padding:10px 12px;resize:none;font-family:inherit;overflow-y:auto}
+    #section-prospector .psp-tool-ta::-webkit-scrollbar{width:4px}
+    #section-prospector .psp-tool-ta::-webkit-scrollbar-thumb{background:#1e2a40;border-radius:2px}
+    #section-prospector .psp-tool-foot{display:flex;align-items:center;gap:8px}
+    #section-prospector .psp-tool-note{font-size:10px;color:#334155;flex:1;font-style:italic}
+    #section-prospector .psp-copy-btn{padding:6px 14px;border-radius:6px;border:1px solid #1e2a40;background:transparent;color:#94a3b8;font-size:12px;cursor:pointer;transition:.15s;font-family:inherit}
+    #section-prospector .psp-copy-btn:hover{background:#1e2a40;color:#e2e8f0}
+    #section-prospector .psp-copy-btn.ok{background:#052e16;color:#86efac;border-color:#166534}
+    #section-prospector #psp-resizer{width:5px;background:#1e2a40;cursor:col-resize;flex-shrink:0;transition:background .15s;position:relative;z-index:10}
+    #section-prospector #psp-resizer:hover,#section-prospector #psp-resizer.dragging{background:#3b82f6}
+    #section-prospector #psp-resizer::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:3px;height:40px;border-radius:2px;background:inherit;opacity:.6}
+    #section-prospector #psp-map-wrap{flex:1;position:relative;overflow:hidden;min-width:200px}
+    #section-prospector #psp-map{width:100%;height:100%;cursor:crosshair}
+    #section-prospector #psp-map.mid-pan{cursor:grabbing!important}
     .section-panel h3 { font-family:'Syne',sans-serif; font-weight:700; font-size:14px; margin-bottom:16px; }
     .section-divider { border:none; border-top:1px solid var(--cbr); margin:16px 0; }
     .repeat-item {
@@ -542,9 +623,59 @@
         </div>
 
 
-        <!-- PROSPECTOR (iframe embed) -->
+        <!-- PROSPECTOR -->
         <div class="section-panel" id="section-prospector">
-          <iframe id="prospector-frame" title="Prospector de Leads" allow="geolocation"></iframe>
+          <div id="psp-main">
+            <aside id="psp-sidebar">
+              <div id="psp-sb-head">
+                <h2>Busca de clientes</h2>
+                <p>Clique e arraste no mapa para selecionar a área · marcadores vermelhos = sem site</p>
+              </div>
+              <div id="psp-controls">
+                <div class="psp-ctrl-row">
+                  <button class="pbtn pbtn-primary pbtn-grow" id="psp-search-btn" onclick="pspSearch()">🔍 Pesquisar no mapa</button>
+                </div>
+                <div class="psp-draw-hint" id="psp-draw-hint">Clique e arraste no mapa para selecionar a área</div>
+                <div class="psp-ftabs">
+                  <button class="psp-ftab active" id="psp-tab-all" onclick="pspSetFilter('all')">Todos (<span id="psp-cnt-all">0</span>)</button>
+                  <button class="psp-ftab" id="psp-tab-nw" onclick="pspSetFilter('nw')">Sem site (<span id="psp-cnt-nw">0</span>)</button>
+                </div>
+                <div class="psp-result-info" id="psp-result-info">
+                  <strong id="psp-cnt-show">0</strong> empresa(s) encontrada(s)
+                  <div class="psp-osm-note">⚠ Dados do OpenStreetMap — pode estar incompleto. Verifique no Google Maps.</div>
+                </div>
+              </div>
+              <div id="psp-list-view">
+                <div id="psp-biz-list">
+                  <div class="psp-state"><div class="psp-state-icon">🗺️</div><span>Clique e arraste no mapa para<br>selecionar uma área de pesquisa.</span></div>
+                </div>
+              </div>
+              <div id="psp-detail-view">
+                <div id="psp-dv-head">
+                  <div class="psp-dv-back"><button onclick="pspCloseDetail()">← Voltar à lista</button></div>
+                  <div class="psp-dv-name" id="psp-dv-name">—</div>
+                  <div class="psp-dv-cat" id="psp-dv-cat">—</div>
+                  <div class="psp-dv-badges" id="psp-dv-badges"></div>
+                </div>
+                <div id="psp-dv-body">
+                  <div class="psp-dv-info" id="psp-dv-info"></div>
+                  <div class="psp-dv-tools">
+                    <div class="psp-ttabs">
+                      <button class="psp-ttab active" onclick="pspSetTab('prompt',this)">🤖 Prompt</button>
+                      <button class="psp-ttab" onclick="pspSetTab('pitch',this)">💬 Abordagem</button>
+                    </div>
+                    <textarea class="psp-tool-ta" id="psp-tool-out" readonly></textarea>
+                    <div class="psp-tool-foot">
+                      <span class="psp-tool-note" id="psp-tool-note"></span>
+                      <button class="psp-copy-btn" id="psp-copy-btn" onclick="pspCopyOut()">📋 Copiar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </aside>
+            <div id="psp-resizer"></div>
+            <div id="psp-map-wrap"><div id="psp-map"></div></div>
+          </div>
         </div>
 
       </div><!-- /editor-pane -->
@@ -1110,11 +1241,7 @@ document.getElementById('sidebar-nav').addEventListener('click', e => {
   document.querySelectorAll('.section-panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('section-'+sec).classList.add('active');
   if (sec === 'global') initDashboard();
-  // Lazy-load prospector iframe on first click
-  if (sec === 'prospector') {
-    const fr = document.getElementById('prospector-frame');
-    if (fr && !fr.getAttribute('src')) fr.src = '/prospector/';
-  }
+  if (sec === 'prospector') initProspector();
   // Hide preview for non-content sections
   const noPreview = new Set(['global','integrations','seo','prospector']);
   const pv = document.querySelector('.preview-pane');
@@ -1351,6 +1478,204 @@ function handleOgImageUpload(input) {
 
 /* ── BOOT ── */
 showApp();
+</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+/* ── PROSPECTOR ────────────────────────────────────────────────────── */
+let pspMap = null, pspInited = false;
+
+function initProspector() {
+  if (pspInited) { if (pspMap) pspMap.invalidateSize(); return; }
+  pspInited = true;
+
+  function $(id) { return document.getElementById('psp-' + id); }
+
+  // MAP
+  pspMap = L.map('psp-map', {center:[-22.9056,-47.0608], zoom:14, zoomControl:true, dragging:false});
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', maxZoom:19,
+  }).addTo(pspMap);
+
+  // DRAW
+  let drawMode=true, drawing=false, drawStart=null, drawRect=null, drawnBounds=null;
+  const mapEl = $('map');
+
+  function setHint(ok) {
+    const h=$('draw-hint');
+    h.className='psp-draw-hint'+(ok?' ok':'');
+    h.textContent=ok?'✓ Área selecionada — redesenhe ou clique em Pesquisar':'Clique e arraste no mapa para selecionar a área';
+  }
+
+  mapEl.addEventListener('mousedown', e => {
+    if (e.button!==0||!drawMode) return;
+    if (e.target.closest('.leaflet-interactive')) return;
+    e.preventDefault(); drawing=true;
+    drawStart=pspMap.containerPointToLatLng(pspMap.mouseEventToContainerPoint(e));
+  });
+  document.addEventListener('mousemove', e => {
+    if (!drawing||!drawMode) return;
+    const r=mapEl.getBoundingClientRect();
+    const x=Math.max(0,Math.min(e.clientX-r.left,r.width));
+    const y=Math.max(0,Math.min(e.clientY-r.top,r.height));
+    const cur=pspMap.containerPointToLatLng(L.point(x,y));
+    if(drawRect){pspMap.removeLayer(drawRect);drawRect=null;}
+    drawRect=L.rectangle(L.latLngBounds(drawStart,cur),{color:'#3b82f6',weight:2,fillOpacity:.08,dashArray:'6 4',interactive:false}).addTo(pspMap);
+  });
+  document.addEventListener('mouseup', e => {
+    if(e.button!==0||!drawing) return;
+    drawing=false; if(!drawStart) return;
+    const r=mapEl.getBoundingClientRect();
+    const x=Math.max(0,Math.min(e.clientX-r.left,r.width));
+    const y=Math.max(0,Math.min(e.clientY-r.top,r.height));
+    const dist=Math.sqrt(Math.pow(pspMap.latLngToContainerPoint(drawStart).x-x,2)+Math.pow(pspMap.latLngToContainerPoint(drawStart).y-y,2));
+    if(dist>15&&drawRect){drawnBounds=drawRect.getBounds();setHint(true);$('search-btn').textContent='🔍 Pesquisar área';}
+    else if(drawRect){pspMap.removeLayer(drawRect);drawRect=null;}
+    drawStart=null;
+  });
+
+  // MIDDLE MOUSE PAN
+  let midPan=false,midLast=null;
+  mapEl.addEventListener('mousedown', e=>{
+    if(e.button!==1) return; e.preventDefault();
+    midPan=true; midLast={x:e.clientX,y:e.clientY}; mapEl.classList.add('mid-pan');
+  });
+  document.addEventListener('mousemove', e=>{
+    if(!midPan||!midLast) return;
+    pspMap.panBy([midLast.x-e.clientX,midLast.y-e.clientY],{animate:false});
+    midLast={x:e.clientX,y:e.clientY};
+  });
+  document.addEventListener('mouseup', e=>{
+    if(e.button===1&&midPan){midPan=false;midLast=null;mapEl.classList.remove('mid-pan');}
+  });
+
+  // RESIZER
+  (function(){
+    const rs=$('resizer'), sb=$('sidebar'), mn=$('main'); let rsz=false;
+    rs.addEventListener('mousedown',e=>{
+      if(e.button!==0) return; e.preventDefault(); rsz=true;
+      rs.classList.add('dragging'); document.body.style.cursor='col-resize';
+      document.body.style.userSelect='none'; $('map-wrap').style.pointerEvents='none';
+    });
+    document.addEventListener('mousemove',e=>{
+      if(!rsz) return;
+      const rect=mn.getBoundingClientRect();
+      sb.style.width=Math.max(240,Math.min(e.clientX-rect.left,rect.width*.75))+'px';
+      pspMap.invalidateSize();
+    });
+    document.addEventListener('mouseup',e=>{
+      if(e.button!==0||!rsz) return; rsz=false;
+      rs.classList.remove('dragging'); document.body.style.cursor='';
+      document.body.style.userSelect=''; $('map-wrap').style.pointerEvents='';
+      pspMap.invalidateSize();
+    });
+  })();
+
+  // CATEGORIES
+  const PSP_CAT={supermarket:'Supermercado',bakery:'Padaria',butcher:'Açougue',pharmacy:'Farmácia',chemist:'Drogaria',clothing:'Loja de Roupas',electronics:'Eletrônicos',furniture:'Móveis',shoes:'Calçados',jewelry:'Joalheria',hairdresser:'Cabeleireiro',beauty:'Salão de Beleza',optician:'Ótica',hardware:'Ferragens',florist:'Floricultura',bicycle:'Bicicletaria',car:'Concessionária',auto_parts:'Autopeças',mobile_phone:'Celulares / Assistência',pet:'Pet Shop',books:'Livraria',sports:'Artigos Esportivos',toys:'Brinquedos',gift:'Presentes',stationery:'Papelaria',convenience:'Mercadinho',deli:'Empório',restaurant:'Restaurante',cafe:'Café / Cafeteria',bar:'Bar',pub:'Bar / Pub',fast_food:'Lanchonete',pizza:'Pizzaria',ice_cream:'Sorveteria',clinic:'Clínica',dentist:'Dentista',doctor:'Consultório Médico',veterinary:'Veterinário',school:'Escola / Curso',kindergarten:'Creche',bank:'Banco',hotel:'Hotel / Pousada',fitness_centre:'Academia',car_wash:'Lava-Rápido',car_repair:'Mecânica / Oficina',laundry:'Lavanderia',dry_cleaning:'Lavanderia',funeral_hall:'Funerária',company:'Empresa',lawyer:'Advocacia',accountant:'Contabilidade',estate_agent:'Imobiliária',insurance:'Seguradora',travel_agent:'Agência de Viagens',yes:'Escritório',shoemaker:'Sapataria',tailor:'Alfaiataria',electrician:'Elétrica',plumber:'Encanamento',carpenter:'Marcenaria',painter:'Pintura e Reforma',locksmith:'Chaveiro',hvac:'Climatização / Ar Cond.',photographer:'Fotógrafo / Estúdio',printing:'Gráfica / Impressão'};
+  function pspGetCat(t){const v=t.shop||t.amenity||t.office||t.craft||t.tourism;return PSP_CAT[v]||v||'Empresa / Comércio';}
+  function pspHasWeb(t){return !!(t.website||t['contact:website']||t.url||t['contact:url']||t['website:official']||t['website:pt']||t['website:en']||t['official_website']||t['website:mobile']);}
+  function pspEscH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+  // STATE
+  let pspALL=[],pspMarkers=[],pspMarkerById=new Map(),pspFilter='all',pspSelected=null,pspActiveTab='prompt';
+
+  // SEARCH
+  let searchAbort=null;
+  window.pspSearch=async function(){
+    if(searchAbort){searchAbort.abort();searchAbort=null;pspSetLoading(false,'cancelled');return;}
+    const bounds=drawnBounds||pspMap.getBounds();
+    searchAbort=new AbortController(); pspSetLoading(true);
+    pspClearMarkers(); pspCloseDetail(true);
+    const s=bounds.getSouth().toFixed(6),w=bounds.getWest().toFixed(6),n=bounds.getNorth().toFixed(6),e2=bounds.getEast().toFixed(6);
+    const q=`[out:json][timeout:30];(\nnode["name"]["shop"](${s},${w},${n},${e2});\nnode["name"]["amenity"~"^(restaurant|cafe|bar|pub|fast_food|pizza|ice_cream|pharmacy|chemist|clinic|dentist|doctor|veterinary|school|kindergarten|bank|hotel|fitness_centre|car_wash|car_repair|laundry|dry_cleaning|funeral_hall|hairdresser|beauty)$"](${s},${w},${n},${e2});\nnode["name"]["office"](${s},${w},${n},${e2});\nnode["name"]["craft"](${s},${w},${n},${e2});\nway["name"]["shop"](${s},${w},${n},${e2});\nway["name"]["amenity"~"^(restaurant|cafe|bar|pub|fast_food|pizza|ice_cream|pharmacy|chemist|clinic|dentist|doctor|veterinary|school|kindergarten|bank|hotel|fitness_centre|car_wash|car_repair|laundry|dry_cleaning|funeral_hall|hairdresser|beauty)$"](${s},${w},${n},${e2});\nway["name"]["office"](${s},${w},${n},${e2});\nway["name"]["craft"](${s},${w},${n},${e2});\n);\nout center;`;
+    try {
+      const r=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:q,signal:searchAbort.signal});
+      if(!r.ok) throw new Error(`Overpass ${r.status}`);
+      const data=await r.json();
+      pspALL=data.elements.map(el=>({id:el.id,lat:el.lat??el.center?.lat,lon:el.lon??el.center?.lon,tags:el.tags||{},hasWeb:pspHasWeb(el.tags||{}),cat:pspGetCat(el.tags||{})})).filter(b=>b.lat&&b.lon);
+      pspUpdateCounts(); pspRenderList(); pspRenderMarkers();
+      if(!pspALL.length) $('biz-list').innerHTML='<div class="psp-state"><div class="psp-state-icon">🔍</div><span>Nenhuma empresa encontrada.<br>Tente uma área maior.</span></div>';
+    } catch(err) {
+      if(err.name==='AbortError') $('biz-list').innerHTML='<div class="psp-state"><div class="psp-state-icon">⏹</div><span>Busca cancelada.</span></div>';
+      else $('biz-list').innerHTML=`<div class="psp-state"><div class="psp-state-icon">⚠️</div><span>Erro ao buscar dados.<br>${pspEscH(err.message)}</span></div>`;
+    } finally { searchAbort=null; pspSetLoading(false); }
+  };
+
+  function pspSetLoading(on){
+    const btn=$('search-btn');
+    if(on){btn.className='pbtn pbtn-danger pbtn-grow';btn.textContent='⏹ Cancelar busca';$('result-info').style.display='none';$('biz-list').innerHTML='<div class="psp-state"><div class="psp-spinner"></div><span>Buscando empresas…</span></div>';}
+    else{btn.className='pbtn pbtn-primary pbtn-grow';btn.textContent=drawnBounds?'🔍 Pesquisar área':'🔍 Pesquisar no mapa';}
+  }
+
+  // FILTER
+  window.pspSetFilter=function(f){pspFilter=f;$('tab-all').classList.toggle('active',f==='all');$('tab-nw').classList.toggle('active',f==='nw');pspRenderList();pspRenderMarkers();};
+  function pspVisible(){return pspFilter==='nw'?pspALL.filter(b=>!b.hasWeb):pspALL;}
+  function pspUpdateCounts(){$('cnt-all').textContent=pspALL.length;$('cnt-nw').textContent=pspALL.filter(b=>!b.hasWeb).length;$('result-info').style.display='block';$('cnt-show').textContent=pspVisible().length;}
+
+  // LIST
+  function pspRenderList(){
+    const items=pspVisible(); $('cnt-show').textContent=items.length;
+    if(!items.length){$('biz-list').innerHTML='<div class="psp-state"><div class="psp-state-icon">🔍</div><span>Nenhuma empresa neste filtro.</span></div>';return;}
+    $('biz-list').innerHTML=`<div class="psp-biz-grid">${items.map(b=>{
+      const n=b.tags.name||'Sem nome',ph=b.tags.phone||b.tags['contact:phone']||b.tags['contact:mobile']||'',sel=pspSelected?.id===b.id?' sel':'';
+      return `<div class="psp-biz-card${sel}" onclick="pspSelectBiz(${b.id})"><div class="psp-biz-top"><div class="psp-biz-name">${pspEscH(n)}</div>${b.hasWeb?'<span class="psp-badge psp-badge-yw">✓ Site</span>':'<span class="psp-badge psp-badge-nw">Sem site</span>'}</div><div class="psp-biz-cat">${pspEscH(b.cat)}</div>${ph?`<div class="psp-biz-phone">📞 ${pspEscH(ph)}</div>`:''}</div>`;
+    }).join('')}</div>`;
+  }
+
+  // MARKERS
+  function pspClearMarkers(){pspMarkers.forEach(m=>pspMap.removeLayer(m));pspMarkers=[];pspMarkerById.clear();}
+  function pspMStyle(b,sel){return{radius:sel?11:7,fillColor:b.hasWeb?'#475569':'#ef4444',color:sel?'#ffffff':(b.hasWeb?'#334155':'#dc2626'),weight:sel?3:1.5,fillOpacity:.9};}
+  function pspRenderMarkers(){
+    pspClearMarkers();
+    pspVisible().forEach(b=>{const m=L.circleMarker([b.lat,b.lon],pspMStyle(b,false)).addTo(pspMap);m.on('click',()=>pspSelectBiz(b.id));m.bindTooltip(b.tags.name||'Sem nome',{direction:'top',offset:[0,-6]});pspMarkers.push(m);pspMarkerById.set(b.id,m);});
+  }
+  function pspHighlight(id){pspMarkerById.forEach((m,mid)=>{const b=pspALL.find(x=>x.id===mid);if(b)m.setStyle(pspMStyle(b,mid===id));});}
+
+  // DETAIL
+  window.pspSelectBiz=function(id){
+    pspSelected=pspALL.find(b=>b.id===id); if(!pspSelected) return;
+    const t=pspSelected.tags,name=t.name||'Sem nome',web=t.website||t['contact:website']||t.url||t['contact:url']||'',phone=t.phone||t['contact:phone']||t['contact:mobile']||'',street=[t['addr:street'],t['addr:housenumber']].filter(Boolean).join(', '),city=t['addr:city']||t['addr:suburb']||t['addr:neighbourhood']||'',addr=[street,city].filter(Boolean).join(' — '),hours=t.opening_hours||'',fb=t['contact:facebook']||t.facebook||'';
+    $('dv-name').textContent=name; $('dv-cat').textContent=pspSelected.cat;
+    const gmq=encodeURIComponent(name+(addr?' '+addr:''));
+    $('dv-badges').innerHTML=(pspSelected.hasWeb?`<span class="psp-badge-lg psp-badge-yw-lg">✓ Tem website</span>${web?`<a href="${pspEscH(web)}" target="_blank" class="psp-ext-link">🔗 Abrir</a>`:''}`:'<span class="psp-badge-lg psp-badge-nw-lg">⚠ Sem website</span>')+`<a href="https://www.google.com/maps/search/${gmq}" target="_blank" class="psp-ext-link">📍 Google Maps</a>`;
+    const rows=[];
+    if(phone) rows.push(`<div class="psp-info-row"><span class="psp-info-ico">📞</span><span class="psp-info-txt"><a href="tel:${pspEscH(phone)}">${pspEscH(phone)}</a></span></div>`);
+    if(addr)  rows.push(`<div class="psp-info-row"><span class="psp-info-ico">📍</span><span class="psp-info-txt">${pspEscH(addr)}</span></div>`);
+    if(hours) rows.push(`<div class="psp-info-row"><span class="psp-info-ico">🕐</span><span class="psp-info-txt">${pspEscH(hours)}</span></div>`);
+    if(web)   rows.push(`<div class="psp-info-row"><span class="psp-info-ico">🌐</span><span class="psp-info-txt"><a href="${pspEscH(web)}" target="_blank">${pspEscH(web)}</a></span></div>`);
+    if(fb)    rows.push(`<div class="psp-info-row"><span class="psp-info-ico">📘</span><span class="psp-info-txt"><a href="${pspEscH(fb)}" target="_blank">Facebook</a></span></div>`);
+    if(!rows.length) rows.push('<div class="psp-info-empty">Dados limitados no OpenStreetMap.<br>Verifique no Google Maps.</div>');
+    $('dv-info').innerHTML=rows.join('');
+    $('list-view').style.display='none'; $('detail-view').style.display='flex';
+    pspMap.panTo([pspSelected.lat,pspSelected.lon]); pspHighlight(id); pspSetTab(pspActiveTab);
+  };
+  window.pspCloseDetail=function(silent){pspSelected=null;$('list-view').style.display='flex';$('detail-view').style.display='none';if(!silent){pspRenderList();pspHighlight(null);}};
+
+  // TABS
+  const PSP_COLOR_HINTS={'Restaurante':'tons quentes — laranja queimado, terracota e creme','Café / Cafeteria':'marrom aconchegante, bege e dourado envelhecido','Pizzaria':'vermelho italiano, branco e verde','Salão de Beleza':'rosé, champagne e dourado — elegante e feminino','Academia':'preto e laranja elétrico — energia e performance','Farmácia':'verde menta e branco — clean e confiável','Dentista':'azul celeste e branco — higiene e confiança','Clínica':'azul ou verde suave — saúde e profissionalismo','Mecânica / Oficina':'cinza escuro, preto e laranja — robusto','Imobiliária':'azul marinho e dourado — seriedade e status','Advocacia':'cinza grafite e dourado — autoridade e prestígio','Contabilidade':'azul corporativo e branco — confiança','Padaria':'trigo, marrom e branco — artesanal e aconchegante','Lava-Rápido':'azul água e branco — limpeza e rapidez','Pet Shop':'amarelo e azul — amigável e alegre'};
+  window.pspSetTab=function(tab){
+    pspActiveTab=tab;
+    document.querySelectorAll('.psp-ttab').forEach((b,i)=>b.classList.toggle('active',(i===0&&tab==='prompt')||(i===1&&tab==='pitch')));
+    if(!pspSelected) return;
+    const t=pspSelected.tags,name=t.name||'esta empresa',cat=pspSelected.cat,phone=t.phone||t['contact:phone']||t['contact:mobile']||'',city=t['addr:city']||t['addr:suburb']||'',addr=[t['addr:street'],t['addr:housenumber']].filter(Boolean).join(', ')+(city?(t['addr:street']?' — ':'')+city:'');
+    $('tool-out').value=tab==='prompt'?pspMakePrompt(name,cat,phone,addr,city,t.opening_hours||''):pspMakePitch(name,cat,phone,city);
+    $('tool-note').textContent=tab==='prompt'?'Cole no Claude para gerar o site.':'Personalize antes de enviar!';
+    $('copy-btn').textContent='📋 Copiar'; $('copy-btn').className='psp-copy-btn';
+  };
+
+  function pspMakePrompt(name,cat,phone,addr,city,hours){
+    const color=PSP_COLOR_HINTS[cat]||'profissional e moderno, adequado ao segmento';
+    return [`Crie um site profissional de uma página (landing page) para **${name}**, um(a) **${cat}**${city?` em ${city}`:''}.\n`,`## Informações`,`- **Nome:** ${name}`,`- **Tipo:** ${cat}`,addr?`- **Endereço:** ${addr}`:'',phone?`- **Tel/WhatsApp:** ${phone}`:'',hours?`- **Horários:** ${hours}`:'',`\n## Design`,`- Estilo moderno, clean, mobile-first e responsivo`,`- Paleta de cores: ${color}`,`- Tipografia bold e impactante (Google Fonts)`,`- Animações sutis de scroll reveal`,`- Botão flutuante do WhatsApp`,`\n## Seções`,`1. **Hero** — headline forte + CTA "Falar no WhatsApp"`,`2. **Sobre nós** — apresentação e diferenciais`,`3. **Serviços** — 3-6 cards com ícone + descrição`,`4. **Por que nos escolher** — 3 diferenciais`,`5. **Depoimentos** — 3 avaliações realistas`,`6. **Galeria** — 6 placeholders com gradiente`,`7. **Contato** — endereço, telefone, horários, link Google Maps`,`\n## Entregável`,`HTML único com CSS/JS inline. Font Awesome 6 + Google Fonts via CDN. Meta tags SEO incluídas. Pronto para GitHub Pages.`].filter(Boolean).join('\n');
+  }
+  function pspMakePitch(name,cat,phone,city){
+    const cityTxt=city?` em ${city}`:'',ps=phone?`\n\nPs: Posso entrar em contato agora: ${phone}`:'';
+    return `Olá, ${name}! 👋\n\nEstava pesquisando ${cat.toLowerCase()}${cityTxt} e encontrei o perfil de vocês — mas não achei o site de vocês na internet.\n\nHoje, mais de 8 em cada 10 pessoas pesquisam no Google antes de visitar um negócio. Quem não aparece online perde esses clientes para a concorrência.\n\nNa **Conselho Digital** criamos sites profissionais:\n✅ Design exclusivo (não é template)\n✅ Aparece no Google — SEO incluso\n✅ 100% adaptado para celular\n✅ Entrega em menos de 1 semana\n✅ Preço justo para PMEs\n\nPosso criar um **protótipo gratuito** do site do ${name} — sem compromisso.\n\n👉 https://wa.me/5519953222558${ps}\n\n— Felipe | Conselho Digital 🚀`;
+  }
+
+  window.pspCopyOut=function(){navigator.clipboard.writeText($('tool-out').value).then(()=>{const b=$('copy-btn');b.textContent='✓ Copiado!';b.className='psp-copy-btn ok';setTimeout(()=>{b.textContent='📋 Copiar';b.className='psp-copy-btn';},2200);});};
+
+  setTimeout(()=>pspMap.invalidateSize(),150);
+}
 </script>
 </body>
 </html>
